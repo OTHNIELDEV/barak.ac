@@ -79,7 +79,7 @@ export default function LandingPage() {
     { name: "송민원 교수", field: "구약학", role: "더바이블 무브먼트 대표", image: "/images/faculty/song-minwon.jpg" },
     { name: "김영희 교수", field: "신약학", role: "신약성경연구소 전문위원", image: "/images/faculty/kim-younghee.jpg" },
     { name: "전예령 교수 (Ph.D)", field: "기독교교육학", role: "토론토대 교육철학 박사", image: "/images/faculty/jeon-yeryeong.jpg" },
-    { name: "박은정 교수", field: "목회상담학", role: "목회상담·치유 전문가", image: "/images/faculty/park-eunjung.jpg" },
+    { name: "박은정 교수", field: "목회상담학", role: "웨스트민스터신학대학원 일반학부장", image: "/images/faculty/park-eunjung.jpg" },
     { name: "김종우 교수", field: "AI와 기독교", role: "스마트목회지원 연구소장", image: "/images/faculty/kim-jongwoo.jpg" },
   ];
 
