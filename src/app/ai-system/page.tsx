@@ -3,6 +3,7 @@
 import { PublicFooter } from "@/components/layout/PublicFooter";
 import { Bot, Cpu, Lock, MessageSquare, Zap, Database } from "lucide-react";
 import Image from "next/image";
+import { InteractiveAutomationDemo } from "@/components/features/demo/InteractiveAutomationDemo";
 
 export default function AiSystemPage() {
     return (
@@ -100,6 +101,13 @@ export default function AiSystemPage() {
                             allowFullScreen
                         />
                     </div>
+                </div>
+            </section>
+
+            {/* Interactive Automation Live Demo Section (Core Feature) */}
+            <section className="py-20 bg-slate-950 relative overflow-hidden" id="automation-demo">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <InteractiveAutomationDemo />
                 </div>
             </section>
 

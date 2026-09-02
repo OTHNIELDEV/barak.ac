@@ -52,7 +52,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplat
                             {courseTitle}
                         </h3>
                         <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed mt-4">
-                            위 사람은 바락 아카데미의 소정의 과정을 성실히 이수하였으며,
+                            위 사람은 바라크아카데미 정규 교육과정(120강) 및 과목별 소감문 작성을 성실히 이수하였으며,
                             성령의 기름부으심 안에서 배운 바를 사역 현장에 적용할 준비가 되었음을 증명합니다.
                         </p>
                     </div>
@@ -67,12 +67,12 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplat
                         </div>
 
                         <div className="text-center">
-                            <div className="font-cursive text-2xl text-blue-900 mb-1" style={{ fontFamily: 'cursive' }}>
-                                Rev. Caleb Lee
+                            <div className="font-bold text-xl text-blue-900 mb-1" style={{ fontFamily: 'serif' }}>
+                                이윤주 목사 (Ph.D)
                             </div>
-                            <div className="text-lg font-bold text-slate-800">Rev. Caleb Lee</div>
-                            <div className="text-xs text-slate-400 uppercase tracking-wider border-t border-slate-300 pt-1 mt-2 w-48 mx-auto">
-                                Academy Director
+                            <div className="text-base font-bold text-slate-800">바라크아카데미 학장</div>
+                            <div className="text-[11px] text-slate-400 uppercase tracking-wider border-t border-slate-300 pt-1 mt-1 w-48 mx-auto">
+                                Barak Academy Dean
                             </div>
                         </div>
                     </div>

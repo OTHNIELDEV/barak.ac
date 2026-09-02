@@ -1,216 +1,389 @@
 "use client";
 
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { User, Award, BookOpen, GraduationCap, Mail } from "lucide-react";
+import { GraduationCap, Award, BookOpen, Sparkles, UserCheck, ArrowRight, Shield, Heart, Cpu, BookMarked } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function FacultyPage() {
-    const faculty = [
+    const facultyList = [
         {
             id: 1,
-            name: "Dr. Lee Caleb",
-            role: "President & Professor of Practical Theology",
-            bio: "Barak Academy의 설립자이자 갈렙 AI 시스템의 비전 제시자입니다. 전통적 신학과 현대 기술의 융합을 통해 다음 세대 목회자를 양성하는 데 헌신하고 있습니다.",
-            image: "/images/caleb-real-v2.png", // Existing asset
-            academics: ["Ph.D. in Practical Theology, Fuller Seminary", "M.Div. at Westminster Theological Seminary"],
-            expertise: ["Prophetic Leadership", "Church Administration", "AI in Ministry"]
+            name: "이윤주 학장 (Ph.D)",
+            title: "바라크아카데미 학장 / 총괄교수",
+            subject: "이윤주 박사의 성경해석학",
+            category: "성경해석학 & 실천신학",
+            badge: "학장 / 총괄교수",
+            accentColor: "from-amber-500 to-orange-600",
+            borderColor: "border-amber-400",
+            bio: "이화여대와 호서대에서 구약학을 전공하였으며, 사역 현장과 학문을 잇는 탁월한 성경해석으로 사모와 여성 사역자, 충성된 부목자들을 깨우는 영적 지도자입니다.",
+            image: "/images/faculty/lee-yoonju.jpg",
+            academics: [
+                "이화여자대학교 신학대학원 졸업 (Th.M)",
+                "호서대학교 일반대학원 구약학 졸업 (Ph.D)",
+            ],
+            careers: [
+                "바라크아카데미 학장",
+                "산해원교회 담임목사",
+                "제이합미션(JHOP Mission) 대표",
+                "한국기독교신학교협의회(한기신협) 이사"
+            ],
+            books: [
+                "이윤주 박사의 성경해석학 실무 강해",
+                "십자가의 도와 구속사적 여종 환원론",
+                "사사기 바락의 영성과 리더십"
+            ],
+            courses: [
+                "이윤주 박사의 성경해석학 (15강)",
+                "사사기적 영성과 바락 리더십 (15강)",
+                "말씀 중심의 실천 목회학"
+            ]
         },
         {
             id: 2,
-            name: "Rev. Sarah Kim",
-            role: "Dean of Deborah Track & Professor of Spirituality",
-            bio: "영적 분별력과 중보기도 사역의 권위자입니다. 드보라 트랙을 이끌며 예언적 리더십을 가진 여성 사역자들을 배출하고 있습니다.",
-            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop",
-            academics: ["D.Min in Spiritual Formation, Gordon-Conwell", "M.A. in Counseling"],
-            expertise: ["Intercessory Prayer", "Spiritual Discernment", "Christian Counseling"]
+            name: "송민원 교수",
+            title: "더바이블 무브먼트 대표 / 구약학 교수",
+            subject: "구약학 (Old Testament)",
+            category: "구약 신학 & 성서언어",
+            badge: "더바이블 무브먼트 대표",
+            accentColor: "from-blue-600 to-indigo-700",
+            borderColor: "border-blue-400",
+            bio: "서울대 독문과 및 시카고대 고대근동학, 맥코믹신학교 구약학을 전공하였으며, '바라크(ברך)'의 히브리어 어원적 영성을 제시한 세계적 성서언어·구약 신학자입니다.",
+            image: "/images/faculty/song-minwon.jpg",
+            academics: [
+                "서울대학교 독일문학 전공",
+                "맥코믹신학교(McCormick Theological Seminary) 구약 전공",
+                "시카고대학교(University of Chicago) 고대근동학 전공"
+            ],
+            careers: [
+                "더바이블 무브먼트 대표",
+                "Israel Institute of Biblical Studies 성서언어 분과 교수",
+                "바라크아카데미 구약학 전임교수"
+            ],
+            books: [
+                "지혜란 무엇인가: 잠언-욥기-전도서의 상호작용",
+                "히브리어의 시간",
+                "태초에 질문이 있었다",
+                "더바이블 욥기: 정답이 무너진 자리에서",
+                "더바이블 전도서: 성숙한 신앙을 위한 지혜",
+                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀 외 다수"
+            ],
+            courses: [
+                "구약 파노라마와 구속사 (15강)",
+                "히브리어 성경과 '바라크'의 본래적 영성",
+                "모세오경 및 지혜문학 심층 강해"
+            ]
         },
         {
             id: 3,
-            name: "Dr. David Park",
-            role: "Dean of Barak Track & Professor of Leadership",
-            bio: "전략적 기획과 실행의 전문가입니다. 바라크 트랙에서 실제적인 목회 행정과 팀 빌딩 전략을 가르칩니다.",
-            image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop",
-            academics: ["Ph.D. in Organizational Leadership, Regent University", "MBA, Seoul National University"],
-            expertise: ["Strategic Planning", "Team Building", "Crisis Management"]
+            name: "김영희 교수",
+            title: "신약학 교수",
+            subject: "신약학 (New Testament)",
+            category: "신약 신학 & 복음서",
+            badge: "신약학 전문가",
+            accentColor: "from-emerald-600 to-teal-700",
+            borderColor: "border-emerald-400",
+            bio: "복음서의 예수 그리스도 중심 구속사와 바울 신학을 현대 목회 현장의 실천적 제자도와 연결하는 명쾌한 강의를 펼칩니다.",
+            image: "/images/faculty/kim-younghee.jpg",
+            academics: [
+                "신약학 전공 (Ph.D / Th.M)",
+                "초대교회 사본학 및 바울신학 연구"
+            ],
+            careers: [
+                "바라크아카데미 신약학 교수",
+                "신약성경연구소 전문위원",
+                "목회자 성경연구원 외래교수"
+            ],
+            books: [
+                "사복음서와 하나님 나라의 구속사",
+                "바울서신에 나타난 초대교회 직분과 동역"
+            ],
+            courses: [
+                "신약 복음서와 하나님 나라 (15강)",
+                "바울서신과 초대교회 영성",
+                "신약 원어 주해와 설교 적용"
+            ]
         },
         {
             id: 4,
-            name: "Dr. James Han",
-            role: "Professor of Old Testament",
-            bio: "고대 근동학과 구약 원어에 정통한 학자입니다. 성경의 역사적 배경을 통해 현대 목회에 적용 가능한 통찰을 제시합니다.",
-            image: "https://images.unsplash.com/photo-1537511446984-935f663eb1f4?q=80&w=2670&auto=format&fit=crop",
-            academics: ["Ph.D. in Old Testament, Trinity Evangelical Divinity School", "Th.M., Chongshin University"],
-            expertise: ["Hebrew Exegesis", "Pentateuch", "Prophetic Literature"]
+            name: "전예령 교수 (Ph.D)",
+            title: "기독교교육학 교수 / 교육철학 박사",
+            subject: "기독교교육학 (Christian Education)",
+            category: "교육철학 & 세대 연합",
+            badge: "토론토대 교육철학 Ph.D",
+            accentColor: "from-purple-600 to-pink-600",
+            borderColor: "border-purple-400",
+            bio: "연세대 및 McMaster대 종교교육, 토론토대 교육철학 박사로서, 청장년 회복과 2세를 위한 교육 프락시스(Praxis)를 개발하고 사모 및 여성 지도자의 교육 리더십을 세웁니다.",
+            image: "/images/faculty/jeon-yeryeong.jpg",
+            academics: [
+                "연세대학교 종교교육 (M.A.)",
+                "McMaster University 종교교육 (M.A.)",
+                "University of Toronto 교육철학 (Ph.D)"
+            ],
+            careers: [
+                "서울신학대학교 교양학부 교수 활동",
+                "청장년(30-40세) 회복 신앙공동체 형성 및 2세 교육 프락시스 사역",
+                "바라크아카데미 기독교교육학 전임교수"
+            ],
+            books: [
+                "Caring- Application for Christian Ethics and Faith Education (신앙과지성사)",
+                "성찰의 힘으로서 대화: 사람들을 변화시키는 힘 (신앙과지성사, Joyce Bellous)",
+                "부모교육 교재 집필 (2017)"
+            ],
+            courses: [
+                "기독교 교육 철학과 영성형성 (15강)",
+                "세대 통합 교육과 회복의 프락시스",
+                "사모 및 여성 지도자를 위한 교육 목회론"
+            ]
         },
         {
             id: 5,
-            name: "Dr. Esther Choi",
-            role: "Professor of New Testament",
-            bio: "바울 신학과 초기 기독교 역사에 대한 깊은 이해를 바탕으로, 복음의 본질을 명쾌하게 강의합니다.",
-            image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop",
-            academics: ["Ph.D. in New Testament, University of Aberdeen", "M.Div., torch Trinity"],
-            expertise: ["Pauline Theology", "Gospels", "Greek Exegesis"]
+            name: "박은정 교수",
+            title: "목회상담학 교수",
+            subject: "목회상담학 (Pastoral Counseling)",
+            category: "치유 상담 & 영혼 돌봄",
+            badge: "목회상담 전문가",
+            accentColor: "from-rose-500 to-red-600",
+            borderColor: "border-rose-400",
+            bio: "사역 현장의 상처 입은 영혼과 목회자 가정을 돌보며, 사모 및 여성 사역자를 위한 정서적 회복과 성경적 상담 실무를 강의합니다.",
+            image: "/images/faculty/park-eunjung.jpg",
+            academics: [
+                "기독교상담학 및 가족치료 전공 (Ph.D)",
+                "한국목회상담협회 공인 전문가"
+            ],
+            careers: [
+                "바라크아카데미 목회상담학 교수",
+                "기독교상담클리닉 원장",
+                "목회자 사모 힐링센터 전문상담위원"
+            ],
+            books: [
+                "성경적 목회상담과 가정 회복",
+                "사역자의 자기돌봄과 영적 건강"
+            ],
+            courses: [
+                "성경적 목회상담과 가족치유 (15강)",
+                "위기상담과 여성사역자의 자기돌봄 (15강)",
+                "전인적 영성 치유와 회복 목회"
+            ]
         },
         {
             id: 6,
-            name: "Dr. Paul Jeong",
-            role: "Professor of Systematic Theology",
-            bio: "개혁주의 신학의 기틀 위에 현대적 이슈들을 신학적으로 조명하는 조직신학 전문가입니다.",
-            image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2670&auto=format&fit=crop",
-            academics: ["Ph.D. in Systematic Theology, Calvin Seminary", "Th.M., ACTS"],
-            expertise: ["Reformed Dogmatics", "Apologetics", "Christian Ethics"]
-        },
-        {
-            id: 7,
-            name: "Rev. Michael Ryu",
-            role: "Professor of Christian Counseling",
-            bio: "임상 경험이 풍부한 상담 전문가로서, 성경적 원리와 심리학적 기법을 통합하여 치유 사역을 돕습니다.",
-            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2574&auto=format&fit=crop",
-            academics: ["Ph.D. in Psychology & Theology, Rosemead", "M.Div., Hapdong"],
-            expertise: ["Pastoral Counseling", "Family Therapy", "Trauma Healing"]
-        },
-        {
-            id: 8,
-            name: "Dr. Grace Lee",
-            role: "Professor of Church History",
-            bio: "초대교회부터 현대교회까지 성령의 역사를 추적하며, 교회가 나아갈 방향을 제시하는 역사학자입니다.",
-            image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2576&auto=format&fit=crop",
-            academics: ["Ph.D. in Church History, Yale Divinity School", "M.A. in History"],
-            expertise: ["Reformation History", "Korean Church History", "Revivalism"]
-        },
-        {
-            id: 9,
-            name: "Rev. Peter Song",
-            role: "Professor of Missiology",
-            bio: "20년간의 선교 현장 경험을 바탕으로 선교적 교회론과 타문화권 사역의 실제를 가르칩니다.",
-            image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2574&auto=format&fit=crop",
-            academics: ["D.Miss, Fuller School of Intercultural Studies", "M.Div., Kosin"],
-            expertise: ["Urban Mission", "Cross-Cultural Ministry", "Church Planting"]
-        },
-        {
-            id: 10,
-            name: "Dr. Lydia Kang",
-            role: "Professor of Worship & Music",
-            bio: "예배의 신학적 의미와 실제적인 찬양 인도를 통합하여, 영과 진리로 드리는 예배자를 양성합니다.",
-            image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?q=80&w=2574&auto=format&fit=crop",
-            academics: ["D.W.S (Doctor of Worship Studies), Robert E. Webber", "M.Mus., Juilliard"],
-            expertise: ["Worship Theology", "Liturgical Design", "Church Music"]
+            name: "김종우 교수",
+            title: "AI와 기독교 교수",
+            subject: "AI와 기독교 (AI & Ministry)",
+            category: "미래 목회 & AI 사역",
+            badge: "스마트목회 선도자",
+            accentColor: "from-cyan-600 to-blue-600",
+            borderColor: "border-cyan-400",
+            bio: "생성형 AI와 최첨단 IT 기술을 복음 전파와 목회 사역에 거룩하게 전용하여, 시대를 앞서가는 스마트 사역자를 양성합니다.",
+            image: "/images/faculty/kim-jongwoo.jpg",
+            academics: [
+                "컴퓨터공학 및 기독교문화융합 전공",
+                "생성형 AI 목회 콘텐츠 연구개발"
+            ],
+            careers: [
+                "바라크아카데미 AI와 기독교 교수",
+                "스마트목회지원 연구소장",
+                "한국교회 AI 선교포럼 전문위원"
+            ],
+            books: [
+                "AI 시대의 목회와 복음 콘텐츠",
+                "프롬프트 엔지니어링으로 완성하는 설교 자료 구축"
+            ],
+            courses: [
+                "생성형 AI와 스마트 목회 콘텐츠 (15강)",
+                "AI를 활용한 성경 연구 및 설교 자료 구축",
+                "디지털 사역과 온라인 교회 개척"
+            ]
         }
     ];
 
     return (
-        <div className="flex flex-col min-h-screen bg-slate-50 font-sans pt-20">
-            {/* Hero Section */}
-            {/* Hero Section */}
-            <section className="relative py-32 overflow-hidden flex items-center justify-center min-h-[50vh] bg-white">
-                {/* Background Decor */}
+        <div className="flex flex-col min-h-screen bg-slate-50 font-sans text-slate-900 pt-20">
+            {/* 1. Hero Section */}
+            <section className="relative py-28 overflow-hidden flex items-center justify-center min-h-[50vh] bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white">
                 <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-100/50 blur-[100px] animate-pulse-slow" />
-                    <div className="absolute top-[20%] -right-[10%] w-[40%] h-[50%] rounded-full bg-purple-100/50 blur-[100px] animate-pulse-slow delay-1000" />
+                    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[100px] animate-pulse-slow" />
+                    <div className="absolute top-[20%] -right-[10%] w-[40%] h-[50%] rounded-full bg-amber-500/15 blur-[100px] animate-pulse-slow delay-1000" />
                 </div>
 
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white z-20" />
+                <div className="relative z-20 max-w-5xl mx-auto px-4 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 shadow-sm"
+                    >
+                        <GraduationCap className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs md:text-sm font-bold tracking-widest uppercase">World-Class Theological Faculty</span>
+                    </motion.div>
 
-                {/* Hero Image with Gradient Fade */}
-                <div
-                    className="absolute inset-0 opacity-50 bg-[url('https://images.unsplash.com/photo-1564981797816-1043664bf78d?q=80&w=2576&auto=format&fit=crop')] bg-cover bg-center"
-                    style={{ maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)' }}
-                />
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.1 }}
+                        className="text-4xl md:text-6xl font-black tracking-tight text-white mb-6 leading-tight"
+                    >
+                        바라크아카데미 교수진
+                    </motion.h1>
 
-                <div className="relative z-30 max-w-7xl mx-auto px-4 text-center">
-                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-blue-200 text-blue-700 shadow-sm animate-fade-in-up ring-1 ring-blue-100">
-                        <GraduationCap className="w-4 h-4" />
-                        <span className="text-sm font-bold tracking-widest uppercase">Faculty & Leadership</span>
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 tracking-tight animate-fade-in-up delay-100 drop-shadow-sm">
-                        World-Class Theologians
-                    </h1>
-                    <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-                        신학적 깊이와 목회적 통찰력을 겸비한 <span className="text-slate-900 font-bold relative inline-block">
-                            바라크 아카데미의 교수진
-                            <span className="absolute bottom-1 left-0 w-full h-2 bg-blue-200/50 -z-10 rounded-full"></span>
-                        </span>.<br className="hidden md:block" />
-                        하나님의 말씀을 바르게 분별하고, 시대를 이끌어갈 영적 리더를 양성합니다.
-                    </p>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.2 }}
+                        className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light"
+                    >
+                        성경의 깊이와 사역의 실전, 그리고 미래 AI 기술을 아우르는<br />
+                        <span className="text-amber-300 font-semibold">6인의 최고 권위 교수진</span>이 여러분과 함께합니다.
+                    </motion.p>
                 </div>
             </section>
 
-            {/* Faculty Grid */}
-            <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {faculty.map((member) => (
-                        <div key={member.id} className="bg-white rounded-[2rem] overflow-hidden shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-300 group border border-slate-100 flex flex-col h-full">
-                            {/* Image Area */}
-                            <div className="relative h-80 overflow-hidden bg-slate-100">
-                                <Image
-                                    src={member.image}
-                                    alt={member.name}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
-                                <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                                    <p className="text-amber-400 font-bold text-xs tracking-widest uppercase mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                                        {member.role.split('&')[0]}
-                                    </p>
-                                    <h3 className="text-2xl font-bold leading-tight">{member.name}</h3>
-                                    <p className="text-slate-300 text-sm mt-1 opacity-90">{member.role}</p>
-                                </div>
-                            </div>
+            {/* 2. Faculty Cards Grid */}
+            <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {facultyList.map((prof, index) => (
+                        <motion.div
+                            key={prof.id}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
+                        >
+                            <div>
+                                {/* Top Header Info */}
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
+                                    <div className={`relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden flex-shrink-0 border-3 ${prof.borderColor} shadow-md`}>
+                                        <Image
+                                            src={prof.image}
+                                            alt={prof.name}
+                                            fill
+                                            className="object-cover object-top"
+                                        />
+                                    </div>
 
-                            {/* Content Area */}
-                            <div className="p-8 flex-1 flex flex-col">
-                                <p className="text-slate-600 mb-8 leading-relaxed text-sm flex-1">
-                                    {member.bio}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <span className={`px-3 py-0.5 rounded-full text-xs font-bold text-white bg-gradient-to-r ${prof.accentColor}`}>
+                                                {prof.badge}
+                                            </span>
+                                            <span className="text-xs text-slate-400 font-medium">
+                                                {prof.category}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="text-2xl font-black text-slate-900 leading-tight">
+                                            {prof.name}
+                                        </h3>
+                                        <p className="text-sm font-bold text-blue-900 mt-1">
+                                            {prof.title}
+                                        </p>
+                                        <p className="text-xs text-amber-700 font-semibold mt-0.5">
+                                            담당과목: {prof.subject}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Bio Paragraph */}
+                                <p className="text-slate-700 text-sm leading-relaxed mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                    {prof.bio}
                                 </p>
 
-                                <div className="space-y-6 mt-auto">
-                                    <div className="pt-6 border-t border-slate-100">
-                                        <h4 className="flex items-center gap-2 text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider">
+                                {/* Academics & Careers */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-xs">
+                                    <div className="space-y-2">
+                                        <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
                                             <GraduationCap className="w-4 h-4 text-blue-900" />
-                                            Academics
+                                            주요 학력 (Academics)
                                         </h4>
-                                        <ul className="space-y-2">
-                                            {member.academics.map((deg, i) => (
-                                                <li key={i} className="text-xs text-slate-500 pl-4 relative before:absolute before:left-0 before:top-1.5 before:w-1.5 before:h-1.5 before:bg-blue-200 before:rounded-full">
-                                                    {deg}
+                                        <ul className="space-y-1 text-slate-600">
+                                            {prof.academics.map((ac, idx) => (
+                                                <li key={idx} className="flex items-start gap-1.5">
+                                                    <span className="text-amber-500 font-bold">•</span>
+                                                    <span>{ac}</span>
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
 
-                                    <div>
-                                        <h4 className="flex items-center gap-2 text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider">
-                                            <Award className="w-4 h-4 text-amber-500" />
-                                            Expertise
+                                    <div className="space-y-2">
+                                        <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                                            <Award className="w-4 h-4 text-amber-600" />
+                                            주요 경력 (Careers)
                                         </h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {member.expertise.map((exp, i) => (
-                                                <span key={i} className="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-semibold border border-slate-200">
-                                                    {exp}
-                                                </span>
+                                        <ul className="space-y-1 text-slate-600">
+                                            {prof.careers.map((cr, idx) => (
+                                                <li key={idx} className="flex items-start gap-1.5">
+                                                    <span className="text-blue-900 font-bold">•</span>
+                                                    <span>{cr}</span>
+                                                </li>
                                             ))}
-                                        </div>
+                                        </ul>
                                     </div>
                                 </div>
+
+                                {/* Books / Publications (저서) */}
+                                {prof.books && prof.books.length > 0 && (
+                                    <div className="mb-6 p-4 bg-amber-50/60 rounded-2xl border border-amber-200/60 text-xs">
+                                        <h4 className="font-bold text-amber-950 mb-2 flex items-center gap-1.5">
+                                            <BookMarked className="w-4 h-4 text-amber-700" />
+                                            대표 저서 및 연구 (Publications)
+                                        </h4>
+                                        <ul className="space-y-1 text-amber-900">
+                                            {prof.books.map((bk, idx) => (
+                                                <li key={idx} className="flex items-start gap-1.5">
+                                                    <span className="text-amber-700 font-bold">✓</span>
+                                                    <span>{bk}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
-                        </div>
+
+                            {/* Assigned Courses Bottom */}
+                            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">
+                                    바라크아카데미 정규 개설 강좌
+                                </span>
+                                <Link
+                                    href="/curriculum"
+                                    className="text-xs font-bold text-blue-900 hover:text-amber-600 flex items-center gap-1 transition-colors"
+                                >
+                                    커리큘럼 보기 <ArrowRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </div>
+                        </motion.div>
                     ))}
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-24 bg-white text-center">
-                <div className="max-w-4xl mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-6">
-                        최고의 스승과 함께하는 여정
+            {/* 3. Bottom CTA Section */}
+            <section className="py-20 bg-white border-t border-slate-200">
+                <div className="max-w-4xl mx-auto px-4 text-center">
+                    <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Enrollment Open</span>
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2 mb-4">
+                        최고의 교수진과 함께 새 시대의 사역자로 거듭나십시오
                     </h2>
-                    <p className="text-slate-600 text-lg mb-10 max-w-2xl mx-auto">
-                        바라크 아카데미의 교수진은 단순한 지식 전달자가 아닌, 여러분의 영적 여정을 함께하는 멘토가 되어드릴 것입니다.
+                    <p className="text-slate-600 text-base md:text-lg mb-8 max-w-2xl mx-auto font-light">
+                        100% 온라인 녹화 영상 강의와 평생 자율 수강, 시험 없는 소감문 중심의 실전 교육이 기다립니다.
                     </p>
-                    <button className="px-8 py-4 bg-blue-900 text-white rounded-full font-bold text-lg hover:bg-blue-800 transition-colors shadow-lg hover:shadow-xl shadow-blue-900/20">
-                        입학 상담 신청하기
-                    </button>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <Link
+                            href="/apply"
+                            className="px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-base hover:from-amber-400 hover:to-orange-400 transition-all shadow-xl flex items-center gap-2"
+                        >
+                            2026학년도 1기 입학 지원 <ArrowRight className="w-5 h-5" />
+                        </Link>
+                        <Link
+                            href="/curriculum"
+                            className="px-8 py-4 rounded-full border border-slate-300 text-slate-800 font-bold text-base hover:bg-slate-100 transition-all"
+                        >
+                            전체 교육과정 보기
+                        </Link>
+                    </div>
                 </div>
             </section>
 

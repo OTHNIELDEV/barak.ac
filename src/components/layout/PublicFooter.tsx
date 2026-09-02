@@ -23,33 +23,34 @@ export function PublicFooter() {
                     <div className="col-span-1 flex flex-col items-start md:items-center">
                         <h4 className="text-white font-bold mb-6">아카데미</h4>
                         <div className="flex flex-col space-y-4 text-sm font-medium md:text-center">
-                            <Link href="/about" className="hover:text-amber-400 transition-colors">아카데미 비전</Link>
-                            <Link href="/curriculum" className="hover:text-amber-400 transition-colors">교육 과정</Link>
+                            <Link href="/about" className="hover:text-amber-400 transition-colors">설립 취지 및 비전</Link>
                             <Link href="/faculty" className="hover:text-amber-400 transition-colors">교수진 소개</Link>
+                            <Link href="/curriculum" className="hover:text-amber-400 transition-colors">4학기 교육과정</Link>
+                            <Link href="/apply" className="hover:text-amber-400 transition-colors font-bold text-amber-300">신입생 모집요강</Link>
                         </div>
                     </div>
 
                     {/* 3. Menu 2: Community (Center Right) */}
                     <div className="col-span-1 flex flex-col items-start md:items-center">
-                        <h4 className="text-white font-bold mb-6">커뮤니티</h4>
+                        <h4 className="text-white font-bold mb-6">사역 & 커뮤니티</h4>
                         <div className="flex flex-col space-y-4 text-sm font-medium md:text-center">
-                            <Link href="/ai-system" className="hover:text-amber-400 transition-colors">갈렙 AI</Link>
                             <Link href="/chapel" className="hover:text-amber-400 transition-colors">산해원 채플</Link>
-                            <Link href="/dashboard/community" className="hover:text-amber-400 transition-colors">커뮤니티</Link>
-                            <Link href="http://localhost:5173" target="_blank" className="hover:text-amber-400 transition-colors">산해원교회</Link>
+                            <Link href="/ai-system" className="hover:text-amber-400 transition-colors">갈렙 AI 시스템</Link>
+                            <Link href="/dashboard/community" className="hover:text-amber-400 transition-colors">동문 커뮤니티</Link>
+                            <Link href="/login?mode=signup" className="hover:text-amber-400 transition-colors">온라인 등록</Link>
                         </div>
                     </div>
 
                     {/* 4. Contact (Right) */}
                     <div className="col-span-1 flex flex-col items-start md:items-end">
                         <h4 className="text-white font-bold mb-6">문의처</h4>
-                        <ul className="space-y-4 text-sm text-slate-400 md:text-right">
-                            <li>설립자: 이갈렙 목사</li>
-                            <li>Email: contact@barak.ac</li>
-                            <li>Tel: 02-1234-5678</li>
-                            <li className="pt-2 text-xs text-slate-600 leading-relaxed">
-                                서울특별시 강남구 테헤란로 123<br />
-                                바라크 아카데미 본부
+                        <ul className="space-y-3 text-sm text-slate-400 md:text-right">
+                            <li><strong className="text-slate-200">학장:</strong> 이윤주 목사 (Ph.D)</li>
+                            <li><strong className="text-slate-200">대표 사역:</strong> 산해원교회 / 제이합미션</li>
+                            <li><strong className="text-slate-200">Email:</strong> contact@barak.ac</li>
+                            <li className="pt-2 text-xs text-slate-500 leading-relaxed">
+                                새 시대에 요구되는 성경 중심의 온라인 신학교<br />
+                                <strong>바라크아카데미 (BARAK ACADEMY)</strong>
                             </li>
                         </ul>
                     </div>

@@ -1,136 +1,295 @@
 "use client";
 
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Shield, Target, Heart, Globe, Users } from "lucide-react";
+import { Shield, Target, Heart, Globe, Users, BookOpen, Sparkles, CheckCircle2, Award, ArrowRight, Flame, ScrollText, Cross } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function AboutPage() {
     return (
         <div className="flex flex-col min-h-screen bg-slate-50 font-sans text-slate-900 pt-20">
-            {/* Hero Section */}
-
-            {/* Hero Section */}
-            {/* Hero Section */}
-            <section className="relative py-32 overflow-hidden flex items-center justify-center min-h-[50vh] bg-white">
-                {/* Background Decor */}
+            {/* 1. Hero Section */}
+            <section className="relative py-32 overflow-hidden flex items-center justify-center min-h-[55vh] bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white">
                 <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-100/50 blur-[100px] animate-pulse-slow" />
-                    <div className="absolute top-[20%] -right-[10%] w-[40%] h-[50%] rounded-full bg-purple-100/50 blur-[100px] animate-pulse-slow delay-1000" />
+                    <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-blue-600/20 blur-[120px] animate-pulse-slow" />
+                    <div className="absolute top-[30%] -right-[10%] w-[50%] h-[60%] rounded-full bg-amber-500/15 blur-[120px] animate-pulse-slow delay-1000" />
                 </div>
 
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white z-20" />
+                <div className="relative z-20 max-w-5xl mx-auto px-4 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 shadow-sm"
+                    >
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs md:text-sm font-bold tracking-widest uppercase">Barak Academy Vision & Theology</span>
+                    </motion.div>
 
-                {/* Hero Image with Gradient Fade */}
-                <div
-                    className="absolute inset-0 opacity-50 bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2674&auto=format&fit=crop')] bg-cover bg-center"
-                    style={{ maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)' }}
-                />
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.1 }}
+                        className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-white mb-6 leading-tight"
+                    >
+                        바라크 아카데미<br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
+                            설립 취지 및 구속사적 목적
+                        </span>
+                    </motion.h1>
 
-                <div className="relative z-30 max-w-7xl mx-auto px-4 text-center">
-                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-blue-200 text-blue-700 shadow-sm animate-fade-in-up ring-1 ring-blue-100">
-                        <Globe className="w-4 h-4" />
-                        <span className="text-sm font-bold tracking-widest uppercase">Academy Vision</span>
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 tracking-tight animate-fade-in-up delay-100 drop-shadow-sm">
-                        아카데미 비전
-                    </h1>
-                    <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-                        바라크 아카데미는 마지막 때를 준비하며,<br />
-                        하나님의 말씀과 성령의 능력으로 무장된 <span className="text-slate-900 font-bold relative inline-block">
-                            실전형 영적 리더
-                            <span className="absolute bottom-1 left-0 w-full h-2 bg-yellow-200/50 -z-10 rounded-full"></span>
-                        </span>를 양성합니다.
-                    </p>
-                </div>
-            </section>
-
-            {/* Mission Statement */}
-            <section className="py-20 bg-white">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-8 text-blue-900">
-                        <Target className="w-8 h-8" />
-                    </div>
-                    <h2 className="text-3xl font-bold text-slate-900 mb-8">Establishment Purpose</h2>
-                    <p className="text-lg text-slate-600 leading-8 mb-12">
-                        현대 교회는 전례 없는 도전 앞에 서 있습니다. 전통적인 신학 교육만으로는 급변하는 시대와 영적 전쟁의 현장에 즉각적으로 대응하기 어렵습니다. 바라크 아카데미는 <strong className="text-blue-900">"드보라의 영적 통찰력과 바라크의 전략적 실행력"</strong>을 겸비한 사역자를 길러내기 위해 설립되었습니다. 우리는 학문적 지식을 넘어, 사역 현장에서 즉시 적용 가능한 실무 능력과 영성을 배양하는 데 집중합니다.
-                    </p>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.2 }}
+                        className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light"
+                    >
+                        바락 부목 · 드보라 여목 · 야엘 평신도 전도인<br />
+                        하나님 앞에 겸손히 무릎 꿇는 영성(<span className="text-amber-300 font-medium">ברך</span>)으로 새 시대 사역자를 세웁니다.
+                    </motion.p>
                 </div>
             </section>
 
-            {/* Core Values */}
-            <section className="py-20 bg-slate-50">
+            {/* 2. 3 Key Biblical Archetypes (Barak, Deborah, Jael) */}
+            <section className="py-24 bg-white relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-slate-900">Core Values</h2>
-                        <p className="mt-4 text-slate-600">우리가 지키고 따르는 핵심 가치입니다.</p>
+                    <div className="text-center max-w-3xl mx-auto mb-16">
+                        <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">3 Biblical Archetypes</span>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
+                            바라크아카데미 3대 사역 모델
+                        </h2>
+                        <p className="text-slate-600 mt-3 text-base md:text-lg">
+                            2025 해운대 세미나에서 선포된 하나님 나라의 실전적 사역자 원형
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            {
-                                icon: Shield,
-                                title: "Biblical Truth",
-                                desc: "타협하지 않는 성경적 진리 수호. 모든 가르침은 오직 기록된 하나님의 말씀에 기초합니다."
-                            },
-                            {
-                                icon: Heart,
-                                title: "Spirit-Filled Life",
-                                desc: "성령의 임재와 동행하는 삶. 지성을 넘어선 영성의 깊이를 추구하며 기도의 능력을 체험합니다."
-                            },
-                            {
-                                icon: Globe,
-                                title: "Global Mission",
-                                desc: "열방을 향한 선교적 사명. 지역 교회를 넘어 열방을 품고 나아가는 하나님 나라의 확장을 꿈꿉니다."
-                            }
-                        ].map((value, idx) => (
-                            <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-lg transition-shadow">
-                                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6 text-blue-900">
-                                    <value.icon className="w-6 h-6" />
+                        {/* 1. Barak - Assistant Pastor */}
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                            <div>
+                                <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-900 flex items-center justify-center mb-6">
+                                    <Shield className="w-7 h-7" />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-3">{value.title}</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    {value.desc}
+                                <span className="text-xs font-bold text-blue-900 bg-blue-200/60 px-3 py-1 rounded-full uppercase">
+                                    바락 (Barak) • 충성된 전문 부목사
+                                </span>
+                                <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
+                                    더 나은 존귀를 얻은 부목사
+                                </h3>
+                                <p className="text-slate-700 text-sm leading-relaxed mb-4">
+                                    담임목사 역 여선지 사사 드보라를 백성들 앞에 존귀히 여김 받도록 시종일관 보좌하여, 그 사사보다 오히려 <strong>[히 11:35] 더 좋은 부활, [히 11:32] 더 나은 존귀</strong>를 얻은 충성된 부목사의 원형입니다.
                                 </p>
                             </div>
-                        ))}
+                            <div className="p-4 bg-white rounded-2xl text-xs text-slate-600 border border-slate-100">
+                                약한 드보라들로 40년 태평 사사를 가능케 했던 바락처럼 교회를 든든히 받치는 최고의 동역자
+                            </div>
+                        </div>
+
+                        {/* 2. Deborah - Women Senior Pastor / Leader */}
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                            <div>
+                                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center mb-6">
+                                    <Sparkles className="w-7 h-7" />
+                                </div>
+                                <span className="text-xs font-bold text-amber-900 bg-amber-200/60 px-3 py-1 rounded-full uppercase">
+                                    드보라 (Deborah) • 여목 / 영적 지도자
+                                </span>
+                                <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
+                                    말씀과 영적 통찰의 여선지자
+                                </h3>
+                                <p className="text-slate-700 text-sm leading-relaxed mb-4">
+                                    하나님의 말씀을 받아 백성을 재판하고 영적 방향을 제시한 여선지 사사로서, 오늘날 시대를 분별하고 양 떼를 먹이는 <strong>여성 담임목회자 및 영적 지도자</strong>의 모형입니다.
+                                </p>
+                            </div>
+                            <div className="p-4 bg-white rounded-2xl text-xs text-slate-600 border border-slate-100">
+                                십자가 완성 후 만민에게 부어주신 성령의 영감으로 교회를 이끄는 예언자적 리더십
+                            </div>
+                        </div>
+
+                        {/* 3. Jael - Lay Evangelist */}
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                            <div>
+                                <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-900 flex items-center justify-center mb-6">
+                                    <Heart className="w-7 h-7" />
+                                </div>
+                                <span className="text-xs font-bold text-purple-900 bg-purple-200/60 px-3 py-1 rounded-full uppercase">
+                                    야엘 (Jael) • 평민 전도인 / 평신도 사역자
+                                </span>
+                                <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
+                                    결정적 승리를 거둔 평신도 승부수
+                                </h3>
+                                <p className="text-slate-700 text-sm leading-relaxed mb-4">
+                                    평민 여성으로서 결행한 일로 [삿 5:24-27] 바락과 드보라의 찬양을 받고, 온 백성으로 하여금 빌립, 스데반 집사같이 하나님께 영광을 돌리게 한 <strong>평신도 전문인 전도인</strong>의 표상입니다.
+                                </p>
+                            </div>
+                            <div className="p-4 bg-white rounded-2xl text-xs text-slate-600 border border-slate-100">
+                                일상과 직장의 현장에서 영적 전쟁의 쐐기를 박고 복음의 승리를 결행하는 사역자
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Founder's Message */}
-            <section className="py-20 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="bg-blue-900 rounded-3xl p-8 md:p-12 lg:flex items-center gap-12 relative overflow-hidden">
-                        {/* Background Pattern */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+            {/* 3. Redemptive Theological Foundation (이윤주 박사/목사 해운대 세미나 선언) */}
+            <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="text-center max-w-3xl mx-auto mb-16">
+                        <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">Redemptive Theology</span>
+                        <h2 className="text-3xl md:text-5xl font-black text-white mt-2">
+                            구속사적 신학 배경과 여종의 환원
+                        </h2>
+                        <p className="text-slate-300 mt-4 text-base md:text-lg font-light">
+                            십자가의 도의 완성으로 다시금 여종 삼으시는 하나님의 섭리
+                        </p>
+                    </div>
 
-                        <div className="lg:w-1/3 mb-8 lg:mb-0 relative">
-                            <div className="aspect-[4/5] bg-slate-300 rounded-2xl overflow-hidden shadow-2xl relative group">
-                                {/* Placeholder for Founder Image */}
-                                <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500">
-                                    <Users className="w-16 h-16 mb-2" />
+                    <div className="bg-slate-800/90 rounded-3xl p-8 md:p-12 border border-slate-700 space-y-8 leading-relaxed text-slate-200 text-sm md:text-base">
+                        <div className="space-y-4">
+                            <h3 className="text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
+                                <Cross className="w-6 h-6 text-amber-400" />
+                                1. 십자가의 도와 단번의 영원한 제사
+                            </h3>
+                            <p>
+                                <strong>[창 22:16-18]</strong> 아브라함과 모리아에서 여호와이레 언약으로 시작된 <strong>[고전 1:18]「십자가의 도」</strong>, 곧 <strong>[마 1:1]</strong> 예수 그리스도의 세계가 다윗과 <strong>[사 53장]</strong>을 거쳐 마침내 <strong>[요 1:14]</strong> 말씀이 육신이 되셨습니다.
+                            </p>
+                            <p>
+                                대제사장들이 해마다 드려야 했던 제사를 예수님은 <strong>[히 7:27, 10:12]「단번(Once for all)」</strong>으로 자기를 드려 단 한 번의 영원한 제사로 완성하시고 <strong>[요 19:30] “다 이루었다”</strong> 선언하셨습니다.
+                            </p>
+                        </div>
+
+                        <div className="border-t border-slate-700 pt-6 space-y-4">
+                            <h3 className="text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
+                                <Flame className="w-6 h-6 text-amber-400" />
+                                2. 말세의 성령 부으심과 여성 사역자의 본래적 회복
+                            </h3>
+                            <p>
+                                주님의 부활 승천 후, 하나님께서는 <strong>[욜 2:28-29, 행 2:17]</strong> 요엘로 약속하신 당신의 성령을 모든 육체와 종들에게 부어주셨습니다.
+                            </p>
+                            <p className="bg-slate-900/60 p-5 rounded-2xl border-l-4 border-amber-400 italic text-amber-100">
+                                “헌데 이때부터는 [행 2:18] 여자들도 남종같이 당신의 여종 삼으시기를, 십자가 도 세계 전의 [창 3:20] 모든 산 자의 어미 하와같이, [창 17:16] 열국의 어미 사라같이 다시금 여종 삼으심이라.”
+                            </p>
+                            <p>
+                                구약 시대에 남종 제사장과 수컷 제물로 한정했던 것은 하나님의 독생자(아들)가 보내어질 것에 대한 모형이었으며, 십자가의 도가 완성됨으로써 <strong>남종과 여종 모두를 거룩한 사역자로 세우시는 본래의 구속사 세계로 환원</strong>하셨습니다.
+                            </p>
+                        </div>
+
+                        <div className="border-t border-slate-700 pt-6 space-y-4">
+                            <h3 className="text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
+                                <Award className="w-6 h-6 text-amber-400" />
+                                3. 교단 신학을 넘어선 은사자들의 학덕 무장
+                            </h3>
+                            <p>
+                                하나님께서는 교단 신학을 거치지 않은 자들의 경우에도 <strong>[행 2:39]</strong> 얼마든지 부르시어 <strong>[고전 12:4-11]</strong> 성령으로 기름 부으시고 지혜, 지식, 신유, 능력, 예언, 방언, 통역의 은사를 주십니다.
+                            </p>
+                            <p>
+                                바라크아카데미는 성령으로 기름 부음을 이미 받은 이들에게 지도자로서 필수적인 <strong>학덕 과목(성경해석학, 구약학, 신약학, 기독교교육학, 목회상담학, AI사역)</strong>을 제공하여, <strong>바락 같은 부목사, 드보라 같은 여목·남목, 야엘 같은 평신도 전도인을 양성하고 자격 증표를 수여</strong>하여 교회들이 임직하는 절차에 모자람이 없게 하고자 합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 4. Recommendation Message (학장 이윤주 박사의 추천의 말씀) */}
+            <section className="py-24 bg-slate-50">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="bg-white rounded-3xl p-8 md:p-14 shadow-xl border border-slate-200">
+                        <div className="flex items-center gap-3 mb-6">
+                            <ScrollText className="w-8 h-8 text-blue-900" />
+                            <span className="text-xs md:text-sm font-bold text-blue-900 tracking-widest uppercase">Special Recommendation</span>
+                        </div>
+
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
+                            추천의 말씀 <span className="text-lg font-normal text-slate-500">- 학장 이윤주 박사 (목사)</span>
+                        </h2>
+
+                        <div className="space-y-6 text-slate-700 text-base md:text-lg leading-relaxed font-light">
+                            <p className="bg-blue-50/50 p-6 rounded-2xl border-l-4 border-blue-900 font-normal text-slate-900">
+                                “현재의 교단 신학 기관들로 남종, 담임목사 양성은 모자람이 없음 때문으로 본 아카데미 프로그램이 남종보다는 <strong>여종</strong>, 담임목사보다는 <strong>전문 부목사</strong>에 비중이 주어졌음입니다.”
+                            </p>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                                    <h4 className="font-bold text-slate-900 text-lg mb-2 flex items-center gap-2">
+                                        <Heart className="w-5 h-5 text-amber-500" />
+                                        현역 목사 및 사모님들께
+                                    </h4>
+                                    <p className="text-sm text-slate-600 leading-relaxed">
+                                        성령과 불의 세례로 각양 은사를 받았음에도 제도적 직임 자격이 주어지지 않아 바락·드보라로 온전히 동사하지 못하고 계신 분들에게 거룩한 사역의 문을 활짝 열어드립니다.
+                                    </p>
                                 </div>
-                                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
-                                    <div className="font-bold text-xl">Rev. Caleb Lee</div>
-                                    <div className="text-sm text-blue-200">Founder & President</div>
+
+                                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                                    <h4 className="font-bold text-slate-900 text-lg mb-2 flex items-center gap-2">
+                                        <Users className="w-5 h-5 text-blue-900" />
+                                        은퇴 및 원로 목회자(65세 이상) 분들께
+                                    </h4>
+                                    <p className="text-sm text-slate-600 leading-relaxed">
+                                        100세 시대에 65세 은퇴 후 원로·은퇴 목사 지위로 여생을 채우시기보다, 본원의 '바락'과 같은 충성된 전문 부목자로 헌신한다면 <strong>[히 11:35b] 더 좋은 부활, [히 11:32] 더 큰 존귀함</strong>에 이름이 기록될 것입니다!
+                                    </p>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
 
-                        <div className="lg:w-2/3 text-white">
-                            <h2 className="text-3xl font-bold mb-6">설립자의 인사말</h2>
-                            <div className="space-y-6 text-blue-100 text-lg leading-relaxed">
-                                <p>
-                                    "사랑하는 동역자 여러분, 지금은 깨어 기도할 때입니다. 하나님께서는 마지막 추수를 위해 준비된 일꾼을 찾고 계십니다."
+            {/* 5. Director Profile Card */}
+            <section className="py-20 bg-white border-t border-slate-200">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 rounded-[2.5rem] p-8 md:p-14 text-white shadow-2xl relative overflow-hidden">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                            {/* Profile Left */}
+                            <div className="lg:col-span-5 text-center">
+                                <div className="relative w-44 h-44 mx-auto rounded-full overflow-hidden mb-6 border-4 border-amber-400/90 shadow-2xl">
+                                    <Image
+                                        src="/images/faculty/lee-yoonju.jpg"
+                                        alt="이윤주 박사 (학장 / 목사)"
+                                        fill
+                                        className="object-cover object-top"
+                                    />
+                                </div>
+                                <h3 className="text-2xl font-bold text-white">이윤주 박사 <span className="text-sm text-amber-300 font-normal">(학장 / 목사)</span></h3>
+                                <p className="text-amber-300 font-medium text-xs mt-1 mb-4">바라크아카데미 학장 / 산해원교회 담임목사</p>
+                                
+                                <div className="text-left bg-black/30 rounded-2xl p-4 space-y-1.5 text-xs text-slate-200 border border-white/10">
+                                    <p>• 이화여자대학교 신학대학원 졸업 (Th.M)</p>
+                                    <p>• 호서대학교 일반대학원 구약학 졸업 (Ph.D)</p>
+                                    <p>• 제이합미션(JHOP Mission) 대표</p>
+                                    <p>• 한국기독교신학교협의회(한기신협) 이사</p>
+                                    <p>• 산해원교회 담임목사</p>
+                                    <p>• 바라크아카데미 학장</p>
+                                </div>
+                            </div>
+
+                            {/* Message Right */}
+                            <div className="lg:col-span-7 space-y-5">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase">
+                                    Director's Message
+                                </div>
+                                <h2 className="text-2xl md:text-4xl font-black text-white leading-tight">
+                                    “이 부르심은 하나님께서 주신<br />
+                                    마지막 거룩한 사명입니다.”
+                                </h2>
+                                <p className="text-slate-200 text-sm md:text-base leading-relaxed font-light">
+                                    바라크아카데미는 성령의 불세례를 받고도 사역의 길을 찾지 못하던 여종들과 충성된 부목자들을 위해 예비된 하나님의 섭리입니다. 지식의 신학을 넘어 영성과 권능이 겸비된 참된 리더십의 길에 동참하시길 축복합니다.
                                 </p>
-                                <p>
-                                    바라크 아카데미는 단순한 지식 전달의 장이 아닙니다. 이곳은 영적 야성을 회복하고, 거룩한 군사로 훈련받는 훈련소입니다. AI 기술은 도구일 뿐입니다. 그 도구를 사용하는 사람의 영성이 무엇보다 중요합니다.
-                                </p>
-                                <p>
-                                    이곳에서 여러분의 부르심을 확인하고, 하나님 나라의 거룩한 전략가로 거듭나시기를 축복합니다.
-                                </p>
+                                <div className="pt-4 flex gap-4">
+                                    <Link
+                                        href="/apply"
+                                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-sm hover:from-amber-400 hover:to-orange-400 transition-all shadow-lg"
+                                    >
+                                        입학 원서 접수 <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                    <Link
+                                        href="/curriculum"
+                                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white font-bold text-sm hover:bg-white/20 transition-all"
+                                    >
+                                        교육과정 안내
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>

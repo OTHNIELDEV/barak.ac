@@ -30,9 +30,9 @@ export function Header() {
         { name: "아카데미소개", href: "/about" },
         { name: "교수진소개", href: "/faculty" },
         { name: "교육과정", href: "/curriculum" },
-        { name: "갈렙AI", href: "/ai-system" },
+        { name: "모집요강", href: "/apply" },
         { name: "산해원채플", href: "/chapel" },
-        { name: "커뮤니티", href: "/dashboard/community" },
+        { name: "갈렙AI", href: "/ai-system" },
     ];
 
     return (

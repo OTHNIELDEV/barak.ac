@@ -37,7 +37,7 @@ export default function CalebTutorPage() {
                 {/* Background Blur */}
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src="/images/caleb-real-v2.png"
+                        src="/images/caleb-tutor.jpg"
                         alt="Caleb Background"
                         fill
                         className="object-cover opacity-30 blur-2xl scale-110"
@@ -53,10 +53,10 @@ export default function CalebTutorPage() {
                         className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 ring-1 ring-white/5"
                     >
                         <Image
-                            src="/images/caleb-real-v2.png"
+                            src="/images/caleb-tutor.jpg"
                             alt="Caleb AI Twin"
                             fill
-                            className="object-contain bg-black"
+                            className="object-cover"
                         />
                         {/* Status Overlay */}
                         <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">

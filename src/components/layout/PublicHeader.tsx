@@ -10,17 +10,14 @@ export function PublicHeader() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
 
-    const navItems = [
-        { name: "아카데미 비전", href: "/about" },
-        { name: "교육 과정", href: "/curriculum" },
-        { name: "AI 시스템", href: "/ai-system" },
-        // { name: "커뮤니티", href: "/dashboard/community" }, // Community is usually for logged in users, but we can link to dashboard
-    ];
-
     const publicNavItems = [
-        ...navItems,
-        { name: "커뮤니티", href: "/dashboard/community" }
-    ]
+        { name: "아카데미소개", href: "/about" },
+        { name: "교수진소개", href: "/faculty" },
+        { name: "교육과정", href: "/curriculum" },
+        { name: "모집요강", href: "/apply" },
+        { name: "산해원채플", href: "/chapel" },
+        { name: "갈렙AI", href: "/ai-system" },
+    ];
 
     return (
         <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 font-sans">

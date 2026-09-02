@@ -457,7 +457,26 @@ export const supabaseDb = {
                     trackId: c.track_id,
                     trackTitle: c.track_title,
                     issuedAt: c.issued_at,
-                    licenseKey: c.license_key,
+                    licenseKey: c.license_key || `BA-2026-${c.id}`,
+                    status: c.status,
+                }));
+            },
+            getByUser: async (userId: string): Promise<CertificateIssued[]> => {
+                const supabase = createClient();
+                const { data, error } = await supabase
+                    .from("certificates")
+                    .select("*")
+                    .eq("student_id", userId)
+                    .order("issued_at", { ascending: false });
+                if (error || !data) return [];
+                return data.map(c => ({
+                    id: c.id,
+                    studentId: c.student_id,
+                    studentName: c.student_name,
+                    trackId: c.track_id,
+                    trackTitle: c.track_title,
+                    issuedAt: c.issued_at,
+                    licenseKey: c.license_key || `BA-2026-${c.id}`,
                     status: c.status,
                 }));
             },
@@ -468,6 +487,7 @@ export const supabaseDb = {
                     student_name: cert.studentName,
                     track_id: cert.trackId,
                     track_title: cert.trackTitle,
+                    license_key: cert.licenseKey,
                     status: "active",
                 }).select().single();
                 return data;
@@ -475,6 +495,39 @@ export const supabaseDb = {
             revoke: async (id: string) => {
                 const supabase = createClient();
                 await supabase.from("certificates").update({ status: "revoked" }).eq("id", id);
+            }
+        },
+
+        reflections: {
+            getAll: async () => {
+                const supabase = createClient();
+                const { data, error } = await supabase.from("reflections").select("*").order("submitted_at", { ascending: false });
+                if (error || !data) return [];
+                return data;
+            },
+            get: async (userId: string, courseId: number) => {
+                const supabase = createClient();
+                const { data, error } = await supabase
+                    .from("reflections")
+                    .select("*")
+                    .eq("user_id", userId)
+                    .eq("course_id", courseId)
+                    .single();
+                if (error || !data) return null;
+                return data;
+            },
+            submit: async (reflection: { userId: string; userName: string; courseId: number; courseTitle: string; content: string }) => {
+                const supabase = createClient();
+                const { data } = await supabase.from("reflections").upsert({
+                    user_id: reflection.userId,
+                    user_name: reflection.userName,
+                    course_id: reflection.courseId,
+                    course_title: reflection.courseTitle,
+                    content: reflection.content,
+                    status: "approved",
+                    submitted_at: new Date().toISOString()
+                }).select().single();
+                return data;
             }
         },
 

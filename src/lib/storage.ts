@@ -207,11 +207,11 @@ const SEED_POSTS: Post[] = [
 
 const SEED_BANNERS: Banner[] = [
     { id: "ban_1", title: "2026 Spring Enrollment", imageUrl: "/images/hero-architecture.png", link: "/curriculum", isActive: true },
-    { id: "ban_2", title: "New Caleb AI Features", imageUrl: "/images/caleb-real-v2.png", link: "/ai-system", isActive: false },
+    { id: "ban_2", title: "New Caleb AI Features", imageUrl: "/images/caleb-tutor.jpg", link: "/ai-system", isActive: false },
 ];
 
 const SEED_FACULTY: Faculty[] = [
-    { id: "fac_1", name: "Pastor Lee Caleb", title: "President", bio: "Founder of Barak Academy", photoUrl: "/images/caleb-real-v2.png" },
+    { id: "fac_1", name: "Pastor Lee Caleb", title: "President", bio: "Founder of Barak Academy", photoUrl: "/images/caleb-tutor.jpg" },
 ];
 
 const SEED_AI_LOGS: AILog[] = [
@@ -348,17 +348,10 @@ export const db = {
 
     courses: {
         getAll: (): Course[] => {
-            if (typeof window === "undefined") return SEED_COURSES;
-            try {
-                const stored = safeStorage.getItem(STORAGE_KEYS.COURSES);
-                return stored ? JSON.parse(stored) : SEED_COURSES;
-            } catch {
-                return SEED_COURSES;
-            }
+            return SEED_COURSES;
         },
         get: (id: number): Course | undefined => {
-            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
-            return courses.find(c => c.id === id);
+            return SEED_COURSES.find(c => c.id === id);
         },
         create: (data: Omit<Course, "id" | "totalModules" | "modules">): Course => {
             const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
