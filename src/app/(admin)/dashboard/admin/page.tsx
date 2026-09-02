@@ -14,7 +14,8 @@ import {
     Cell
 } from "recharts";
 import { Users, Activity, Award, MessageSquare, TrendingUp, MoreHorizontal } from "lucide-react";
-import { db, Banner, AILog, User } from "@/lib/storage";
+import { db, AILog, User } from "@/lib/storage";
+import { supabaseDb } from "@/lib/supabase/db";
 
 // --- Components ---
 
@@ -54,14 +55,41 @@ export default function AdminDashboardPage() {
     const [recentUsers, setRecentUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        // Load Data
-        const dashboardStats = db.admin.getStats();
-        const logs = db.admin.aiLogs.getAll().slice(0, 5); // Get last 5
-        const users = JSON.parse(localStorage.getItem("barak_users") || "[]").slice(-5).reverse(); // Last 5 users
+        const loadDashboard = async () => {
+            try {
+                const [users, logs] = await Promise.all([
+                    supabaseDb.admin.users.getAll(),
+                    supabaseDb.admin.aiLogs.getAll(),
+                ]);
 
-        setStats(dashboardStats);
-        setRecentLogs(logs);
-        setRecentUsers(users);
+                if (users && users.length > 0) {
+                    setRecentUsers(users.slice(0, 5));
+                } else {
+                    setRecentUsers(db.admin.users.getAll().slice(-5).reverse());
+                }
+
+                if (logs && logs.length > 0) {
+                    setRecentLogs(logs.slice(0, 5));
+                } else {
+                    setRecentLogs(db.admin.aiLogs.getAll().slice(0, 5));
+                }
+
+                const dashboardStats = db.admin.getStats();
+                if (users && users.length > 0) {
+                    dashboardStats.totalStudents = users.filter(u => u.role !== 'admin').length;
+                }
+                if (logs && logs.length > 0) {
+                    dashboardStats.totalAiQueries = logs.length;
+                }
+                setStats(dashboardStats);
+            } catch (e) {
+                console.warn("Failed to load remote admin stats, using local:", e);
+                setStats(db.admin.getStats());
+                setRecentLogs(db.admin.aiLogs.getAll().slice(0, 5));
+                setRecentUsers(db.admin.users.getAll().slice(-5).reverse());
+            }
+        };
+        loadDashboard();
     }, []);
 
     if (!stats) return <div className="p-10 text-center">대시보드 로딩 중...</div>;

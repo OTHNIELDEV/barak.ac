@@ -7,6 +7,7 @@ import {
     Filter, GraduationCap, Building2, User, ChevronDown, Check, X
 } from "lucide-react";
 import { db, Application } from "@/lib/storage";
+import { supabaseDb } from "@/lib/supabase/db";
 
 // Reusable Section Header
 const SectionHeader = ({ title, subtitle, action }: any) => (
@@ -29,41 +30,60 @@ export default function AdminAdmissionsPage() {
         name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah" as "deborah" | "barak" | "jael", motivation: "관리자 수기 등록"
     });
 
+    const loadApplications = async () => {
+        try {
+            const remoteApps = await supabaseDb.applications.getAll();
+            if (remoteApps && remoteApps.length > 0) {
+                setApplications(remoteApps);
+            } else {
+                setApplications(db.admin.applications.getAll());
+            }
+        } catch (e) {
+            console.warn("Failed to load remote applications, fallback:", e);
+            setApplications(db.admin.applications.getAll());
+        }
+    };
+
     // Initial Load
     useEffect(() => {
-        // Need to ensure client-side only
-        if (typeof window !== "undefined") {
-            const data = db.admin.applications.getAll();
-            setApplications(data);
-        }
+        loadApplications();
     }, []);
 
-    const handleCreateApplication = (e: React.FormEvent) => {
+    const handleCreateApplication = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const created = db.applications.create({
+            const created = await supabaseDb.applications.create({
                 ...newApp,
             });
-            setApplications(prev => [created, ...prev]);
+            await loadApplications();
             setIsAddModalOpen(false);
             setNewApp({ name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah", motivation: "관리자 수기 등록" });
             alert("신청서가 등록되었습니다.");
         } catch (error) {
             console.error(error);
-            alert("등록 중 오류가 발생했습니다.");
+            const created = db.applications.create({ ...newApp });
+            setApplications(prev => [created, ...prev]);
+            setIsAddModalOpen(false);
+            setNewApp({ name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah", motivation: "관리자 수기 등록" });
+            alert("신청서가 등록되었습니다.");
         }
     };
 
-    const handleStatusUpdate = (id: string, status: "approved" | "rejected") => {
+    const handleStatusUpdate = async (id: string, status: "approved" | "rejected") => {
         if (!confirm(`${status === 'approved' ? '승인' : '거절'} 처리하시겠습니까?`)) return;
 
+        try {
+            await supabaseDb.applications.updateStatus(id, status);
+        } catch (e) {
+            console.warn("Remote status update error:", e);
+        }
         db.admin.applications.updateStatus(id, status);
 
-        // Optimistic Update
-        setApplications(prev => prev.map(app =>
-            app.id === id ? { ...app, status } : app
-        ));
-        setSelectedApp(null);
+        // Update local state
+        setApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+        if (selectedApp && selectedApp.id === id) {
+            setSelectedApp(prev => prev ? { ...prev, status } : null);
+        }
     };
 
     const filteredApps = applications.filter(app => {

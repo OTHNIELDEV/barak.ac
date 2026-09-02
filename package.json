@@ -11,6 +11,8 @@
   "dependencies": {
     "@ai-sdk/openai": "^3.0.12",
     "@ai-sdk/react": "^3.0.41",
+    "@supabase/ssr": "^0.12.5",
+    "@supabase/supabase-js": "^2.112.4",
     "ai": "^6.0.39",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",

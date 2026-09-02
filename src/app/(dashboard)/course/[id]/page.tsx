@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, Suspense } from "react";
 import { VideoPlayer } from "@/components/features/lms/VideoPlayer";
 import { AmenButton } from "@/components/features/lms/AmenButton";
 import { AIChatSidebar } from "@/components/features/ai/AIChatSidebar";
@@ -11,7 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { mockCourses } from "@/lib/mockData";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function CoursePage({ params }: { params: Promise<{ id: string }> }) {
+function CourseContent({ params }: { params: Promise<{ id: string }> }) {
     const { user } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -215,5 +215,13 @@ export default function CoursePage({ params }: { params: Promise<{ id: string }>
                 <AIChatSidebar />
             </div>
         </div>
+    );
+}
+
+export default function CoursePage({ params }: { params: Promise<{ id: string }> }) {
+    return (
+        <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-blue-900" /></div>}>
+            <CourseContent params={params} />
+        </Suspense>
     );
 }

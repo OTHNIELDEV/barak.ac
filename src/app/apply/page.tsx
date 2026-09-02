@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Shield, CheckCircle, ArrowRight, User, GraduationCap, Building2, BookOpen } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { db } from "@/lib/storage";
+import { supabaseDb } from "@/lib/supabase/db";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 
-export default function AdmissionApplyPage() {
+function AdmissionApplyForm() {
     const { user, isLoading: authLoading } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -62,13 +63,21 @@ export default function AdmissionApplyPage() {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate API delay for UX
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Save to Local Storage DB
         try {
+            await supabaseDb.applications.create({
+                userId: user?.id,
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                church: formData.church,
+                position: formData.position,
+                department: formData.department,
+                track: formData.track,
+                motivation: formData.motivation
+            });
+            // Local fallback
             db.applications.create({
-                userId: user?.id, // Optional, links application to user account
+                userId: user?.id,
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
@@ -80,8 +89,19 @@ export default function AdmissionApplyPage() {
             });
             setIsCompleted(true);
         } catch (error) {
-            console.error("Application failed", error);
-            alert("신청서 제출 중 오류가 발생했습니다.");
+            console.warn("Remote apply failed, using local:", error);
+            db.applications.create({
+                userId: user?.id,
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                church: formData.church,
+                position: formData.position,
+                department: formData.department,
+                track: formData.track,
+                motivation: formData.motivation
+            });
+            setIsCompleted(true);
         } finally {
             setIsSubmitting(false);
         }
@@ -329,5 +349,13 @@ export default function AdmissionApplyPage() {
             </div>
             <PublicFooter />
         </div>
+    );
+}
+
+export default function AdmissionApplyPage() {
+    return (
+        <Suspense fallback={null}>
+            <AdmissionApplyForm />
+        </Suspense>
     );
 }

@@ -6,39 +6,33 @@ import { PublicFooter } from "@/components/layout/PublicFooter";
 import { ChevronRight, PlayCircle, Shield, Award, Users, BookOpen, ArrowRight, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Course } from "@/lib/storage";
+import { Course, db } from "@/lib/storage";
+import { supabaseDb } from "@/lib/supabase/db";
 import { cn } from "@/lib/utils";
 
 export default function LandingPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  const DEFAULT_COURSES: Course[] = [
-    { id: 1, title: "Deborah Track", subTitle: "Vision & Prophecy", description: "시대를 읽는 통찰력과 예언적 비전을 배양하는 과정입니다.", thumbnail: "", totalModules: 0, modules: [] },
-    { id: 2, title: "Barak Track", subTitle: "Strategy & Execution", description: "비전을 현실로 만드는 구체적인 전략과 거룩한 행정을 배웁니다.", thumbnail: "", totalModules: 0, modules: [] },
-    { id: 3, title: "Jael Track", subTitle: "Action & Crisis", description: "위기의 순간에 하나님의 뜻을 이루는 담대한 결단력을 훈련합니다.", thumbnail: "", totalModules: 0, modules: [] }
-  ];
-
   useEffect(() => {
     setMounted(true);
-    if (typeof window !== "undefined") {
+    const fetchCourses = async () => {
       try {
-        const stored = localStorage.getItem("barak_courses");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setCourses(parsed);
-          } else {
-            setCourses(DEFAULT_COURSES);
-          }
+        const remoteCourses = await supabaseDb.courses.getAll();
+        if (remoteCourses && remoteCourses.length > 0) {
+          setCourses(remoteCourses);
         } else {
-          setCourses(DEFAULT_COURSES);
+          const allCourses = db.courses.getAll();
+          if (allCourses && allCourses.length > 0) {
+            setCourses(allCourses);
+          }
         }
       } catch (error) {
-        console.error("Failed to load courses:", error);
-        setCourses(DEFAULT_COURSES);
+        console.warn("Failed to load remote courses:", error);
+        setCourses(db.courses.getAll());
       }
-    }
+    };
+    fetchCourses();
   }, []);
 
   const getTrackStyle = (index: number) => {

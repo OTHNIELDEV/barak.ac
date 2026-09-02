@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { BookOpen, Folder, PlayCircle, Plus, Edit2, Trash2, ChevronRight, ChevronDown, Save, X, Video } from "lucide-react";
-import { Course, Module, STORAGE_KEYS, db } from "@/lib/storage";
+import { Course, Module, STORAGE_KEYS, db, safeStorage } from "@/lib/storage";
 
 // --- Module Editor Modal ---
 interface ModuleModalProps {
@@ -242,7 +242,7 @@ export default function CurriculumManagementPage() {
                                 onClick={() => {
                                     if (confirm("경고: 모든 변경사항이 삭제되고 초기 공식 커리큘럼으로 초기화됩니다.\n계속하시겠습니까?")) {
                                         const { mockCourses } = require("@/lib/mockData");
-                                        localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(mockCourses));
+                                        safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(mockCourses));
                                         setCourses(mockCourses);
                                         setSelectedCourse(null);
                                         setExpandedIds(new Set());

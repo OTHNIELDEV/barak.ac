@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1779192761153,
+  "lastScanned": 1782181291877,
   "projectRoot": "/Users/isangsoo/Desktop/_Projects2026/making/barak.ac",
   "techStack": {
     "languages": [
@@ -74,7 +74,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 6,
-      "lastAccessed": 1779192760813,
+      "lastAccessed": 1782181291826,
       "keyFiles": [
         "curriculum.pdf",
         "file.svg",
@@ -87,14 +87,14 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 0,
-      "lastAccessed": 1779192760852,
+      "lastAccessed": 1782181291827,
       "keyFiles": []
     },
     "무제 폴더": {
       "path": "무제 폴더",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1779192761051,
+      "lastAccessed": 1782181291853,
       "keyFiles": [
         "curriculum.pdf"
       ]
@@ -103,7 +103,7 @@
       "path": "src/app",
       "purpose": "Application code",
       "fileCount": 4,
-      "lastAccessed": 1779192761061,
+      "lastAccessed": 1782181291854,
       "keyFiles": [
         "favicon.ico",
         "globals.css",
@@ -114,7 +114,7 @@
       "path": "src/components",
       "purpose": "UI components",
       "fileCount": 1,
-      "lastAccessed": 1779192761064,
+      "lastAccessed": 1782181291867,
       "keyFiles": [
         "CalebAI.tsx"
       ]
@@ -123,7 +123,7 @@
       "path": "src/lib",
       "purpose": "Library code",
       "fileCount": 3,
-      "lastAccessed": 1779192761069,
+      "lastAccessed": 1782181291868,
       "keyFiles": [
         "mockData.ts",
         "storage.ts",

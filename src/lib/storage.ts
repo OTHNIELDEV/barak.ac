@@ -1,6 +1,6 @@
 "use client";
 
-import { mockCourses } from "./mockData"; // Keeping import for type safety reference, but overriding data below
+import { mockCourses as SEED_COURSES } from "./mockData";
 
 export const STORAGE_KEYS = {
     USERS: "barak_users",
@@ -14,6 +14,52 @@ export const STORAGE_KEYS = {
     CERTIFICATES: "barak_admin_certificates",
     AI_LOGS: "barak_admin_ai_logs",
     APPLICATIONS: "barak_admin_applications",
+};
+
+// In-Memory Storage Fallback to prevent QuotaExceededError or SSR crashes
+const memoryStorage: Record<string, string> = {};
+
+export const safeStorage = {
+    getItem: (key: string): string | null => {
+        if (typeof window === "undefined") {
+            return memoryStorage[key] ?? null;
+        }
+        try {
+            const item = localStorage.getItem(key);
+            if (item !== null) return item;
+            return memoryStorage[key] ?? null;
+        } catch (e) {
+            console.warn(`[Storage] Failed to read "${key}" from localStorage:`, e);
+            return memoryStorage[key] ?? null;
+        }
+    },
+    setItem: (key: string, value: string): void => {
+        memoryStorage[key] = value;
+        if (typeof window === "undefined") return;
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            console.warn(`[Storage] Failed to write "${key}" to localStorage (QuotaExceeded or disabled). Falling back to memory storage:`, e);
+        }
+    },
+    removeItem: (key: string): void => {
+        delete memoryStorage[key];
+        if (typeof window === "undefined") return;
+        try {
+            localStorage.removeItem(key);
+        } catch (e) {
+            console.warn(`[Storage] Failed to remove "${key}" from localStorage:`, e);
+        }
+    },
+    clear: (): void => {
+        Object.keys(memoryStorage).forEach(k => delete memoryStorage[k]);
+        if (typeof window === "undefined") return;
+        try {
+            localStorage.clear();
+        } catch (e) {
+            console.warn(`[Storage] Failed to clear localStorage:`, e);
+        }
+    }
 };
 
 // Types
@@ -31,6 +77,7 @@ export interface Application {
     status: "pending" | "approved" | "rejected";
     submittedAt: string;
 }
+
 export interface User {
     id: string;
     email: string;
@@ -145,18 +192,6 @@ const SEED_USERS: User[] = [
     }
 ];
 
-// ... (SEED_COURSES and others remain unchanged, but we need to target the block carefully)
-
-// Skipping to db.init modification in a separate chunk if needed or covering it here if contiguous. 
-// SEED_COURSES is in between. I'll split into two or use multi_replace if they are far apart.
-// SEED_USERS ends at line 121. db.init is at 248. They are far apart.
-// Usage of replace_file_content for SEED_USERS first.
-
-// Import directly from mockData to ensure Sync
-import { mockCourses as SEED_COURSES } from "./mockData";
-
-// ... SEED_COURSES definition removed, using import instead ...
-
 const SEED_POSTS: Post[] = [
     {
         id: "p1",
@@ -220,36 +255,40 @@ export const db = {
     init: () => {
         if (typeof window === "undefined") return;
 
-        // Force reset users if 'demo@barak.ac' or 'admin' doesn't exist to ensure demo works
-        const existingUsers = localStorage.getItem(STORAGE_KEYS.USERS);
+        try {
+            // Force reset users if 'demo@barak.ac' or 'admin' doesn't exist to ensure demo works
+            const existingUsers = safeStorage.getItem(STORAGE_KEYS.USERS);
 
-        // Check if we need to re-seed (missing demo or missing admin)
-        const needsSeed = !existingUsers ||
-            !existingUsers.includes("axasoft@naver.com") ||
-            !existingUsers.includes('"email":"a@a.com"');
+            // Check if we need to re-seed (missing demo or missing admin)
+            const needsSeed = !existingUsers ||
+                !existingUsers.includes("axasoft@naver.com") ||
+                !existingUsers.includes('"email":"a@a.com"');
 
-        if (needsSeed) {
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+            if (needsSeed) {
+                safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+            }
+
+            // FORCE SYNC COURSES: Always update seed courses to reflect code changes (translations)
+            // This ensures users see the new Korean content immediately
+            safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(SEED_COURSES));
+
+            if (!safeStorage.getItem(STORAGE_KEYS.POSTS)) {
+                safeStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(SEED_POSTS));
+            }
+
+            // Admin Seeds
+            if (!safeStorage.getItem(STORAGE_KEYS.BANNERS)) safeStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(SEED_BANNERS));
+            if (!safeStorage.getItem(STORAGE_KEYS.FACULTY)) safeStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(SEED_FACULTY));
+            if (!safeStorage.getItem(STORAGE_KEYS.AI_LOGS)) safeStorage.setItem(STORAGE_KEYS.AI_LOGS, JSON.stringify(SEED_AI_LOGS));
+            if (!safeStorage.getItem(STORAGE_KEYS.APPLICATIONS)) safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(SEED_APPLICATIONS));
+        } catch (error) {
+            console.warn("[Storage init error]", error);
         }
-
-        // FORCE SYNC COURSES: Always update seed courses to reflect code changes (translations)
-        // This ensures users see the new Korean content immediately
-        localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(SEED_COURSES));
-
-        if (!localStorage.getItem(STORAGE_KEYS.POSTS)) {
-            localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(SEED_POSTS));
-        }
-
-        // Admin Seeds
-        if (!localStorage.getItem(STORAGE_KEYS.BANNERS)) localStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(SEED_BANNERS));
-        if (!localStorage.getItem(STORAGE_KEYS.FACULTY)) localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(SEED_FACULTY));
-        if (!localStorage.getItem(STORAGE_KEYS.AI_LOGS)) localStorage.setItem(STORAGE_KEYS.AI_LOGS, JSON.stringify(SEED_AI_LOGS));
-        if (!localStorage.getItem(STORAGE_KEYS.APPLICATIONS)) localStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(SEED_APPLICATIONS));
     },
 
     auth: {
         login: (email: string, password: string): User => {
-            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+            const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
             const user = users.find((u: User) => u.email === email && u.password === password);
 
             if (!user) {
@@ -258,12 +297,12 @@ export const db = {
 
             // Create Session
             const { password: _, ...userWithoutPass } = user;
-            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
+            safeStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
             return userWithoutPass;
         },
 
         signup: (data: Omit<User, "id">) => {
-            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+            const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
 
             if (users.find((u: User) => u.email === data.email)) {
                 throw new Error("이미 존재하는 이메일입니다.");
@@ -271,36 +310,36 @@ export const db = {
 
             const newUser = { ...data, id: `user_${Date.now()}` };
             users.push(newUser);
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 
             return newUser;
         },
 
         logout: () => {
-            localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+            safeStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
         },
 
         getCurrentUser: (): User | null => {
             if (typeof window === "undefined") return null;
-            const stored = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+            const stored = safeStorage.getItem(STORAGE_KEYS.CURRENT_USER);
             return stored ? JSON.parse(stored) : null;
         },
 
         updateUser: (userId: string, data: Partial<User>) => {
-            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+            const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
             const index = users.findIndex((u: User) => u.id === userId);
 
             if (index === -1) throw new Error("User not found");
 
             const updatedUser = { ...users[index], ...data };
             users[index] = updatedUser;
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 
             // Should also update session if it's the current user
-            const currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER) || "null");
+            const currentUser = JSON.parse(safeStorage.getItem(STORAGE_KEYS.CURRENT_USER) || "null");
             if (currentUser && currentUser.id === userId) {
                 const { password: _, ...userWithoutPass } = updatedUser;
-                localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
+                safeStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
             }
 
             return updatedUser;
@@ -310,83 +349,92 @@ export const db = {
     courses: {
         getAll: (): Course[] => {
             if (typeof window === "undefined") return SEED_COURSES;
-            return JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || JSON.stringify(SEED_COURSES));
+            try {
+                const stored = safeStorage.getItem(STORAGE_KEYS.COURSES);
+                return stored ? JSON.parse(stored) : SEED_COURSES;
+            } catch {
+                return SEED_COURSES;
+            }
         },
         get: (id: number): Course | undefined => {
-            const courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             return courses.find(c => c.id === id);
         },
         create: (data: Omit<Course, "id" | "totalModules" | "modules">): Course => {
-            const courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             const newId = courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1;
             const newCourse = { ...data, id: newId, totalModules: 0, modules: [] };
             courses.push(newCourse);
-            localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
+            safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
             return newCourse;
         },
         update: (id: number, data: Partial<Course>) => {
-            const courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             const index = courses.findIndex(c => c.id === id);
             if (index !== -1) {
                 courses[index] = { ...courses[index], ...data };
-                localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
+                safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
             }
         },
         delete: (id: number) => {
-            let courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            let courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             courses = courses.filter(c => c.id !== id);
-            localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
+            safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
         },
         addModule: (courseId: number, module: Omit<Module, "id">) => {
-            const courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             const index = courses.findIndex(c => c.id === courseId);
             if (index !== -1) {
                 const newModule = { ...module, id: `mod_${Date.now()}` };
                 courses[index].modules.push(newModule);
                 courses[index].totalModules = courses[index].modules.length;
-                localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
+                safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
             }
         },
         updateModule: (courseId: number, moduleId: string, data: Partial<Module>) => {
-            const courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             const index = courses.findIndex(c => c.id === courseId);
             if (index !== -1) {
                 const mIndex = courses[index].modules.findIndex(m => m.id === moduleId);
                 if (mIndex !== -1) {
                     courses[index].modules[mIndex] = { ...courses[index].modules[mIndex], ...data };
-                    localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
+                    safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
                 }
             }
         },
         removeModule: (courseId: number, moduleId: string) => {
-            const courses: Course[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
+            const courses: Course[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.COURSES) || "[]");
             const index = courses.findIndex(c => c.id === courseId);
             if (index !== -1) {
                 courses[index].modules = courses[index].modules.filter(m => m.id !== moduleId);
                 courses[index].totalModules = courses[index].modules.length;
-                localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
+                safeStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
             }
         }
     },
 
     posts: {
         getAll: (): Post[] => {
-            return JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
+            try {
+                return JSON.parse(safeStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
+            } catch {
+                return [];
+            }
         },
 
         get: (id: string): Post | null => {
-            const posts = JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
+            const posts = JSON.parse(safeStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
             const post = posts.find((p: Post) => p.id === id);
             if (post) {
                 // Increment views
                 post.views = (post.views || 0) + 1;
-                localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
+                safeStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
             }
             return post || null;
         },
 
         create: (data: Omit<Post, "id" | "createdAt" | "views">): Post => {
-            const posts = JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
+            const posts = JSON.parse(safeStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
             const newPost: Post = {
                 ...data,
                 id: `post_${Date.now()}`,
@@ -394,42 +442,42 @@ export const db = {
                 views: 0,
             };
             posts.unshift(newPost); // Add to the beginning
-            localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
+            safeStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
             return newPost;
         },
 
         update: (id: string, data: Partial<Omit<Post, "id" | "createdAt" | "authorId" | "authorName">>): Post => {
-            const posts = JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
+            const posts = JSON.parse(safeStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
             const index = posts.findIndex((p: Post) => p.id === id);
 
             if (index === -1) throw new Error("Post not found");
 
             const updatedPost = { ...posts[index], ...data };
             posts[index] = updatedPost;
-            localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
+            safeStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
             return updatedPost;
         },
 
         delete: (id: string) => {
-            let posts = JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
+            let posts = JSON.parse(safeStorage.getItem(STORAGE_KEYS.POSTS) || "[]");
             posts = posts.filter((p: Post) => p.id !== id);
-            localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
+            safeStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
         }
     },
 
     progress: {
         get: (userId: string, courseId: number) => {
-            const allProgress = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
+            const allProgress = JSON.parse(safeStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
             return allProgress.find((p: Progress) => p.userId === userId && p.courseId === courseId) || null;
         },
 
         getAll: (userId: string): Progress[] => {
-            const allProgress = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
+            const allProgress = JSON.parse(safeStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
             return allProgress.filter((p: Progress) => p.userId === userId);
         },
 
         completeLesson: (userId: string, courseId: number, lessonId: string) => {
-            const allProgress = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
+            const allProgress = JSON.parse(safeStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
             const existingIdx = allProgress.findIndex((p: Progress) => p.userId === userId && p.courseId === courseId);
 
             let newProgress;
@@ -453,7 +501,7 @@ export const db = {
                 allProgress.push(newProgress);
             }
 
-            localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(allProgress));
+            safeStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(allProgress));
 
             // Also update access log if not just created
             if (existingIdx >= 0) {
@@ -467,7 +515,7 @@ export const db = {
         getWeeklyStats: (userId: string) => {
             if (typeof window === "undefined") return [];
 
-            const allProgress: Progress[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
+            const allProgress: Progress[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
             const userProgress = allProgress.filter(p => p.userId === userId);
 
             // Map to store per day counts
@@ -497,10 +545,6 @@ export const db = {
                 }
             });
 
-            // Reconstruct weekData with actual values
-            // Currently weekData has "Sun", "Mon" etc in order of last 7 days ago -> today
-            const keysArray = Array.from(dailyCounts.keys()).sort(); // Ensure date order
-
             return weekData.map((d, index) => {
                 // Find corresponding date for this index (0 = 6 days ago, 6 = today)
                 const targetDate = new Date(today);
@@ -515,7 +559,7 @@ export const db = {
 
         // Log access without completing
         logAccess: (userId: string, courseId: number) => {
-            const allProgress = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
+            const allProgress = JSON.parse(safeStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
             const existingIdx = allProgress.findIndex((p: Progress) => p.userId === userId && p.courseId === courseId);
 
             let progress: Progress;
@@ -550,14 +594,14 @@ export const db = {
                 allProgress.push(progress);
             }
 
-            localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(allProgress));
+            safeStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(allProgress));
         }
     },
 
     // User-facing Applications
     applications: {
         create: (data: Omit<Application, "id" | "status" | "submittedAt">) => {
-            const list: Application[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+            const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
             const newApp: Application = {
                 ...data,
                 id: `app_${Date.now()}`,
@@ -565,11 +609,11 @@ export const db = {
                 submittedAt: new Date().toISOString()
             };
             list.unshift(newApp);
-            localStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
+            safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
             return newApp;
         },
         hasApplied: (userId: string): boolean => {
-            const list: Application[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+            const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
             return list.some(app => app.userId === userId);
         }
     },
@@ -579,20 +623,20 @@ export const db = {
         users: {
             getAll: (): User[] => {
                 if (typeof window === "undefined") return [];
-                return JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                return JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
             },
             delete: (id: string) => {
-                let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                let users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
                 users = users.filter((u: User) => u.id !== id);
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
             },
             updateRole: (id: string, role: "student" | "pastor" | "admin", level?: string) => {
-                const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
                 const index = users.findIndex((u: User) => u.id === id);
                 if (index !== -1) {
                     users[index].role = role;
                     if (level) users[index].level = level;
-                    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                    safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 }
             }
         },
@@ -600,42 +644,42 @@ export const db = {
         banners: {
             getAll: (): Banner[] => {
                 if (typeof window === "undefined") return [];
-                return JSON.parse(localStorage.getItem(STORAGE_KEYS.BANNERS) || JSON.stringify(SEED_BANNERS));
+                return JSON.parse(safeStorage.getItem(STORAGE_KEYS.BANNERS) || JSON.stringify(SEED_BANNERS));
             },
             save: (banners: Banner[]) => {
-                localStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(banners));
+                safeStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(banners));
             }
         },
 
         faculty: {
             getAll: (): Faculty[] => {
                 if (typeof window === "undefined") return [];
-                return JSON.parse(localStorage.getItem(STORAGE_KEYS.FACULTY) || JSON.stringify(SEED_FACULTY));
+                return JSON.parse(safeStorage.getItem(STORAGE_KEYS.FACULTY) || JSON.stringify(SEED_FACULTY));
             },
             add: (faculty: Faculty) => {
-                const list = JSON.parse(localStorage.getItem(STORAGE_KEYS.FACULTY) || "[]");
+                const list = JSON.parse(safeStorage.getItem(STORAGE_KEYS.FACULTY) || "[]");
                 list.push(faculty);
-                localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(list));
+                safeStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(list));
             },
             update: (id: string, data: Partial<Faculty>) => {
-                const list: Faculty[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.FACULTY) || "[]");
+                const list: Faculty[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.FACULTY) || "[]");
                 const idx = list.findIndex(f => f.id === id);
                 if (idx !== -1) {
                     list[idx] = { ...list[idx], ...data };
-                    localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(list));
+                    safeStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(list));
                 }
             },
             remove: (id: string) => {
-                let list = JSON.parse(localStorage.getItem(STORAGE_KEYS.FACULTY) || "[]");
+                let list = JSON.parse(safeStorage.getItem(STORAGE_KEYS.FACULTY) || "[]");
                 list = list.filter((f: Faculty) => f.id !== id);
-                localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(list));
+                safeStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(list));
             }
         },
 
         applications: {
-            getAll: (): Application[] => JSON.parse(localStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]"),
+            getAll: (): Application[] => JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]"),
             updateStatus: (id: string, status: "approved" | "rejected") => {
-                const list: Application[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
                 const appIndex = list.findIndex(a => a.id === id);
 
                 if (appIndex === -1) return;
@@ -643,18 +687,18 @@ export const db = {
                 const app = list[appIndex];
                 app.status = status;
                 list[appIndex] = app;
-                localStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
+                safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
 
                 // If approved, verify/upgrade user
                 if (status === 'approved' && app.userId) {
-                    const users: User[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                    const users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
                     const userIndex = users.findIndex(u => u.id === app.userId);
 
                     if (userIndex >= 0) {
                         users[userIndex].role = 'student';
                         users[userIndex].level = 'Student Member';
                         users[userIndex].church = app.church; // Sync church info
-                        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                        safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                     }
                 }
             }
@@ -663,10 +707,10 @@ export const db = {
         certificates: {
             getAll: (): CertificateIssued[] => {
                 if (typeof window === "undefined") return [];
-                return JSON.parse(localStorage.getItem(STORAGE_KEYS.CERTIFICATES) || "[]");
+                return JSON.parse(safeStorage.getItem(STORAGE_KEYS.CERTIFICATES) || "[]");
             },
             issue: (data: Omit<CertificateIssued, "id" | "issuedAt" | "status">) => {
-                const list = JSON.parse(localStorage.getItem(STORAGE_KEYS.CERTIFICATES) || "[]");
+                const list = JSON.parse(safeStorage.getItem(STORAGE_KEYS.CERTIFICATES) || "[]");
                 const newCert: CertificateIssued = {
                     ...data,
                     id: `cert_${Date.now()}`,
@@ -674,15 +718,15 @@ export const db = {
                     status: "active"
                 };
                 list.unshift(newCert);
-                localStorage.setItem(STORAGE_KEYS.CERTIFICATES, JSON.stringify(list));
+                safeStorage.setItem(STORAGE_KEYS.CERTIFICATES, JSON.stringify(list));
                 return newCert;
             },
             revoke: (id: string) => {
-                const list: CertificateIssued[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.CERTIFICATES) || "[]");
+                const list: CertificateIssued[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.CERTIFICATES) || "[]");
                 const idx = list.findIndex(c => c.id === id);
                 if (idx >= 0) {
                     list[idx].status = "revoked";
-                    localStorage.setItem(STORAGE_KEYS.CERTIFICATES, JSON.stringify(list));
+                    safeStorage.setItem(STORAGE_KEYS.CERTIFICATES, JSON.stringify(list));
                 }
             }
         },
@@ -690,17 +734,17 @@ export const db = {
         aiLogs: {
             getAll: (): AILog[] => {
                 if (typeof window === "undefined") return [];
-                return JSON.parse(localStorage.getItem(STORAGE_KEYS.AI_LOGS) || JSON.stringify(SEED_AI_LOGS));
+                return JSON.parse(safeStorage.getItem(STORAGE_KEYS.AI_LOGS) || JSON.stringify(SEED_AI_LOGS));
             },
             log: (data: Omit<AILog, "id" | "timestamp">) => {
-                const list = JSON.parse(localStorage.getItem(STORAGE_KEYS.AI_LOGS) || "[]");
+                const list = JSON.parse(safeStorage.getItem(STORAGE_KEYS.AI_LOGS) || "[]");
                 const newLog = {
                     ...data,
                     id: `ailog_${Date.now()}`,
                     timestamp: new Date().toISOString()
                 };
                 list.unshift(newLog);
-                localStorage.setItem(STORAGE_KEYS.AI_LOGS, JSON.stringify(list));
+                safeStorage.setItem(STORAGE_KEYS.AI_LOGS, JSON.stringify(list));
             }
         },
 
@@ -708,16 +752,15 @@ export const db = {
         getStats: () => {
             if (typeof window === "undefined") return { totalStudents: 0, activeToday: 0, completionRate: 0, totalAiQueries: 0, trackData: [] };
 
-            const users: User[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-            const progress: Progress[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
-            const logs: AILog[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.AI_LOGS) || "[]");
+            const users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+            const progress: Progress[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.PROGRESS) || "[]");
+            const logs: AILog[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.AI_LOGS) || "[]");
 
             // Calc completion rate
             const completedUsers = progress.filter(p => p.completedLessons.length > 0).length; // rudimentary check
 
             // Track pop
             const trackCounts = { Deborah: 0, Barak: 0, Jael: 0 };
-            // In a real app we'd join enrollment data. Here we assume from progress.
             progress.forEach(p => {
                 if (p.courseId === 1) trackCounts.Deborah++;
                 if (p.courseId === 2) trackCounts.Barak++;

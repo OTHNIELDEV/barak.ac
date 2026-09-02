@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db, Post, STORAGE_KEYS } from "@/lib/storage";
+import { db, Post } from "@/lib/storage";
+import { supabaseDb } from "@/lib/supabase/db";
 import { useAuth } from "@/context/AuthContext";
 import { MessageSquare, Heart, HelpCircle, Plus, Search, Filter, MoreVertical, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,28 +16,63 @@ export default function CommunityPage() {
     const [newPost, setNewPost] = useState({ title: "", content: "", category: "free" as const });
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        // Load initial posts
-        if (typeof window !== "undefined") {
-            const allPosts = db.posts.getAll();
-            setPosts(allPosts);
+    const loadPosts = async () => {
+        try {
+            const remotePosts = await supabaseDb.posts.getAll();
+            if (remotePosts && remotePosts.length > 0) {
+                setPosts(remotePosts);
+            } else {
+                setPosts(db.posts.getAll());
+            }
+        } catch (e) {
+            console.warn("Failed to load remote posts, fallback to local:", e);
+            setPosts(db.posts.getAll());
+        } finally {
             setIsLoading(false);
         }
+    };
+
+    useEffect(() => {
+        loadPosts();
     }, []);
 
-    const handleCreatePost = (e: React.FormEvent) => {
+    const handleCreatePost = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
 
-        const created = db.posts.create({
-            title: newPost.title,
-            content: newPost.content,
-            category: newPost.category,
-            authorId: user.id,
-            authorName: user.name,
-        });
+        try {
+            const created = await supabaseDb.posts.create({
+                title: newPost.title,
+                content: newPost.content,
+                category: newPost.category,
+                authorId: user.id,
+                authorName: user.name,
+            });
 
-        setPosts([created, ...posts]);
+            if (created) {
+                setPosts(prev => [created, ...prev]);
+            } else {
+                const localCreated = db.posts.create({
+                    title: newPost.title,
+                    content: newPost.content,
+                    category: newPost.category,
+                    authorId: user.id,
+                    authorName: user.name,
+                });
+                setPosts(prev => [localCreated, ...prev]);
+            }
+        } catch (err) {
+            console.warn("Remote create failed, saving local:", err);
+            const localCreated = db.posts.create({
+                title: newPost.title,
+                content: newPost.content,
+                category: newPost.category,
+                authorId: user.id,
+                authorName: user.name,
+            });
+            setPosts(prev => [localCreated, ...prev]);
+        }
+
         setIsWriteModalOpen(false);
         setNewPost({ title: "", content: "", category: "free" }); // Reset
     };

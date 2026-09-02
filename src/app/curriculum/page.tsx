@@ -6,75 +6,29 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { Course, STORAGE_KEYS } from "@/lib/storage";
+import { Course, db } from "@/lib/storage";
+import { supabaseDb } from "@/lib/supabase/db";
 
 export default function CurriculumPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [mounted, setMounted] = useState(false);
 
-    // Hardcoded default data to seed if storage is empty
-    const defaultTracks = [
-        {
-            id: 1,
-            title: "드보라 트랙 (Deborah Track)",
-            subTitle: "Visionary & Word",
-            description: "탁월한 영적 통찰력으로 시대를 분별하고, 말씀 선포를 통해 비전을 제시하는 예언적 리더십 과정",
-            thumbnail: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop",
-            modules: [
-                { id: "m1", title: "Week 1: 예언적 중보기도와 영적 전쟁", description: "영적 기류 분별과 중보기도의 실제", duration: "60:00", videoUrl: "" },
-                { id: "m2", title: "Week 2: 구약의 여성 리더십 연구", description: "드보라, 에스더, 룻을 통한 여성 리더십의 원리", duration: "60:00", videoUrl: "" },
-                { id: "m3", title: "Week 3: 설교학과 메시지 전달", description: "청중을 깨우는 설교 작성법과 스피치 훈련", duration: "60:00", videoUrl: "" },
-                { id: "m4", title: "Week 4: 비전 맵핑과 전략 수립", description: "하나님의 비전을 구체적인 사역 전략으로 전환하기", duration: "60:00", videoUrl: "" },
-            ]
-        },
-        {
-            id: 2,
-            title: "바라크 트랙 (Barak Track)",
-            subTitle: "Execution & Strategy",
-            description: "비전을 현실로 만드는 전략적 사고와 실행력. 교회 행정, 팀 빌딩, 프로젝트 관리를 마스터하는 과정",
-            thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop",
-            modules: [
-                { id: "m1", title: "Week 1: 교회 행정과 시스템 구축", description: "효율적인 사역을 위한 행정 체계 마련", duration: "60:00", videoUrl: "" },
-                { id: "m2", title: "Week 2: 사역 프로젝트 관리 (PM)", description: "기획부터 실행, 평가까지 프로젝트 사이클 실습", duration: "60:00", videoUrl: "" },
-                { id: "m3", title: "Week 3: 팀 빌딩과 동기부여 리더십", description: "은사에 따른 팀 구성과 갈등 관리", duration: "60:00", videoUrl: "" },
-                { id: "m4", title: "Week 4: 위기 관리와 리스크 매니지먼트", description: "사역 중 발생하는 위기 상황 대처법", duration: "60:00", videoUrl: "" },
-            ]
-        },
-        {
-            id: 3,
-            title: "야엘 트랙 (Jael Track)",
-            subTitle: "Action & Crisis Mgmt",
-            description: "결정적인 순간에 승부를 짓는 현장 사역의 전문가. 전도, 선교, 개척 현장에서 돌파구를 만드는 과정",
-            thumbnail: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&auto=format&fit=crop",
-            modules: [
-                { id: "m1", title: "Week 1: 현장 전도와 관계 맺기", description: "불신자 영혼 접촉점 찾기와 복음 제시", duration: "60:00", videoUrl: "" },
-                { id: "m2", title: "Week 2: 소그룹 인도와 제자 양육", description: "역동적인 소그룹 운영과 재생산 원리", duration: "60:00", videoUrl: "" },
-                { id: "m3", title: "Week 3: 이문화 이해와 선교 전략", description: "문화적 장벽을 넘는 선교적 접근법", duration: "60:00", videoUrl: "" },
-                { id: "m4", title: "Week 4: 개척 교회 성장학", description: "무에서 유를 창조하는 개척 사역의 실제", duration: "60:00", videoUrl: "" },
-            ]
-        }
-    ];
-
     useEffect(() => {
         setMounted(true);
-        if (typeof window !== "undefined") {
+        const fetchCourses = async () => {
             try {
-                const stored = localStorage.getItem("barak_courses");
-                if (stored) {
-                    setCourses(JSON.parse(stored));
+                const remoteCourses = await supabaseDb.courses.getAll();
+                if (remoteCourses && remoteCourses.length > 0) {
+                    setCourses(remoteCourses);
                 } else {
-                    throw new Error("No courses found");
+                    setCourses(db.courses.getAll());
                 }
             } catch (e) {
-                // Seed logic
-                const seedData = defaultTracks.map(t => ({
-                    ...t,
-                    totalModules: t.modules.length
-                })) as Course[];
-                localStorage.setItem("barak_courses", JSON.stringify(seedData));
-                setCourses(seedData);
+                console.warn("Failed to load remote courses, fallback to local:", e);
+                setCourses(db.courses.getAll());
             }
-        }
+        };
+        fetchCourses();
     }, []);
 
     const getTheme = (index: number) => {
