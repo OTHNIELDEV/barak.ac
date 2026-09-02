@@ -1,94 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <!-- Bright Pristine Background Gradient -->
-    <linearGradient id="brightBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="60%" stop-color="#fdfbf7" />
-      <stop offset="100%" stop-color="#fef3c7" />
+    <!-- Brand Gradient: Blue to Indigo to Violet -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="45%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    
+    <!-- Shield Subtle Glass Fill Gradient -->
+    <linearGradient id="shieldInnerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.10" />
     </linearGradient>
 
-    <!-- Deep Royal Navy Gradient for Cross / Shield -->
-    <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e3a8a" />
-      <stop offset="50%" stop-color="#172554" />
-      <stop offset="100%" stop-color="#0f172a" />
-    </linearGradient>
-
-    <!-- Brilliant Radiant Gold Gradient -->
-    <linearGradient id="brightGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24" />
-      <stop offset="40%" stop-color="#f59e0b" />
-      <stop offset="80%" stop-color="#d97706" />
-      <stop offset="100%" stop-color="#b45309" />
-    </linearGradient>
-
-    <!-- Holy Spirit Flame Vivid Gradient -->
-    <linearGradient id="flameVividGrad" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#dc2626" />
-      <stop offset="40%" stop-color="#ea580c" />
-      <stop offset="75%" stop-color="#f59e0b" />
-      <stop offset="100%" stop-color="#fef08a" />
-    </linearGradient>
-
-    <!-- Outer Gold / Blue Border -->
-    <linearGradient id="borderBrightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f59e0b" />
-      <stop offset="50%" stop-color="#3b82f6" />
-      <stop offset="100%" stop-color="#d97706" />
-    </linearGradient>
-
-    <!-- Soft Ambient Shadow -->
-    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.2" />
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#d97706" flood-opacity="0.3" />
+    <!-- Ambient Shadow for Depth -->
+    <filter id="shieldShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1E1B4B" flood-opacity="0.3" />
     </filter>
   </defs>
 
-  <!-- 1. Bright Base Container (Squircle) -->
-  <rect width="512" height="512" rx="115" fill="url(#brightBgGrad)" />
-  
-  <!-- Outer Double Luxury Border -->
-  <rect x="14" y="14" width="484" height="484" rx="101" fill="none" stroke="url(#borderBrightGrad)" stroke-width="8" stroke-opacity="0.9" />
-  <rect x="26" y="26" width="460" height="460" rx="90" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-opacity="0.2" />
+  <!-- Squircle Base -->
+  <rect width="512" height="512" rx="115" fill="url(#shieldGrad)" />
 
-  <!-- Sunburst Radiant Halo Behind Cross -->
-  <circle cx="256" cy="235" r="160" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.4" />
-  <circle cx="256" cy="235" r="120" fill="#fef3c7" fill-opacity="0.5" />
+  <!-- Subtle Top Highlight Border -->
+  <rect x="8" y="8" width="496" height="496" rx="108" fill="none" stroke="#ffffff" stroke-width="4" stroke-opacity="0.25" />
 
-  <!-- 2. Main High-Contrast Symbol Group -->
-  <g filter="url(#softShadow)">
-    <!-- Base Altar / Open Wings of Blessing (바라크의 겸손 제단) -->
-    <path d="M 125 365 Q 256 425 387 365 Q 320 428 256 432 Q 192 428 125 365 Z" fill="url(#brightGoldGrad)" />
-    
-    <!-- Left Stylized Wing -->
-    <path d="M 256 380 C 175 375 130 315 138 250 C 145 195 190 165 235 160 L 235 195 C 198 200 170 225 168 255 C 165 295 195 335 256 345 Z" fill="url(#navyGrad)" opacity="0.85" />
-    
-    <!-- Right Stylized Wing -->
-    <path d="M 256 380 C 337 375 382 315 374 250 C 367 195 322 165 277 160 L 277 195 C 314 200 342 225 344 255 C 347 295 317 335 256 345 Z" fill="url(#navyGrad)" opacity="0.85" />
-
-    <!-- Solid Royal Navy Central Cross (고대비 십자가) -->
-    <!-- Vertical Cross Beam -->
-    <path d="M 234 85 L 278 85 L 282 385 L 230 385 Z" fill="url(#navyGrad)" />
-    <!-- Horizontal Cross Beam -->
-    <path d="M 125 180 L 387 180 L 387 218 L 125 218 Z" fill="url(#navyGrad)" />
-
-    <!-- Gold Accent Trim on Cross Edges -->
-    <path d="M 234 85 L 246 85 L 246 385 L 230 385 Z" fill="url(#brightGoldGrad)" opacity="0.7" />
-    <path d="M 125 180 L 387 180 L 387 192 L 125 192 Z" fill="url(#brightGoldGrad)" opacity="0.6" />
-
-    <!-- Center Radiant Holy Spirit Fire Flame (중앙 성령의 타오르는 불꽃) -->
-    <path d="M 256 110 C 280 155 315 195 298 235 C 286 258 262 270 256 270 C 250 270 226 258 214 235 C 197 195 232 155 256 110 Z" fill="url(#flameVividGrad)" />
-    
-    <!-- Inner Flame Core (화이트/옐로우 코어) -->
-    <path d="M 256 150 C 270 178 288 202 280 226 C 275 240 260 248 256 248 C 252 248 237 240 232 226 C 224 202 242 178 256 150 Z" fill="#ffffff" opacity="0.95" />
-
-    <!-- Center Morning Star Diamond -->
-    <polygon points="256,90 262,106 278,112 262,118 256,134 250,118 234,112 250,106" fill="#fbbf24" />
-    
-    <!-- Top Sparkle -->
-    <polygon points="256,48 261,64 277,69 261,74 256,90 251,74 235,69 251,64" fill="#d97706" />
+  <!-- Shield Icon (Lucide Shield matching Barak Academy Logo) -->
+  <g transform="translate(106, 106) scale(12.5)" filter="url(#shieldShadow)">
+    <path
+      d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+      fill="url(#shieldInnerGrad)"
+      stroke="#ffffff"
+      stroke-width="1.85"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
   </g>
-
-  <!-- Hebrew Inscription 'בָּרַךְ' (Barak) in Elegant Royal Navy -->
-  <text x="256" y="474" font-family="'Times New Roman', serif" font-size="32" font-weight="bold" fill="#1e3a8a" text-anchor="middle" letter-spacing="6">בָּרַךְ</text>
 </svg>
