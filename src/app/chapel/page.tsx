@@ -81,6 +81,69 @@ export default function ChapelPage() {
         }
     ];
 
+    const broadcastSermons = [
+        {
+            id: 101,
+            title: "생베 조각을 낡은 옷에 깁지 않는다",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "마태복음 9:14-17",
+            series: "큰집 큰사람 (1)",
+            desc: "복음의 새 포도주를 담는 영적 그릇과 생베 조각의 거룩한 연합의 비밀을 강해합니다.",
+            youtubeId: "4EeTdI3EkRU",
+            thumb: "https://img.youtube.com/vi/4EeTdI3EkRU/hqdefault.jpg"
+        },
+        {
+            id: 102,
+            title: "모든 말씀으로 살 것이라",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "마태복음 4:1-11",
+            series: "큰집 큰사람 (2)",
+            desc: "육신의 떡을 넘어 하나님의 입에서 나오는 모든 말씀으로 원수를 이기는 신앙의 삶",
+            youtubeId: "5hTDZu3H8mo",
+            thumb: "https://img.youtube.com/vi/5hTDZu3H8mo/hqdefault.jpg"
+        },
+        {
+            id: 103,
+            title: "다만 주를 섬기라 하였느니라",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "누가복음 4:1-13",
+            series: "큰집 큰사람 (3)",
+            desc: "오직 주 하나님만을 경외하고 섬김으로 악한 권세를 꺾는 거룩한 성도의 권능",
+            youtubeId: "3QG-fBkdSmw",
+            thumb: "https://img.youtube.com/vi/3QG-fBkdSmw/hqdefault.jpg"
+        },
+        {
+            id: 104,
+            title: "아버지의 약속하신 것 그대로",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "사도행전 1:4-5, 요엘 2:28-32",
+            series: "성경성령론 (1)",
+            desc: "약속하신 성령을 기다리며 권능과 성령의 세례를 온전히 사모하는 성경적 성령론 강해",
+            youtubeId: "m1vIEIBsJwQ",
+            thumb: "https://img.youtube.com/vi/m1vIEIBsJwQ/hqdefault.jpg"
+        },
+        {
+            id: 105,
+            title: "성령, 예루살렘으로부터라야",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "누가복음 24:45-49, 요엘 2:28-32",
+            series: "성경성령론 (2)",
+            desc: "위로부터 입혀지는 성령의 능력과 예루살렘에서부터 온 땅 끝으로 향하는 구속사적 사명",
+            youtubeId: "OyXDNwZaP14",
+            thumb: "https://img.youtube.com/vi/OyXDNwZaP14/hqdefault.jpg"
+        },
+        {
+            id: 106,
+            title: "필경은 성신을 그의 제자된 자에게",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "이사야 32:9-15, 사도행전 2:32, 36",
+            series: "성경성령론 (3)",
+            desc: "광야가 아름다운 밭이 되고 주를 주로 시인하는 제자들에게 부어주시는 성령의 충만하심",
+            youtubeId: "IGOT8t6eg8I",
+            thumb: "https://img.youtube.com/vi/IGOT8t6eg8I/hqdefault.jpg"
+        }
+    ];
+
     return (
         <div className="flex flex-col min-h-screen bg-stone-50 font-serif pt-20">
             {/* Hero Section */}
@@ -210,6 +273,80 @@ export default function ChapelPage() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </section>
+
+            {/* 2. Broadcast Sermons Grid */}
+            <section className="py-20 bg-stone-100/70 border-t border-stone-200 font-sans">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+                        <div>
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase mb-2">
+                                <Video className="w-3.5 h-3.5 text-amber-700" />
+                                J-HOP TV 방송 설교
+                            </div>
+                            <h2 className="text-3xl font-bold text-stone-900">설교 방송</h2>
+                            <p className="text-stone-500 mt-2">이갈렙 목사의 깊이 있는 성경 강해와 성경성령론 연속 방송을 시청하세요.</p>
+                        </div>
+                        <span className="text-xs text-stone-500 font-medium self-start sm:self-auto">
+                            총 6개 방송 강해 수록
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {broadcastSermons.map((sermon) => (
+                            <div
+                                key={sermon.id}
+                                onClick={() => setSelectedVideo({ 
+                                    title: sermon.title, 
+                                    youtubeId: sermon.youtubeId, 
+                                    speaker: sermon.speaker,
+                                    scripture: sermon.scripture 
+                                })}
+                                className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-200 flex flex-col justify-between"
+                            >
+                                <div>
+                                    <div className="relative aspect-video overflow-hidden bg-stone-900">
+                                        <img
+                                            src={sermon.thumb}
+                                            alt={sermon.title}
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                                        />
+                                        <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition-colors" />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-14 h-14 bg-amber-500/90 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-amber-500 transition-all duration-300">
+                                                <Play className="w-6 h-6 ml-1 fill-white" />
+                                            </div>
+                                        </div>
+                                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-stone-900/80 text-amber-300 text-xs font-bold backdrop-blur-sm border border-white/10">
+                                            {sermon.series}
+                                        </div>
+                                        <span className="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/70 text-white text-[11px] font-medium backdrop-blur-sm">
+                                            설교 방송
+                                        </span>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider mb-2">
+                                            <span>{sermon.scripture}</span>
+                                            <span>•</span>
+                                            <span className="text-stone-600">{sermon.speaker}</span>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-stone-900 mb-2 leading-snug group-hover:text-amber-700 transition-colors">
+                                            {sermon.title}
+                                        </h3>
+                                        <p className="text-stone-500 text-xs leading-relaxed line-clamp-2">
+                                            {sermon.desc}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="px-6 pb-6 pt-0">
+                                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-900 group-hover:text-amber-600 group-hover:translate-x-1 transition-all">
+                                        방송 시청하기 <ArrowRight className="w-3.5 h-3.5" />
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
