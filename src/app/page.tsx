@@ -75,12 +75,12 @@ export default function LandingPage() {
   };
 
   const facultyPreview = [
-    { name: "이윤주 학장 (Ph.D)", field: "이갈렙 목사의 성경해석학", role: "학장 / 산해원교회 담임목사", image: "/images/faculty/lee-yoonju.jpg" },
-    { name: "송민원 교수", field: "구약학", role: "더바이블 무브먼트 대표", image: "/images/faculty/song-minwon.jpg" },
-    { name: "김영희 교수", field: "신약학", role: "신약성경연구소 전문위원", image: "/images/faculty/kim-younghee.jpg" },
-    { name: "전예령 교수 (Ph.D)", field: "기독교교육학", role: "토론토대 교육철학 박사", image: "/images/faculty/jeon-yeryeong.jpg" },
-    { name: "박은정 교수", field: "목회상담학", role: "웨스트민스터신학대학원 일반학부장", image: "/images/faculty/park-eunjung.jpg" },
-    { name: "김종우 교수", field: "AI와 기독교", role: "스마트목회지원 연구소장", image: "/images/faculty/kim-jongwoo.jpg" },
+    { name: "이윤주 학장 (Ph.D)", field: "이갈렙 목사의 성경해석학", image: "/images/faculty/lee-yoonju.jpg" },
+    { name: "송민원 교수", field: "구약학", image: "/images/faculty/song-minwon.jpg" },
+    { name: "김영희 교수", field: "신약학", image: "/images/faculty/kim-younghee.jpg" },
+    { name: "전예령 교수 (Ph.D)", field: "기독교교육학", image: "/images/faculty/jeon-yeryeong.jpg" },
+    { name: "박은정 교수", field: "목회상담학", image: "/images/faculty/park-eunjung.jpg" },
+    { name: "김종우 교수", field: "AI와 기독교", image: "/images/faculty/kim-jongwoo.jpg" },
   ];
 
   if (!mounted) return null;
@@ -486,8 +486,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <h4 className="font-bold text-slate-900 text-sm mb-0.5">{faculty.name}</h4>
-                <p className="text-amber-600 font-semibold text-xs mb-1">{faculty.field}</p>
-                <p className="text-slate-400 text-[10px] line-clamp-1">{faculty.role}</p>
+                <p className="text-amber-600 font-semibold text-xs">{faculty.field}</p>
               </div>
             ))}
           </div>
