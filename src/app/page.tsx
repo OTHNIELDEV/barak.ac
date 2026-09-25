@@ -520,15 +520,15 @@ export default function LandingPage() {
                   <div className="relative h-96 w-full">
                     <Image
                       src={
-                        course.id === 1 ? "/images/track-deborah-symbolic.jpg" :
-                          course.id === 2 ? "/images/track-barak-symbolic.jpg" :
-                            "/images/track-jael-symbolic.jpg"
+                        course.id === 1 ? "/images/track-deborah-fresh.jpg" :
+                          course.id === 2 ? "/images/track-barak-fresh.jpg" :
+                            "/images/track-jael-fresh.jpg"
                       }
                       alt={course.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.7]"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.85] group-hover:brightness-95"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
 
                     <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                       <div>
