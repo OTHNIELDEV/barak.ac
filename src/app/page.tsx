@@ -334,7 +334,7 @@ export default function LandingPage() {
                     <CheckCircle2 className="w-5 h-5 text-amber-500" />
                     A4용지 소감문 작성
                   </div>
-                  <p className="text-xs text-slate-500">과목별 A4 1장 소감문으로 진리를 삶에 내재화</p>
+                  <p className="text-xs text-slate-500">각 강의별 A4 1장 소감문으로 삶에 내재화</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
