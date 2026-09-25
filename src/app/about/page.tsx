@@ -118,7 +118,7 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* 3. Recommendation Message (학장 이윤주 박사의 추천의 말씀) */}
+            {/* 3. Recommendation Message (설립자 이갈렙 목사의 추천의 말씀) */}
             <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="bg-slate-800/90 rounded-3xl p-8 md:p-14 shadow-2xl border border-slate-700">
@@ -128,12 +128,12 @@ export default function AboutPage() {
                         </div>
 
                         <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">
-                            추천의 말씀 <span className="text-lg font-normal text-slate-400">- 학장 이윤주 박사 (목사)</span>
+                            추천의 말씀 <span className="text-lg font-normal text-slate-400">- 설립자 이갈렙 목사</span>
                         </h2>
 
                         <div className="space-y-6 text-slate-200 text-base md:text-lg leading-relaxed font-light">
                             <p className="bg-slate-900/80 p-6 rounded-2xl border-l-4 border-amber-400 font-normal text-slate-100 shadow-inner">
-                                “현재의 교단 신학 기관들로 남종, 담임목사 양성은 모자람이 없음 때문으로 본 아카데미 프로그램이 남종보다는 <strong>여종</strong>, 담임목사보다는 <strong>전문 부목사</strong>에 비중이 주어졌음입니다.”
+                                “현재의 교단 신학 기관들로 남종, 담임목사 양성은 모자람이 없음 때문으로 본 아카데미 프로그램은 남종보다는 <strong>여종</strong>, 담임목사보다는 <strong>전문 부목사</strong>에 비중을 두고 있습니다.”
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
@@ -143,17 +143,17 @@ export default function AboutPage() {
                                         현역 목사 및 사모님들께
                                     </h4>
                                     <p className="text-sm text-slate-300 leading-relaxed">
-                                        성령과 불의 세례로 각양 은사를 받았음에도 제도적 직임 자격이 주어지지 않아 바락·드보라로 온전히 동사하지 못하고 계신 분들에게 거룩한 사역의 문을 활짝 열어드립니다.
+                                        성령 세례로 각양 은사를 받았음에도 제도적 직임 자격이 주어지지 않은 분들에게 거룩한 사역의 문을 활짝 열어드립니다.
                                     </p>
                                 </div>
 
                                 <div className="p-6 bg-slate-900/60 rounded-2xl border border-slate-700/70">
                                     <h4 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
                                         <Users className="w-5 h-5 text-amber-400" />
-                                        은퇴 및 원로 목회자(65세 이상) 분들께
+                                        은퇴 및 원로 목회자 분들께
                                     </h4>
                                     <p className="text-sm text-slate-300 leading-relaxed">
-                                        100세 시대에 65세 은퇴 후 원로·은퇴 목사 지위로 여생을 채우시기보다, 본원의 '바락'과 같은 충성된 전문 부목자로 헌신한다면 <strong>[히 11:35b] 더 좋은 부활, [히 11:32] 더 큰 존귀함</strong>에 이름이 기록될 것입니다!
+                                        100세 시대에 은퇴 후 원로·은퇴 목사 지위로 여생을 채우시기보다, 본원의 '바락'과 같은 충성된 전문 부목자로 헌신한다면 <strong>[히 11:35b] 더 좋은 부활, [히 11:32] 더 큰 존귀함</strong>에 이름이 기록될 것입니다!
                                     </p>
                                 </div>
                             </div>
