@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function PublicFooter() {
     return (
-        <footer className="bg-slate-900 py-12 md:py-20 text-slate-300">
+        <footer className="bg-slate-900 py-12 md:py-20 text-slate-300 font-sans">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 {/* Balanced 4-Column Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8 border-b border-slate-800 pb-12 mb-12">

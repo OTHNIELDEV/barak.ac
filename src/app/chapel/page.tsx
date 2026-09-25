@@ -27,55 +27,55 @@ export default function ChapelPage() {
     const chapelSermons = [
         {
             id: 1,
-            title: "항상 들으시니 항상 기도할 것인가",
+            title: "자유하는 율법 #2  최고한 법 (나)",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "요한복음 11:41-44",
-            desc: "우리의 간구를 언제나 들으시는 하나님의 은혜 속에서 성도가 지녀야 할 참된 기도의 영성",
-            youtubeId: "ZbAzIGAuywg",
-            thumb: "https://img.youtube.com/vi/ZbAzIGAuywg/hqdefault.jpg"
+            scripture: "마 19:16-22",
+            desc: "사랑과 긍휼로 율법을 완성하며 성도를 참된 자유로 이끄는 온전한 구속사적 말씀입니다.",
+            youtubeId: "bftZuUKSfM8",
+            thumb: "https://img.youtube.com/vi/bftZuUKSfM8/hqdefault.jpg"
         },
         {
             id: 2,
-            title: "자유하는 율법 #1 최고한 법 (가)",
+            title: "자유하는 율법 #1  최고한 법 (가)",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "야고보서 2:8-9",
-            desc: "차별 없는 사랑과 긍휼로 완성되는 최고의 법, 성도를 자유케 하는 온전한 율법의 비밀 강해",
+            scripture: "약 2:8-9",
+            desc: "사랑과 긍휼로 율법을 완성하며 성도를 참된 자유로 이끄는 온전한 구속사적 말씀입니다.",
             youtubeId: "OP79-8l715c",
             thumb: "https://img.youtube.com/vi/OP79-8l715c/hqdefault.jpg"
         },
         {
             id: 3,
-            title: "자유하는 율법 #2 최고한 법 (나)",
+            title: "항상 들으시니 항상 기도할 것인가",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "마태복음 19:16-22",
-            desc: "부자 청년의 질문을 통해 살펴본 영생의 본질과 자기 소유를 내려놓고 주를 따르는 참된 제자도",
-            youtubeId: "bftZuUKSfM8",
-            thumb: "https://img.youtube.com/vi/bftZuUKSfM8/hqdefault.jpg"
+            scripture: "요 11:41-44",
+            desc: "우리의 간구를 항상 들으시는 하나님의 신실하심 속에서 마땅히 품어야 할 기도의 영성입니다.",
+            youtubeId: "ZbAzIGAuywg",
+            thumb: "https://img.youtube.com/vi/ZbAzIGAuywg/hqdefault.jpg"
         },
         {
             id: 4,
-            title: "기록되었으되, 부제(1) 하나님을 시험하라",
+            title: "기록되었으되, 부제(2) 겸손하여야",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "이사야 7:10-15, 마태복음 4:5-7",
-            desc: "광야의 유혹 속에서 기록된 말씀의 권세로 원수의 궤계를 물리치신 예수 그리스도의 성경적 분별",
-            youtubeId: "OWo5Up7GZEk",
-            thumb: "https://img.youtube.com/vi/OWo5Up7GZEk/hqdefault.jpg"
+            scripture: "대상 21:1, 마 4:1-4",
+            desc: "대상 21:1, 마 4:1-4 말씀을 중심으로 하나님 나라의 진리와 사역자의 바른 영성을 증거합니다.",
+            youtubeId: "tvWiKoF_MI8",
+            thumb: "https://img.youtube.com/vi/tvWiKoF_MI8/hqdefault.jpg"
         },
         {
             id: 5,
-            title: "기록되었으되, 부제(2) 겸손하여야",
+            title: "모든 말씀으로 살 것이라",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "역대상 21:1, 마태복음 4:1-4",
-            desc: "사람이 떡으로만 살 것이 아니요 하나님의 모든 말씀으로 살아야 함을 선포하는 겸손의 영성",
-            youtubeId: "tvWiKoF_MI8",
-            thumb: "https://img.youtube.com/vi/tvWiKoF_MI8/hqdefault.jpg"
+            scripture: "큰집 큰사람(2)",
+            desc: "기록된 말씀의 권세로 원수를 물리치고 하나님의 입에서 나오는 말씀으로 사는 삶을 선포합니다.",
+            youtubeId: "5hTDZu3H8mo",
+            thumb: "https://img.youtube.com/vi/5hTDZu3H8mo/hqdefault.jpg"
         },
         {
             id: 6,
             title: "주여, 구원을 얻는 자가 적으니이까",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "누가복음 13:18-21, 마태복음 7:22-23",
-            desc: "좁은 문으로 들어가기를 힘쓰라 명하신 주님의 음성을 기억하며 깨어있는 성도의 삶과 구원의 확신",
+            scripture: "눅 13:18-21, 마 7:22-23",
+            desc: "눅 13:18-21, 마 7:22-23 말씀을 중심으로 하나님 나라의 진리와 사역자의 바른 영성을 증거합니다.",
             youtubeId: "iE0UZ2fipx0",
             thumb: "https://img.youtube.com/vi/iE0UZ2fipx0/hqdefault.jpg"
         }
@@ -89,8 +89,8 @@ export default function ChapelPage() {
             scripture: "마태복음 9:14-17",
             series: "큰집 큰사람 (1)",
             desc: "복음의 새 포도주를 담는 영적 그릇과 생베 조각의 거룩한 연합의 비밀을 강해합니다.",
-            youtubeId: "4EeTdI3EkRU",
-            thumb: "https://img.youtube.com/vi/4EeTdI3EkRU/hqdefault.jpg"
+            youtubeId: "YxU9WnNvNP0",
+            thumb: "https://img.youtube.com/vi/YxU9WnNvNP0/hqdefault.jpg"
         },
         {
             id: 102,
@@ -99,8 +99,8 @@ export default function ChapelPage() {
             scripture: "마태복음 4:1-11",
             series: "큰집 큰사람 (2)",
             desc: "육신의 떡을 넘어 하나님의 입에서 나오는 모든 말씀으로 원수를 이기는 신앙의 삶",
-            youtubeId: "5hTDZu3H8mo",
-            thumb: "https://img.youtube.com/vi/5hTDZu3H8mo/hqdefault.jpg"
+            youtubeId: "FlYdXHkAK08",
+            thumb: "https://img.youtube.com/vi/FlYdXHkAK08/hqdefault.jpg"
         },
         {
             id: 103,
@@ -109,8 +109,8 @@ export default function ChapelPage() {
             scripture: "누가복음 4:1-13",
             series: "큰집 큰사람 (3)",
             desc: "오직 주 하나님만을 경외하고 섬김으로 악한 권세를 꺾는 거룩한 성도의 권능",
-            youtubeId: "3QG-fBkdSmw",
-            thumb: "https://img.youtube.com/vi/3QG-fBkdSmw/hqdefault.jpg"
+            youtubeId: "Du1FyiPPqIQ",
+            thumb: "https://img.youtube.com/vi/Du1FyiPPqIQ/hqdefault.jpg"
         },
         {
             id: 104,
@@ -119,8 +119,8 @@ export default function ChapelPage() {
             scripture: "사도행전 1:4-5, 요엘 2:28-32",
             series: "성경성령론 (1)",
             desc: "약속하신 성령을 기다리며 권능과 성령의 세례를 온전히 사모하는 성경적 성령론 강해",
-            youtubeId: "m1vIEIBsJwQ",
-            thumb: "https://img.youtube.com/vi/m1vIEIBsJwQ/hqdefault.jpg"
+            youtubeId: "7c3CMFPsTFA",
+            thumb: "https://img.youtube.com/vi/7c3CMFPsTFA/hqdefault.jpg"
         },
         {
             id: 105,
@@ -129,8 +129,8 @@ export default function ChapelPage() {
             scripture: "누가복음 24:45-49, 요엘 2:28-32",
             series: "성경성령론 (2)",
             desc: "위로부터 입혀지는 성령의 능력과 예루살렘에서부터 온 땅 끝으로 향하는 구속사적 사명",
-            youtubeId: "OyXDNwZaP14",
-            thumb: "https://img.youtube.com/vi/OyXDNwZaP14/hqdefault.jpg"
+            youtubeId: "2KyVQqoj0HM",
+            thumb: "https://img.youtube.com/vi/2KyVQqoj0HM/hqdefault.jpg"
         },
         {
             id: 106,
@@ -139,8 +139,8 @@ export default function ChapelPage() {
             scripture: "이사야 32:9-15, 사도행전 2:32, 36",
             series: "성경성령론 (3)",
             desc: "광야가 아름다운 밭이 되고 주를 주로 시인하는 제자들에게 부어주시는 성령의 충만하심",
-            youtubeId: "IGOT8t6eg8I",
-            thumb: "https://img.youtube.com/vi/IGOT8t6eg8I/hqdefault.jpg"
+            youtubeId: "SNFWAkc05NY",
+            thumb: "https://img.youtube.com/vi/SNFWAkc05NY/hqdefault.jpg"
         }
     ];
 
@@ -400,7 +400,9 @@ export default function ChapelPage() {
 
 
 
-            <PublicFooter />
+            <div className="font-sans">
+                <PublicFooter />
+            </div>
         </div>
     );
 }
