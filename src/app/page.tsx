@@ -411,7 +411,7 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10 text-xs text-amber-200 leading-relaxed">
-                * 1차 물세례자는 누구나 제약 없이 입학/수강 가능하며, 교회 임직에 모자람 없는 공식 자격증표를 수여합니다.
+                * 누구나 제약 없이 입학/수강 가능하며, 졸업시 공식 자격증서를 수여합니다.
               </div>
             </div>
 
