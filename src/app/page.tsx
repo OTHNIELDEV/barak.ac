@@ -405,7 +405,7 @@ export default function LandingPage() {
                   </li>
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
                     <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">4</span>
-                    <span><strong>성경과 신학의 학덕을 깊이 탐구</strong>하여 권능과 지식을 겸비하고자 하는 은사자</span>
+                    <span><strong>성경과 신학을 깊이 탐구</strong>하여 영성과 지식을 겸비하고자 하는 은사자</span>
                   </li>
                 </ul>
               </div>
