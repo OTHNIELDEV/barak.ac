@@ -1,7 +1,7 @@
 "use client";
 
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { BookOpen, Shield, Zap, ChevronRight, PlayCircle, CheckCircle2, Award, FileText, Clock, Users, ArrowRight, Sparkles } from "lucide-react";
+import { BookOpen, Shield, Zap, ChevronRight, PlayCircle, CheckCircle2, Award, FileText, Clock, Users, ArrowRight, Sparkles, Lock, Video } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -31,29 +31,78 @@ export default function CurriculumPage() {
         fetchCourses();
     }, []);
 
-    const semesters = [
+    const semester1Subjects = [
         {
-            sem: "제 1학기",
-            title: "성경의 기초와 원어 영성",
-            totalLectures: "30강",
-            desc: "구약과 신약의 맥을 잡고 히브리어 '바라크'의 어원적 영성과 성경 원어의 본래적 의미를 체득합니다.",
-            professors: "송민원 교수 (구약학), 김영희 교수 (신약학)",
-            subjects: ["구약 파노라마와 구속사 (15강)", "신약 복음서와 하나님 나라 (15강)"]
+            id: 1,
+            title: "이갈렙 목사의 성경해석학 실무",
+            lectures: "5강",
+            professor: "이윤주 학장",
+            field: "성경해석학",
+            image: "/images/faculty/lee-yoonju.jpg",
+            desc: "성경을 바르게 해석하고 목회 현장에 접목하는 핵심 원리와 구속사적 강해"
         },
         {
+            id: 2,
+            title: "구약 파노라마와 원어 영성",
+            lectures: "5강",
+            professor: "송민원 교수",
+            field: "구약학",
+            image: "/images/faculty/song-minwon.jpg",
+            desc: "구약의 맥을 잡고 히브리어 원어 '바라크'의 본래적 영성과 지혜 체득"
+        },
+        {
+            id: 3,
+            title: "신약 복음서와 하나님 나라",
+            lectures: "5강",
+            professor: "김영희 교수",
+            field: "신약학",
+            image: "/images/faculty/kim-younghee.jpg",
+            desc: "사복음서 중심 예수 그리스도의 구속사와 초대교회 제자도의 실천"
+        },
+        {
+            id: 4,
+            title: "기독교 교육 철학과 영성형성",
+            lectures: "5강",
+            professor: "전예령 교수",
+            field: "기독교교육학",
+            image: "/images/faculty/jeon-yeryeong.jpg",
+            desc: "세대 통합 교육 프락시스와 사모·여성 지도자를 위한 교육 리더십"
+        },
+        {
+            id: 5,
+            title: "성경적 목회상담과 전인 치유",
+            lectures: "5강",
+            professor: "박은정 교수",
+            field: "목회상담학",
+            image: "/images/faculty/park-eunjung.jpg",
+            desc: "사역 현장의 상처 입은 영혼과 가정을 돌보는 성경적 상담 및 치유 실무"
+        },
+        {
+            id: 6,
+            title: "생성형 AI와 스마트 목회",
+            lectures: "5강",
+            professor: "김종우 교수",
+            field: "인공지능 시대의 기독교 신학",
+            image: "/images/faculty/kim-jongwoo.jpg",
+            desc: "AI 기술을 거룩하게 전용하여 복음 콘텐츠를 제작하는 스마트 사역 실무"
+        }
+    ];
+
+    const upcomingSemesters = [
+        {
             sem: "제 2학기",
-            title: "성경해석학과 교육목회",
+            title: "성경해석학과 교육목회 심화",
             totalLectures: "30강",
             desc: "이갈렙 목사의 성경해석학을 통해 성경을 바르게 해석하고 이를 교회와 가정에 가르치는 교육 리더십을 세웁니다.",
-            professors: "이윤주 학장 (성경해석학), 전예령 교수 (기독교교육학)",
-            subjects: ["이갈렙 목사의 성경해석학 실무 (15강)", "기독교 교육 철학과 영성형성 (15강)"]
+            professors: "이윤주 학장, 전예령 교수",
+            subjects: ["이갈렙 목사의 성경해석학 실무 심화 (15강)", "기독교 교육 철학과 영성형성 심화 (15강)"]
         },
         {
             sem: "제 3학기",
-            title: "목회상담과 전인적 치유",
+            title: "목회상담과 전인적 치유 심화",
             totalLectures: "30강",
             desc: "사역 현장의 상처 입은 영혼과 가정을 돌보며, 사모 및 여성 사역자를 위한 정서적 회복과 상담 실무를 배웁니다.",
-            professors: "박은정 교수 (목회상담학)",
+            professors: "박은정 교수",
             subjects: ["성경적 목회상담과 가족치유 (15강)", "위기상담과 여성사역자의 자기돌봄 (15강)"]
         },
         {
@@ -61,9 +110,9 @@ export default function CurriculumPage() {
             title: "AI와 미래목회 & 실전 사역",
             totalLectures: "30강",
             desc: "생성형 AI 기술을 거룩하게 전용하여 복음 콘텐츠를 제작하고 온누리(산, 바다, 들)로 나아가는 종합 실천 사역을 완성합니다.",
-            professors: "김종우 교수 (인공지능 시대의 기독교 신학), 이윤주 학장",
-            subjects: ["생성형 AI와 스마트 목회 콘텐츠 (15강)", "실전 사역 프로젝트 및 소감문 완성 (15강)"]
-        },
+            professors: "김종우 교수, 이윤주 학장",
+            subjects: ["생성형 AI와 스마트 목회 콘텐츠 심화 (15강)", "실전 사역 프로젝트 및 소감문 완성 (15강)"]
+        }
     ];
 
     const getTheme = (index: number) => {
@@ -209,49 +258,180 @@ export default function CurriculumPage() {
 
             {/* 3. 4-Semester Roadmap */}
             <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-16">
+                <div className="text-center max-w-3xl mx-auto mb-14">
                     <span className="text-blue-900 font-bold text-sm tracking-widest uppercase">Curriculum Roadmap</span>
                     <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
                         학기별 정규 커리큘럼 로드맵
                     </h2>
                     <p className="text-slate-600 mt-3 text-base md:text-lg">
-                        6인 전문 교수진이 전하는 4학기 120강의 균형 잡힌 신학 교육
+                        6인의 교수진이 전하는 제 1학기 6개 과목(30강) 집중 개설 및 전 과정 로드맵
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {semesters.map((sem, idx) => (
-                        <div key={idx} className="bg-white rounded-3xl p-8 shadow-lg border border-slate-200 flex flex-col justify-between hover:shadow-xl transition-all">
-                            <div>
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className="px-3.5 py-1 rounded-full bg-blue-900 text-white font-extrabold text-xs">
-                                        {sem.sem}
-                                    </span>
-                                    <span className="text-amber-600 font-bold text-sm flex items-center gap-1">
-                                        <PlayCircle className="w-4 h-4" /> {sem.totalLectures}
-                                    </span>
-                                </div>
-                                <h3 className="text-2xl font-bold text-slate-900 mb-2">{sem.title}</h3>
-                                <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                                    {sem.desc}
-                                </p>
+                {/* 1st Semester: Active Featured Course */}
+                <div className="bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-xl border-2 border-blue-900/15 relative overflow-hidden transition-all mb-12">
+                    {/* Top Accent Gradient Bar */}
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-900 via-amber-500 to-blue-900" />
 
-                                <div className="space-y-3 pt-4 border-t border-slate-100">
-                                    <div className="text-xs font-semibold text-blue-900 flex items-center gap-1">
-                                        <Users className="w-3.5 h-3.5" /> 담당 교수진: {sem.professors}
-                                    </div>
-                                    <div className="space-y-2">
-                                        {sem.subjects.map((sub, sIdx) => (
-                                            <div key={sIdx} className="p-3 bg-slate-50 rounded-xl text-xs font-medium text-slate-700 flex items-center gap-2 border border-slate-100">
-                                                <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                                                <span>{sub}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                    {/* Semester 1 Header */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                        <div>
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                                <span className="px-3.5 py-1 rounded-full bg-blue-900 text-white font-extrabold text-xs shadow-sm">
+                                    제 1학기 (1st Semester)
+                                </span>
+                                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-xs flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> 현재 정규 개설 · 수강 신청 가능
+                                </span>
+                            </div>
+                            <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
+                                6인의 교수진과 함께하는 1학기 6대 핵심 신학
+                            </h3>
+                            <p className="text-slate-600 text-sm md:text-base mt-2 max-w-3xl leading-relaxed">
+                                6인의 전임 교수진 전원이 1학기에 참여하여 신학의 본질, 성경 해석, 교육, 상담, AI 사역까지 
+                                목회 기초를 다지는 <strong>6개 과목(과목당 5개 고화질 영상, 총 30강)</strong>을 제공합니다.
+                            </p>
+                        </div>
+
+                        <div className="flex-shrink-0 self-start md:self-auto">
+                            <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 flex items-center gap-2.5 shadow-sm">
+                                <PlayCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                                <div>
+                                    <div className="text-xs text-amber-800 font-medium">1학기 영상 구성</div>
+                                    <div className="text-base font-extrabold text-amber-950">6개 과목 총 30강</div>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    </div>
+
+                    {/* 6 Subjects Grid */}
+                    <div className="mt-8">
+                        <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                                <Users className="w-3.5 h-3.5 text-blue-900" /> 1학기 6대 개설 과목 목록 (과목당 5강 녹화 영상)
+                            </h4>
+                            <span className="text-xs text-slate-400">100% 자율 수강 · A4 1장 소감문</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            {semester1Subjects.map((sub) => (
+                                <div 
+                                    key={sub.id} 
+                                    className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/90 hover:border-blue-400 hover:bg-white hover:shadow-md transition-all flex flex-col justify-between group"
+                                >
+                                    <div>
+                                        {/* Professor Header */}
+                                        <div className="flex items-center justify-between gap-3 mb-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-white shadow-sm flex-shrink-0 bg-slate-200">
+                                                    <Image 
+                                                        src={sub.image} 
+                                                        alt={sub.professor} 
+                                                        fill 
+                                                        className="object-cover group-hover:scale-105 transition-transform" 
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-slate-900 text-sm leading-tight">
+                                                        {sub.professor}
+                                                    </div>
+                                                    <span className="text-[11px] text-slate-500 block">
+                                                        {sub.field}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <span className="px-2 py-0.5 rounded-md bg-blue-100/80 text-blue-900 text-[11px] font-bold flex items-center gap-1 flex-shrink-0">
+                                                <Video className="w-3 h-3" /> {sub.lectures}
+                                            </span>
+                                        </div>
+
+                                        {/* Course Title */}
+                                        <h5 className="font-bold text-slate-900 text-base mb-1.5 group-hover:text-blue-900 transition-colors">
+                                            {sub.title}
+                                        </h5>
+
+                                        {/* Course Desc */}
+                                        <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                                            {sub.desc}
+                                        </p>
+                                    </div>
+
+                                    {/* Footer Info */}
+                                    <div className="pt-3 border-t border-slate-200/70 flex items-center justify-between text-[11px] text-slate-500">
+                                        <span className="flex items-center gap-1 text-slate-600">
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-amber-500" /> 5개 영상 수강
+                                        </span>
+                                        <span className="text-slate-400">A4 1장 소감문</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Bottom Action / Guide Bar */}
+                    <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p className="text-xs md:text-sm text-slate-600 flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-blue-900 flex-shrink-0" />
+                            사역과 일상의 일정에 맞춰 언제든 100% 자율 수강할 수 있으며, 6개 과목 수강 및 소감문 제출 시 1학기가 수료됩니다.
+                        </p>
+                        <Link
+                            href="/apply"
+                            className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-900 text-white rounded-xl font-bold text-sm hover:bg-blue-800 transition-all shadow-md flex-shrink-0"
+                        >
+                            1학기 입학 및 수강 신청 <ChevronRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Upcoming Semesters (2, 3, 4학기: 희미하게 안보임 처리) */}
+                <div className="mt-14">
+                    <div className="text-center mb-8">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Next Semesters Roadmap</span>
+                        <h3 className="text-xl md:text-2xl font-bold text-slate-500 mt-1">
+                            차기 학기 순차 개설 로드맵 (2 · 3 · 4학기)
+                        </h3>
+                        <p className="text-xs md:text-sm text-slate-400 mt-1">
+                            1학기 학사 일정 및 수료 진행에 맞추어 순차적으로 개설됩니다.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {upcomingSemesters.map((sem, idx) => (
+                            <div 
+                                key={idx} 
+                                className="relative bg-slate-100/60 rounded-3xl p-6 border border-dashed border-slate-300 opacity-40 filter blur-[0.4px] hover:opacity-60 hover:blur-none transition-all duration-300 select-none group"
+                            >
+                                <div className="absolute top-5 right-5 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-200/90 text-slate-500 text-[11px] font-bold">
+                                    <Lock className="w-3 h-3" /> 순차 개설 예정
+                                </div>
+
+                                <div className="mb-3">
+                                    <span className="px-3 py-0.5 rounded-full bg-slate-300 text-slate-700 font-extrabold text-[11px]">
+                                        {sem.sem}
+                                    </span>
+                                </div>
+
+                                <h4 className="text-lg font-bold text-slate-700 mb-1.5">{sem.title}</h4>
+                                <span className="text-xs text-slate-500 block mb-3 font-medium">총 {sem.totalLectures} 예정</span>
+                                <p className="text-xs text-slate-500 mb-4 line-clamp-2 leading-relaxed">
+                                    {sem.desc}
+                                </p>
+
+                                <div className="space-y-1.5 pt-3 border-t border-slate-200/60 text-xs text-slate-500">
+                                    <div className="text-[11px] font-semibold text-slate-600 mb-1.5">
+                                        담당: {sem.professors}
+                                    </div>
+                                    {sem.subjects.map((sub, sIdx) => (
+                                        <div key={sIdx} className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                                            <span>{sub}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
