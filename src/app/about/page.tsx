@@ -184,7 +184,7 @@ export default function AboutPage() {
                                     <p>• 이화여자대학교 신학대학원 졸업 (Th.M)</p>
                                     <p>• 호서대학교 일반대학원 구약학 졸업 (Ph.D)</p>
                                     <p>• 제이합미션(JHOP Mission) 대표</p>
-                                    <p>• 한국기독교신학교협의회(한기신협) 이사</p>
+                                    <p>• 한국기독교대학 신학대학원 협의회(한기신협) 이사</p>
                                     <p>• 산해원교회 담임목사</p>
                                     <p>• 바라크아카데미 학장</p>
                                 </div>
@@ -200,7 +200,7 @@ export default function AboutPage() {
                                     마지막 거룩한 사명입니다.”
                                 </h2>
                                 <p className="text-slate-200 text-sm md:text-base leading-relaxed font-light">
-                                    바라크아카데미는 성령의 불세례를 받고도 사역의 길을 찾지 못하던 여종들과 충성된 부목자들을 위해 예비된 하나님의 섭리입니다. 지식의 신학을 넘어 영성과 권능이 겸비된 참된 리더십의 길에 동참하시길 축복합니다.
+                                    바라크아카데미는 성령 세례를 받고도 사역의 길을 찾지 못하던 분들을 위해 예비된 신학 전문기관입니다. 지식의 신학을 넘어 영성과 실력이 겸비된 참된 리더십의 길에 동참하시길 바랍니다.
                                 </p>
                                 <div className="pt-4 flex gap-4">
                                     <Link
