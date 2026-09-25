@@ -262,8 +262,8 @@ function AdmissionApplyForm() {
                                     <span className="font-bold text-yellow-200 text-base">50% 할인 (50만원)</span>
                                 </div>
                                 <div className="flex justify-between items-center bg-white/10 p-2.5 rounded-xl">
-                                    <span className="font-semibold">🌟 1기 개교 등록 장학금</span>
-                                    <span className="font-bold text-white text-base">전체 30% 지급 (70만원)</span>
+                                    <span className="font-semibold">🌟 1기 등록 장학금</span>
+                                    <span className="font-bold text-white text-base">30% 혜택 (70만원)</span>
                                 </div>
                             </div>
                         </div>
@@ -487,7 +487,7 @@ function AdmissionApplyForm() {
                                         <label className="block text-sm font-semibold text-slate-700 mb-3">희망 장학 혜택 선택 *</label>
                                         <div className="space-y-2.5">
                                             {[
-                                                { id: "first_batch_30", title: "1기 개교 등록 장학금 (30% 지급)", desc: "1기 신입생 전원 혜택 (수강료 70만원 적용)" },
+                                                { id: "first_batch_30", title: "1기 등록 장학금 (30% 혜택)", desc: "1기 신입생 전원 혜택 (수강료 70만원 적용)" },
                                                 { id: "pastor_wife_50", title: "목사 사모 특별 장학 (50% 감면)", desc: "목회자 사모 대상 특별 장학 (수강료 50만원 적용)" },
                                                 { id: "none", title: "일반 등록 (정규 100만원)", desc: "기관 또는 교회 후원 등록" },
                                             ].map((sch) => (

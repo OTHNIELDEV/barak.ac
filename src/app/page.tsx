@@ -135,7 +135,7 @@ export default function LandingPage() {
             {/* Scholarship & Accreditation Badge in Hero */}
             <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10 text-xs md:text-sm">
               <span className="px-3.5 py-1.5 rounded-full bg-amber-500 text-slate-950 font-bold shadow-lg">
-                🌟 1기 개교 등록 장학금 30% 지급
+                🌟 1기 등록 장학금 30% 혜택
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-blue-600/90 text-white font-bold border border-blue-400/40 backdrop-blur-sm">
                 💖 목사 사모 특별 장학금 50% 할인
@@ -421,10 +421,10 @@ export default function LandingPage() {
               <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between">
                 <div>
                   <div className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold mb-4">
-                    1기 개교 장학
+                    1기 장학 혜택
                   </div>
                   <h4 className="text-xl font-bold mb-2">1기 등록 장학금</h4>
-                  <div className="text-3xl font-black mb-4">전체 30% 지급</div>
+                  <div className="text-3xl font-black mb-4">30% 혜택 (70만원)</div>
                   <p className="text-amber-100 text-xs leading-relaxed mb-6">
                     정규 수강료 100만원 중 1기 신입생 전원에게 30% 장학금을 지원하여 <strong>70만원</strong>으로 등록 가능합니다.
                   </p>
