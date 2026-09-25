@@ -57,7 +57,8 @@ export default function FacultyPage() {
             ],
             careers: [
                 "더바이블 무브먼트 대표",
-                "Israel Institute of Biblical Studies 성서언어 분과 교수"
+                "Israel Institute of Biblical Studies 성서언어 분과 교수",
+                "바라크아카데미 구약학 전임교수"
             ],
             books: [
                 "지혜란 무엇인가: 잠언-욥기-전도서의 상호작용",
