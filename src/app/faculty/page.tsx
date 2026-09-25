@@ -10,7 +10,7 @@ export default function FacultyPage() {
     const facultyList = [
         {
             id: 1,
-            name: "이윤주 학장 (Ph.D)",
+            name: "이윤주 학장",
             title: "바라크아카데미 학장 / 산해원교회 담임목사",
             subject: "이갈렙 목사의 성경해석학",
             category: "성경해석학 & 실천신학",
@@ -107,7 +107,7 @@ export default function FacultyPage() {
         },
         {
             id: 4,
-            name: "전예령 교수 (Ph.D)",
+            name: "전예령 교수",
             title: "기독교교육학 교수 / 교육철학 박사",
             subject: "기독교교육학 (Christian Education)",
             category: "교육철학 & 세대 연합",
