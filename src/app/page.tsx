@@ -378,7 +378,7 @@ export default function LandingPage() {
               입학 요건 · 학생모집 요강 · 장학 혜택
             </h2>
             <p className="text-slate-300 mt-4 text-base md:text-lg font-light">
-              물세례자 누구나 제약 없이 입학 가능하며, 성령의 권능을 덧입어 공인 사역자 자격증서를 수여받습니다.
+              누구나 제약 없이 입학 가능하며, 성령의 권능을 받은 자에 한해 졸업시 공인 사역자 자격증서를 수여받습니다.
             </p>
           </div>
 
