@@ -466,7 +466,7 @@ export default function CurriculumPage() {
                                         <Shield className="w-8 h-8 md:w-10 md:h-10 text-amber-400" />
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl md:text-4xl font-black text-white">바라크 과정</h3>
+                                        <h3 className="text-2xl md:text-4xl font-black text-white">바라크 수강 신청</h3>
                                     </div>
                                 </div>
 
@@ -475,7 +475,7 @@ export default function CurriculumPage() {
                                         href="/apply?track=barak"
                                         className="inline-flex items-center gap-2 px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-extrabold text-sm transition-all shadow-lg hover:scale-105"
                                     >
-                                        바라크 과정 신청하기 <ChevronRight className="w-4 h-4" />
+                                        바라크 수강 신청하기 <ChevronRight className="w-4 h-4" />
                                     </Link>
                                 </div>
                             </div>
