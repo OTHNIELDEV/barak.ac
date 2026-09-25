@@ -55,35 +55,25 @@ export default function ChapelPage() {
                         <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                         <span className="text-xs font-sans tracking-widest uppercase">Sanhaewon Chapel</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight drop-shadow-lg">
+                    <h1 className="text-5xl md:text-7xl font-bold mb-4 tracking-tight drop-shadow-lg">
                         산해원 채플
                     </h1>
-                    <p className="text-xl md:text-2xl font-light text-stone-200 max-w-2xl mx-auto italic">
-                        "여호와를 경외하는 것이 지혜의 근본이라"
-                    </p>
                 </div>
             </section>
 
             {/* Service Info Bar */}
-            <section className="relative z-20 -mt-20 max-w-5xl mx-auto px-4">
-                <div className="bg-white rounded-t-3xl shadow-2xl p-8 grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-stone-100 font-sans">
+            <section className="relative z-20 -mt-20 max-w-3xl mx-auto px-4">
+                <div className="bg-white rounded-3xl shadow-2xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8 divide-y md:divide-y-0 md:divide-x divide-stone-100 font-sans border border-stone-100">
                     <div className="text-center p-4">
                         <Clock className="w-8 h-8 text-stone-400 mx-auto mb-4" />
-                        <h3 className="font-bold text-stone-900 mb-2">주일 대예배</h3>
-                        <p className="text-stone-600 text-sm">매주일 오전 11:00</p>
-                        <p className="text-stone-500 text-xs mt-1">산해원교회 본당</p>
-                    </div>
-                    <div className="text-center p-4">
-                        <Calendar className="w-8 h-8 text-stone-400 mx-auto mb-4" />
-                        <h3 className="font-bold text-stone-900 mb-2">새벽 기도회</h3>
-                        <p className="text-stone-600 text-sm">월-금 오전 05:30</p>
-                        <p className="text-stone-500 text-xs mt-1">온라인 & 오프라인 동시</p>
+                        <h3 className="font-bold text-stone-900 mb-2 text-lg">주일 예배</h3>
+                        <p className="text-stone-600 text-sm font-medium">매주일 오전 11:00</p>
+                        <p className="text-stone-500 text-xs mt-1">산해원 채플실</p>
                     </div>
                     <div className="text-center p-4">
                         <MapPin className="w-8 h-8 text-stone-400 mx-auto mb-4" />
-                        <h3 className="font-bold text-stone-900 mb-2">예배 처소</h3>
-                        <p className="text-stone-600 text-sm">바라크아카데미 / 산해원교회</p>
-                        <p className="text-stone-500 text-xs mt-1">부산 해운대구</p>
+                        <h3 className="font-bold text-stone-900 mb-2 text-lg">예배 처소</h3>
+                        <p className="text-stone-600 text-sm font-medium">바라크아카데미 / 산해원교회</p>
                     </div>
                 </div>
             </section>
