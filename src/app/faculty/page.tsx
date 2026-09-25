@@ -17,7 +17,7 @@ export default function FacultyPage() {
             badge: "학장 / 산해원교회 담임목사",
             accentColor: "from-amber-500 to-orange-600",
             borderColor: "border-amber-400",
-            bio: "이화여대와 호서대에서 구약학을 전공하였으며, 사역 현장과 학문을 잇는 탁월한 성경해석으로 사모와 여성 사역자, 충성된 부목자들을 깨우는 영적 지도자입니다.",
+            bio: "이화여대에서 기독교 교육을, 호서대에서 구약학을 전공하였으며, 이갈렙 목사의 탁월한 성경해석을 강의합니다.",
             image: "/images/faculty/lee-yoonju.jpg",
             academics: [
                 "이화여자대학교 신학대학원 졸업 (Th.M)",
@@ -29,10 +29,9 @@ export default function FacultyPage() {
                 "제이합미션(JHOP Mission) 대표",
                 "한국기독교대학 신학대학원 협의회(한기신협) 이사"
             ],
+            booksLabel: "대표 연구",
             books: [
-                "이갈렙 목사의 성경해석학 실무 강해",
-                "십자가의 도와 구속사적 여종 환원론",
-                "사사기 바락의 영성과 리더십"
+                "창조와 구원의 관점에서 샬롬과 샤바트 연구"
             ],
             courses: [
                 "이갈렙 목사의 성경해석학 (15강)",
@@ -334,7 +333,7 @@ export default function FacultyPage() {
                                     <div className="mb-6 p-4 bg-amber-50/60 rounded-2xl border border-amber-200/60 text-xs">
                                         <h4 className="font-bold text-amber-950 mb-2 flex items-center gap-1.5">
                                             <BookMarked className="w-4 h-4 text-amber-700" />
-                                            대표 저서 및 연구 (Publications)
+                                            {prof.booksLabel || "대표 저서 및 연구 (Publications)"}
                                         </h4>
                                         <ul className="space-y-1 text-amber-900">
                                             {prof.books.map((bk, idx) => (
