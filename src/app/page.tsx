@@ -373,7 +373,7 @@ export default function LandingPage() {
       <section className="py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">2026 Admissions & Tuition</span>
+            <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">2027 Admissions & Tuition</span>
             <h2 className="text-3xl md:text-5xl font-black text-white mt-2">
               입학 요건 · 학생모집 요강 · 장학 혜택
             </h2>
