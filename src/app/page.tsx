@@ -272,7 +272,7 @@ export default function LandingPage() {
                 3. 온누리에 말씀 전파 사명
               </h3>
               <p className="text-slate-300 text-sm leading-relaxed">
-                드보라, 바락, 야엘과 같은 자격을 갖춘 사역자를 산과 바다와 들, 곧 온누리에 파송하여 순전한 하나님의 복음을 전파합니다.
+                드보라, 바락, 야엘과 같은 자격을 갖춘 사역자를 산과 바다와 들, 곧 온누리에 파송하여 하나님의 진리를 전파합니다.
               </p>
             </div>
           </div>
