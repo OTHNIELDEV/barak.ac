@@ -52,21 +52,21 @@ export default function CurriculumPage() {
         },
         {
             id: 3,
-            title: "신약 복음서와 하나님 나라",
+            title: "요한 복음 연구",
             lectures: "5강",
             professor: "김영희 교수",
             field: "신약학",
             image: "/images/faculty/kim-younghee.jpg",
-            desc: "사복음서 중심 예수 그리스도의 구속사와 초대교회 제자도의 실천"
+            desc: "요한복음을 통한 예수 그리스도의 구속사적 연구"
         },
         {
             id: 4,
-            title: "기독교 교육 철학과 영성형성",
+            title: "기독교 교육의 이론과 실제",
             lectures: "5강",
             professor: "전예령 교수",
             field: "기독교교육학",
             image: "/images/faculty/jeon-yeryeong.jpg",
-            desc: "세대 통합 교육 프락시스와 사모·여성 지도자를 위한 교육 리더십"
+            desc: "기독교 교육의 핵심 이론 체계와 사역 현장의 교육적 실제"
         },
         {
             id: 5,
@@ -95,7 +95,7 @@ export default function CurriculumPage() {
             totalLectures: "30강",
             desc: "이갈렙 목사의 성경해석학을 통해 성경을 바르게 해석하고 이를 교회와 가정에 가르치는 교육 리더십을 세웁니다.",
             professors: "이윤주 교수, 전예령 교수",
-            subjects: ["이갈렙 목사의 성경해석학 심화 (15강)", "기독교 교육 철학과 영성형성 심화 (15강)"]
+            subjects: ["이갈렙 목사의 성경해석학 심화 (15강)", "기독교 교육의 이론과 실제 심화 (15강)"]
         },
         {
             sem: "제 3학기",
@@ -140,20 +140,20 @@ export default function CurriculumPage() {
             id: 3,
             num: "03",
             category: "신약학",
-            title: "신약 복음서와 하나님 나라의 구속사",
+            title: "요한 복음 연구",
             instructor: "김영희 교수",
             lectures: "5강",
-            desc: "사복음서에 나타난 예수 그리스도의 구속사와 초대교회 제자도의 실천적 적용",
+            desc: "요한복음을 통한 예수 그리스도의 구속사적 연구",
             badgeColor: "bg-emerald-100 text-emerald-900 border-emerald-200"
         },
         {
             id: 4,
             num: "04",
             category: "기독교교육학",
-            title: "기독교 교육 철학과 영성형성 프락시스",
+            title: "기독교 교육의 이론과 실제",
             instructor: "전예령 교수",
             lectures: "5강",
-            desc: "세대 통합 교육과 삶의 회복을 이끄는 실천적 교육철학 및 사역자 교육 리더십",
+            desc: "기독교 교육의 핵심 이론 체계와 사역 현장의 교육적 실제",
             badgeColor: "bg-purple-100 text-purple-900 border-purple-200"
         },
         {
