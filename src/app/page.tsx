@@ -553,7 +553,7 @@ export default function LandingPage() {
       <section className="py-24 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 text-white text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase mb-6">
-            <Sparkles className="w-4 h-4" /> 지금 1기 등록 시 30% 장학금 즉시 지급
+            <Sparkles className="w-4 h-4" /> 2027년 1기 등록 시 30% 장학금 혜택
           </div>
           <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
             하나님의 손에 붙들려 쓰임 받는<br />
