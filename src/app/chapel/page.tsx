@@ -1,39 +1,83 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { MapPin, Clock, Calendar, Video, ArrowRight, Heart, X, Play } from "lucide-react";
+import { MapPin, Clock, Calendar, Video, ArrowRight, Heart, X, Play, ExternalLink } from "lucide-react";
 
 export default function ChapelPage() {
-    const [selectedVideo, setSelectedVideo] = useState<{ title: string; youtubeId: string; speaker: string } | null>(null);
+    const [selectedVideo, setSelectedVideo] = useState<{ title: string; youtubeId: string; speaker: string; scripture?: string } | null>(null);
+
+    // ESC key closes modal
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setSelectedVideo(null);
+            }
+        };
+        if (selectedVideo) {
+            window.addEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "hidden";
+        }
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "auto";
+        };
+    }, [selectedVideo]);
 
     const chapelSermons = [
         {
             id: 1,
-            title: "광야에서 외치는 소리: 사사기적 영성",
-            speaker: "이윤주 학장 (산해원교회)",
-            date: "2026년 3월 주일예배",
-            desc: "사사기 4~5장을 통해 하나님께서 세우시는 바락과 드보라의 동역과 거룩한 순종의 비밀을 선포합니다.",
-            youtubeId: "M7lc1UVf-VE",
-            thumb: "https://images.unsplash.com/photo-1445052493926-6c9ad69e7539?q=80&w=2670&auto=format&fit=crop"
+            title: "항상 들으시니 항상 기도할 것인가",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "요한복음 11:41-44",
+            desc: "우리의 간구를 언제나 들으시는 하나님의 은혜 속에서 성도가 지녀야 할 참된 기도의 영성",
+            youtubeId: "ZbAzIGAuywg",
+            thumb: "https://img.youtube.com/vi/ZbAzIGAuywg/hqdefault.jpg"
         },
         {
             id: 2,
-            title: "새 부대에는 새 술을: 디지털 시대의 복음",
-            speaker: "송민원 교수 (구약학)",
-            date: "2026년 2월 특별채플",
-            desc: "어원적 '바라크(ברך)'의 축복과 지혜를 통해 현대 문명과 기술 속에서 복음의 본질을 밝힙니다.",
-            youtubeId: "kJQP7kiw5Fk",
-            thumb: "https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2670&auto=format&fit=crop"
+            title: "자유하는 율법 #1 최고한 법 (가)",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "야고보서 2:8-9",
+            desc: "차별 없는 사랑과 긍휼로 완성되는 최고의 법, 성도를 자유케 하는 온전한 율법의 비밀 강해",
+            youtubeId: "OP79-8l715c",
+            thumb: "https://img.youtube.com/vi/OP79-8l715c/hqdefault.jpg"
         },
         {
             id: 3,
-            title: "믿음의 선한 싸움과 성령의 기름부으심",
-            speaker: "이윤주 학장 (산해원교회)",
-            date: "2026년 2월 주일예배",
-            desc: "불과 성령의 2차 세례로 무장하여 삶의 현장에서 사명을 감당하는 참된 사역자의 길을 제시합니다.",
-            youtubeId: "ZbZSe6N_BXs",
-            thumb: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2673&auto=format&fit=crop"
+            title: "자유하는 율법 #2 최고한 법 (나)",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "마태복음 19:16-22",
+            desc: "부자 청년의 질문을 통해 살펴본 영생의 본질과 자기 소유를 내려놓고 주를 따르는 참된 제자도",
+            youtubeId: "bftZuUKSfM8",
+            thumb: "https://img.youtube.com/vi/bftZuUKSfM8/hqdefault.jpg"
+        },
+        {
+            id: 4,
+            title: "기록되었으되, 부제(1) 하나님을 시험하라",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "이사야 7:10-15, 마태복음 4:5-7",
+            desc: "광야의 유혹 속에서 기록된 말씀의 권세로 원수의 궤계를 물리치신 예수 그리스도의 성경적 분별",
+            youtubeId: "OWo5Up7GZEk",
+            thumb: "https://img.youtube.com/vi/OWo5Up7GZEk/hqdefault.jpg"
+        },
+        {
+            id: 5,
+            title: "기록되었으되, 부제(2) 겸손하여야",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "역대상 21:1, 마태복음 4:1-4",
+            desc: "사람이 떡으로만 살 것이 아니요 하나님의 모든 말씀으로 살아야 함을 선포하는 겸손의 영성",
+            youtubeId: "tvWiKoF_MI8",
+            thumb: "https://img.youtube.com/vi/tvWiKoF_MI8/hqdefault.jpg"
+        },
+        {
+            id: 6,
+            title: "주여, 구원을 얻는 자가 적으니이까",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "누가복음 13:18-21, 마태복음 7:22-23",
+            desc: "좁은 문으로 들어가기를 힘쓰라 명하신 주님의 음성을 기억하며 깨어있는 성도의 삶과 구원의 확신",
+            youtubeId: "iE0UZ2fipx0",
+            thumb: "https://img.youtube.com/vi/iE0UZ2fipx0/hqdefault.jpg"
         }
     ];
 
@@ -80,40 +124,58 @@ export default function ChapelPage() {
 
             {/* Recent Sermons Grid */}
             <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
-                <div className="flex items-end justify-between mb-12">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
                     <div>
                         <h2 className="text-3xl font-bold text-stone-900">최근 채플 설교</h2>
                         <p className="text-stone-500 mt-2">산해원 채플과 바라크아카데미의 은혜로운 말씀을 시청하세요.</p>
                     </div>
+                    <a
+                        href="https://www.youtube.com/@jhoptv/videos"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 font-bold text-xs transition-colors border border-red-200 self-start sm:self-auto"
+                    >
+                        <Video className="w-4 h-4 text-red-600" />
+                        J-HOP TV 채널 전체보기 <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {chapelSermons.map((sermon) => (
                         <div
                             key={sermon.id}
-                            onClick={() => setSelectedVideo({ title: sermon.title, youtubeId: sermon.youtubeId, speaker: sermon.speaker })}
+                            onClick={() => setSelectedVideo({ 
+                                title: sermon.title, 
+                                youtubeId: sermon.youtubeId, 
+                                speaker: sermon.speaker,
+                                scripture: sermon.scripture 
+                            })}
                             className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-stone-200 flex flex-col justify-between"
                         >
                             <div>
-                                <div className="relative aspect-video overflow-hidden bg-stone-200">
-                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-90 group-hover:scale-110 transition-transform duration-300">
-                                        <div className="w-14 h-14 bg-amber-500/90 text-white rounded-full flex items-center justify-center shadow-lg">
-                                            <Play className="w-6 h-6 ml-1 fill-white" />
-                                        </div>
-                                    </div>
+                                <div className="relative aspect-video overflow-hidden bg-stone-900">
                                     <img
                                         src={sermon.thumb}
                                         alt={sermon.title}
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                                     />
+                                    <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition-colors" />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-14 h-14 bg-amber-500/90 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-amber-500 transition-all duration-300">
+                                            <Play className="w-6 h-6 ml-1 fill-white" />
+                                        </div>
+                                    </div>
+                                    <span className="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/70 text-white text-[11px] font-medium backdrop-blur-sm">
+                                        YouTube
+                                    </span>
                                 </div>
                                 <div className="p-6">
                                     <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider mb-2">
-                                        <Calendar className="w-3.5 h-3.5" />
-                                        <span>{sermon.date} • {sermon.speaker}</span>
+                                        <span>{sermon.scripture}</span>
+                                        <span>•</span>
+                                        <span className="text-stone-600">{sermon.speaker}</span>
                                     </div>
-                                    <h3 className="text-lg font-bold text-stone-900 mb-2 leading-tight group-hover:text-amber-700 transition-colors">
+                                    <h3 className="text-lg font-bold text-stone-900 mb-2 leading-snug group-hover:text-amber-700 transition-colors">
                                         {sermon.title}
                                     </h3>
                                     <p className="text-stone-500 text-xs leading-relaxed line-clamp-2">
@@ -122,7 +184,7 @@ export default function ChapelPage() {
                                 </div>
                             </div>
                             <div className="px-6 pb-6 pt-0">
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-900 group-hover:translate-x-1 transition-transform">
+                                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-900 group-hover:text-amber-600 group-hover:translate-x-1 transition-all">
                                     말씀 시청하기 <ArrowRight className="w-3.5 h-3.5" />
                                 </span>
                             </div>
@@ -131,27 +193,46 @@ export default function ChapelPage() {
                 </div>
             </section>
 
-            {/* Video Modal */}
+            {/* Video Modal Popup */}
             {selectedVideo && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
-                    <div className="relative w-full max-w-4xl bg-stone-900 rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200"
+                    onClick={() => setSelectedVideo(null)}
+                >
+                    <div 
+                        className="relative w-full max-w-4xl bg-stone-900 rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="flex items-center justify-between p-4 px-6 bg-stone-950 text-white border-b border-white/10 font-sans">
-                            <div>
-                                <h3 className="font-bold text-base md:text-lg text-white">{selectedVideo.title}</h3>
-                                <p className="text-xs text-amber-300 font-medium">{selectedVideo.speaker}</p>
+                            <div className="min-w-0 pr-4">
+                                <h3 className="font-bold text-base md:text-lg text-white truncate">{selectedVideo.title}</h3>
+                                <p className="text-xs text-amber-300 font-medium mt-0.5">
+                                    {selectedVideo.scripture ? `${selectedVideo.scripture} • ` : ""}{selectedVideo.speaker}
+                                </p>
                             </div>
-                            <button
-                                onClick={() => setSelectedVideo(null)}
-                                className="p-2 rounded-full hover:bg-white/10 text-white transition-colors"
-                            >
-                                <X className="w-6 h-6" />
-                            </button>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <a
+                                    href={`https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors"
+                                >
+                                    <ExternalLink className="w-3.5 h-3.5" /> YouTube에서 열기
+                                </a>
+                                <button
+                                    onClick={() => setSelectedVideo(null)}
+                                    className="p-2 rounded-full hover:bg-white/10 text-white transition-colors"
+                                    aria-label="닫기"
+                                >
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
                         </div>
                         <div className="aspect-video w-full bg-black">
                             <iframe
-                                src={`https://www.youtube-nocookie.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+                                src={`https://www.youtube-nocookie.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0`}
                                 title={selectedVideo.title}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
                                 className="w-full h-full border-0"
                             />
