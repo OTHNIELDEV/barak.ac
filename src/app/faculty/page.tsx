@@ -57,8 +57,7 @@ export default function FacultyPage() {
             ],
             careers: [
                 "더바이블 무브먼트 대표",
-                "Israel Institute of Biblical Studies 성서언어 분과 교수",
-                "바라크아카데미 구약학 전임교수"
+                "Israel Institute of Biblical Studies 성서언어 분과 교수"
             ],
             books: [
                 "지혜란 무엇인가: 잠언-욥기-전도서의 상호작용",
@@ -66,7 +65,8 @@ export default function FacultyPage() {
                 "태초에 질문이 있었다",
                 "더바이블 욥기: 정답이 무너진 자리에서",
                 "더바이블 전도서: 성숙한 신앙을 위한 지혜",
-                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀 외 다수"
+                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀 외 다수",
+                "더바이블 룻기: 헤세드의 사람들"
             ],
             courses: [
                 "구약 파노라마와 구속사 (15강)",
