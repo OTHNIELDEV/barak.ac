@@ -366,10 +366,10 @@ export default function FacultyPage() {
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Enrollment Open</span>
                     <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2 mb-4">
-                        최고의 교수진과 함께 새 시대의 사역자로 거듭나십시오
+                        6인의 교수진과 함께 새 시대의 사역자로 거듭나십시오
                     </h2>
                     <p className="text-slate-600 text-base md:text-lg mb-8 max-w-2xl mx-auto font-light">
-                        100% 온라인 녹화 영상 강의와 평생 자율 수강, 시험 없는 소감문 중심의 실전 교육이 기다립니다.
+                        100% 온라인 녹화 영상 강의와 자율 수강, 시험 없는 소감문 중심의 실전 교육이 기다립니다.
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link
