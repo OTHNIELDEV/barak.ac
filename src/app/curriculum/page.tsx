@@ -547,13 +547,7 @@ export default function CurriculumPage() {
                                         <Shield className="w-8 h-8 md:w-10 md:h-10 text-amber-400" />
                                     </div>
                                     <div>
-                                        <div className="inline-block px-3 py-1 bg-amber-500/20 backdrop-blur-md border border-amber-400/40 text-amber-300 rounded-lg text-xs font-bold uppercase mb-2">
-                                            다볼 산의 소집: 거룩한 순종과 연합의 영성
-                                        </div>
-                                        <h3 className="text-2xl md:text-4xl font-black text-white mb-2">바라크 정규 과정</h3>
-                                        <p className="text-sm md:text-base text-slate-200 max-w-2xl font-light leading-relaxed">
-                                            순종(Obedience)과 동역(Partnership), 그리고 영적 전쟁(Spiritual Warfare)을 다루며, 비전을 현실로 만드는 전략적 실행과 사역을 배웁니다.
-                                        </p>
+                                        <h3 className="text-2xl md:text-4xl font-black text-white">바라크 과정</h3>
                                     </div>
                                 </div>
 
@@ -562,7 +556,7 @@ export default function CurriculumPage() {
                                         href="/apply?track=barak"
                                         className="inline-flex items-center gap-2 px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-extrabold text-sm transition-all shadow-lg hover:scale-105"
                                     >
-                                        바라크 정규 과정 입학 신청하기 <ChevronRight className="w-4 h-4" />
+                                        바라크 과정 입학 신청하기 <ChevronRight className="w-4 h-4" />
                                     </Link>
                                 </div>
                             </div>
@@ -574,7 +568,7 @@ export default function CurriculumPage() {
                                 <div>
                                     <h4 className="font-extrabold text-slate-900 text-lg md:text-xl flex items-center gap-2">
                                         <BookOpen className="w-5 h-5 text-blue-900" />
-                                        바라크 정규 과정 개설 강의 커리큘럼
+                                        바라크 과정 개설 강의 커리큘럼
                                     </h4>
                                     <p className="text-xs md:text-sm text-slate-500 mt-1">
                                         6인의 전임 교수진 직강 및 사역 실천 심화 강의로 구성된 체계적인 실천 신학 교육
@@ -620,7 +614,7 @@ export default function CurriculumPage() {
                                     href="/apply?track=barak"
                                     className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 text-white rounded-xl font-bold text-sm hover:bg-blue-800 transition-colors shadow-md flex-shrink-0"
                                 >
-                                    바라크 정규 과정 입학 신청하기 <ChevronRight className="w-4 h-4" />
+                                    바라크 과정 입학 신청하기 <ChevronRight className="w-4 h-4" />
                                 </Link>
                             </div>
                         </div>
