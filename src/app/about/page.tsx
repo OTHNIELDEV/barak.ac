@@ -35,7 +35,7 @@ export default function AboutPage() {
                     >
                         바라크 아카데미<br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
-                            설립 취지 및 구속사적 목적
+                            설립 취지 및 목적
                         </span>
                     </motion.h1>
 
@@ -45,7 +45,6 @@ export default function AboutPage() {
                         transition={{ duration: 0.7, delay: 0.2 }}
                         className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light"
                     >
-                        바락 부목 · 드보라 여목 · 야엘 평신도 전도인<br />
                         하나님 앞에 겸손히 무릎 꿇는 영성(<span className="text-amber-300 font-medium">ברך</span>)으로 새 시대 사역자를 세웁니다.
                     </motion.p>
                 </div>
