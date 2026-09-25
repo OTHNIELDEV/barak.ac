@@ -1,7 +1,7 @@
 "use client";
 
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Shield, Target, Heart, Globe, Users, BookOpen, Sparkles, CheckCircle2, Award, ArrowRight, Flame, ScrollText, Cross } from "lucide-react";
+import { Shield, Heart, Users, Sparkles, ArrowRight, ScrollText } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -118,100 +118,41 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* 3. Redemptive Theological Foundation (이윤주 박사/목사 해운대 세미나 선언) */}
+            {/* 3. Recommendation Message (학장 이윤주 박사의 추천의 말씀) */}
             <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="text-center max-w-3xl mx-auto mb-16">
-                        <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">Redemptive Theology</span>
-                        <h2 className="text-3xl md:text-5xl font-black text-white mt-2">
-                            구속사적 신학 배경과 여종의 환원
-                        </h2>
-                        <p className="text-slate-300 mt-4 text-base md:text-lg font-light">
-                            십자가의 도의 완성으로 다시금 여종 삼으시는 하나님의 섭리
-                        </p>
-                    </div>
-
-                    <div className="bg-slate-800/90 rounded-3xl p-8 md:p-12 border border-slate-700 space-y-8 leading-relaxed text-slate-200 text-sm md:text-base">
-                        <div className="space-y-4">
-                            <h3 className="text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
-                                <Cross className="w-6 h-6 text-amber-400" />
-                                1. 십자가의 도와 단번의 영원한 제사
-                            </h3>
-                            <p>
-                                <strong>[창 22:16-18]</strong> 아브라함과 모리아에서 여호와이레 언약으로 시작된 <strong>[고전 1:18]「십자가의 도」</strong>, 곧 <strong>[마 1:1]</strong> 예수 그리스도의 세계가 다윗과 <strong>[사 53장]</strong>을 거쳐 마침내 <strong>[요 1:14]</strong> 말씀이 육신이 되셨습니다.
-                            </p>
-                            <p>
-                                대제사장들이 해마다 드려야 했던 제사를 예수님은 <strong>[히 7:27, 10:12]「단번(Once for all)」</strong>으로 자기를 드려 단 한 번의 영원한 제사로 완성하시고 <strong>[요 19:30] “다 이루었다”</strong> 선언하셨습니다.
-                            </p>
-                        </div>
-
-                        <div className="border-t border-slate-700 pt-6 space-y-4">
-                            <h3 className="text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
-                                <Flame className="w-6 h-6 text-amber-400" />
-                                2. 말세의 성령 부으심과 여성 사역자의 본래적 회복
-                            </h3>
-                            <p>
-                                주님의 부활 승천 후, 하나님께서는 <strong>[욜 2:28-29, 행 2:17]</strong> 요엘로 약속하신 당신의 성령을 모든 육체와 종들에게 부어주셨습니다.
-                            </p>
-                            <p className="bg-slate-900/60 p-5 rounded-2xl border-l-4 border-amber-400 italic text-amber-100">
-                                “헌데 이때부터는 [행 2:18] 여자들도 남종같이 당신의 여종 삼으시기를, 십자가 도 세계 전의 [창 3:20] 모든 산 자의 어미 하와같이, [창 17:16] 열국의 어미 사라같이 다시금 여종 삼으심이라.”
-                            </p>
-                            <p>
-                                구약 시대에 남종 제사장과 수컷 제물로 한정했던 것은 하나님의 독생자(아들)가 보내어질 것에 대한 모형이었으며, 십자가의 도가 완성됨으로써 <strong>남종과 여종 모두를 거룩한 사역자로 세우시는 본래의 구속사 세계로 환원</strong>하셨습니다.
-                            </p>
-                        </div>
-
-                        <div className="border-t border-slate-700 pt-6 space-y-4">
-                            <h3 className="text-xl md:text-2xl font-bold text-amber-300 flex items-center gap-2">
-                                <Award className="w-6 h-6 text-amber-400" />
-                                3. 교단 신학을 넘어선 은사자들의 학덕 무장
-                            </h3>
-                            <p>
-                                하나님께서는 교단 신학을 거치지 않은 자들의 경우에도 <strong>[행 2:39]</strong> 얼마든지 부르시어 <strong>[고전 12:4-11]</strong> 성령으로 기름 부으시고 지혜, 지식, 신유, 능력, 예언, 방언, 통역의 은사를 주십니다.
-                            </p>
-                            <p>
-                                바라크아카데미는 성령으로 기름 부음을 이미 받은 이들에게 지도자로서 필수적인 <strong>학덕 과목(성경해석학, 구약학, 신약학, 기독교교육학, 목회상담학, AI사역)</strong>을 제공하여, <strong>바락 같은 부목사, 드보라 같은 여목·남목, 야엘 같은 평신도 전도인을 양성하고 자격 증표를 수여</strong>하여 교회들이 임직하는 절차에 모자람이 없게 하고자 합니다.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 4. Recommendation Message (학장 이윤주 박사의 추천의 말씀) */}
-            <section className="py-24 bg-slate-50">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="bg-white rounded-3xl p-8 md:p-14 shadow-xl border border-slate-200">
+                    <div className="bg-slate-800/90 rounded-3xl p-8 md:p-14 shadow-2xl border border-slate-700">
                         <div className="flex items-center gap-3 mb-6">
-                            <ScrollText className="w-8 h-8 text-blue-900" />
-                            <span className="text-xs md:text-sm font-bold text-blue-900 tracking-widest uppercase">Special Recommendation</span>
+                            <ScrollText className="w-8 h-8 text-amber-400" />
+                            <span className="text-xs md:text-sm font-bold text-amber-400 tracking-widest uppercase">Special Recommendation</span>
                         </div>
 
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
-                            추천의 말씀 <span className="text-lg font-normal text-slate-500">- 학장 이윤주 박사 (목사)</span>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">
+                            추천의 말씀 <span className="text-lg font-normal text-slate-400">- 학장 이윤주 박사 (목사)</span>
                         </h2>
 
-                        <div className="space-y-6 text-slate-700 text-base md:text-lg leading-relaxed font-light">
-                            <p className="bg-blue-50/50 p-6 rounded-2xl border-l-4 border-blue-900 font-normal text-slate-900">
+                        <div className="space-y-6 text-slate-200 text-base md:text-lg leading-relaxed font-light">
+                            <p className="bg-slate-900/80 p-6 rounded-2xl border-l-4 border-amber-400 font-normal text-slate-100 shadow-inner">
                                 “현재의 교단 신학 기관들로 남종, 담임목사 양성은 모자람이 없음 때문으로 본 아카데미 프로그램이 남종보다는 <strong>여종</strong>, 담임목사보다는 <strong>전문 부목사</strong>에 비중이 주어졌음입니다.”
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                                    <h4 className="font-bold text-slate-900 text-lg mb-2 flex items-center gap-2">
-                                        <Heart className="w-5 h-5 text-amber-500" />
+                                <div className="p-6 bg-slate-900/60 rounded-2xl border border-slate-700/70">
+                                    <h4 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
+                                        <Heart className="w-5 h-5 text-amber-400" />
                                         현역 목사 및 사모님들께
                                     </h4>
-                                    <p className="text-sm text-slate-600 leading-relaxed">
+                                    <p className="text-sm text-slate-300 leading-relaxed">
                                         성령과 불의 세례로 각양 은사를 받았음에도 제도적 직임 자격이 주어지지 않아 바락·드보라로 온전히 동사하지 못하고 계신 분들에게 거룩한 사역의 문을 활짝 열어드립니다.
                                     </p>
                                 </div>
 
-                                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                                    <h4 className="font-bold text-slate-900 text-lg mb-2 flex items-center gap-2">
-                                        <Users className="w-5 h-5 text-blue-900" />
+                                <div className="p-6 bg-slate-900/60 rounded-2xl border border-slate-700/70">
+                                    <h4 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
+                                        <Users className="w-5 h-5 text-amber-400" />
                                         은퇴 및 원로 목회자(65세 이상) 분들께
                                     </h4>
-                                    <p className="text-sm text-slate-600 leading-relaxed">
+                                    <p className="text-sm text-slate-300 leading-relaxed">
                                         100세 시대에 65세 은퇴 후 원로·은퇴 목사 지위로 여생을 채우시기보다, 본원의 '바락'과 같은 충성된 전문 부목자로 헌신한다면 <strong>[히 11:35b] 더 좋은 부활, [히 11:32] 더 큰 존귀함</strong>에 이름이 기록될 것입니다!
                                     </p>
                                 </div>
