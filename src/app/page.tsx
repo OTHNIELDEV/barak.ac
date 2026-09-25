@@ -520,28 +520,19 @@ export default function LandingPage() {
                   <div className="relative h-96 w-full">
                     <Image
                       src={
-                        course.id === 1 ? "/images/track-deborah-biblical.png" :
-                          course.id === 2 ? "/images/track-barak-biblical.png" :
-                            "/images/track-jael-biblical.png"
+                        course.id === 1 ? "/images/track-deborah-symbolic.jpg" :
+                          course.id === 2 ? "/images/track-barak-symbolic.jpg" :
+                            "/images/track-jael-symbolic.jpg"
                       }
                       alt={course.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.6]"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.7]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent" />
 
-                    <div className="absolute inset-0 p-8 flex flex-col justify-between text-white">
-                      <div className="flex justify-between items-start">
-                        <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase">
-                          {style.badge}
-                        </span>
-                      </div>
-
+                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                       <div>
-                        <h3 className="text-2xl font-bold mb-2">{course.title}</h3>
-                        <p className="text-slate-300 text-xs line-clamp-2 mb-4 font-light">
-                          {course.description}
-                        </p>
+                        <h3 className="text-2xl font-bold mb-3 drop-shadow-md">{course.title}</h3>
                         <Link
                           href={`/apply?track=${course.id === 1 ? 'deborah' : course.id === 2 ? 'barak' : 'jael'}`}
                           className="inline-flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200"
