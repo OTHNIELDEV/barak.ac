@@ -265,7 +265,7 @@ export default function CurriculumPage() {
                                 <FileText className="w-6 h-6" />
                             </div>
                             <h4 className="font-bold text-slate-900 text-base mb-1">A4용지 소감문</h4>
-                            <p className="text-xs text-slate-600">각 강의당 A4 1장 소감문 작성을 통해 배운 진리를 삶으로 정리</p>
+                            <p className="text-xs text-slate-600">각 강의당 A4 1장 소감문 작성을 통해 배운 내용을 삶에 적용</p>
                         </div>
 
                         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center text-center">

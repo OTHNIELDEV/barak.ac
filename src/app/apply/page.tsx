@@ -96,7 +96,7 @@ function AdmissionApplyForm() {
             email: formData.email,
             phone: formData.phone,
             church: formData.church,
-            position: `${formData.position} (${formData.applicantType}) [세례:${formData.waterBaptism === 'yes' ? '물세례유' : '물세례무'}, 성령세례:${formData.holySpiritBaptism === 'experienced' ? '체험' : '사모'}]`,
+            position: `${formData.position} (${formData.applicantType})`,
             department: formData.department,
             track: formData.track,
             motivation: `[장학희망: ${formData.scholarshipType === 'pastor_wife_50' ? '사모 50% 할인' : formData.scholarshipType === 'first_batch_30' ? '1기 등록 장학금 30%' : '일반'}] ${formData.motivation}`
@@ -287,11 +287,11 @@ function AdmissionApplyForm() {
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
-                                    <span><strong>과목당 A4 소감문</strong>: 배운 진리의 삶 적용</span>
+                                    <span><strong>각 강의당 A4 소감문</strong>: 배운 내용을 삶에 적용</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
-                                    <span><strong>졸업 기한 제한 없음</strong>: 자율 수강 이수</span>
+                                    <span><strong>졸업 기한 제한 없음</strong>: 자율 이수</span>
                                 </li>
                             </ul>
                         </div>
@@ -329,7 +329,7 @@ function AdmissionApplyForm() {
                                     {num}
                                 </div>
                                 <span className={`text-xs font-semibold ${step >= num ? "text-blue-900" : "text-slate-400"}`}>
-                                    {num === 1 ? "기본 및 세례" : num === 2 ? "지원 대상 및 소속" : "트랙 & 장학 선택"}
+                                    {num === 1 ? "기본 정보" : num === 2 ? "지원 대상 및 소속" : "트랙 & 장학 선택"}
                                 </span>
                             </div>
                         ))}
@@ -343,13 +343,13 @@ function AdmissionApplyForm() {
                     >
                         <form onSubmit={handleSubmit} className="p-6 md:p-10">
 
-                            {/* Step 1: Personal & Baptism */}
+                            {/* Step 1: Personal Info */}
                             {step === 1 && (
                                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                                     <div className="space-y-4">
                                         <h3 className="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
                                             <User className="w-5 h-5 text-blue-900" />
-                                            지원자 기본 정보 및 세례 여부
+                                            지원자 기본 정보
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                                             <div>
@@ -376,35 +376,6 @@ function AdmissionApplyForm() {
                                                 className={`w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none text-sm ${user?.email ? 'cursor-not-allowed opacity-80' : ''}`}
                                                 placeholder="example@domain.com"
                                             />
-                                        </div>
-
-                                        {/* 세례 여부 선택 */}
-                                        <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-xs font-semibold text-slate-700 mb-2">1차 세례 (물세례 / 침례) 여부 *</label>
-                                                <select
-                                                    name="waterBaptism"
-                                                    value={formData.waterBaptism}
-                                                    onChange={handleInputChange}
-                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-900 outline-none text-sm bg-white"
-                                                >
-                                                    <option value="yes">물세례 / 침례 받음 (1차 세례 완료)</option>
-                                                    <option value="no">아직 받지 않음 (수강 중 입교 희망)</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-xs font-semibold text-slate-700 mb-2">2차 세례 (성령과 불의 세례) *</label>
-                                                <select
-                                                    name="holySpiritBaptism"
-                                                    value={formData.holySpiritBaptism}
-                                                    onChange={handleInputChange}
-                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-900 outline-none text-sm bg-white"
-                                                >
-                                                    <option value="experienced">성령의 기름부으심/은사 체험함</option>
-                                                    <option value="seeking">사모하며 성령 임하심을 기다리는 중</option>
-                                                </select>
-                                            </div>
                                         </div>
                                     </div>
                                 </motion.div>
