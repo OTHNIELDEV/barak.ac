@@ -191,7 +191,7 @@ export default function LandingPage() {
                   성경 속 인물 • 사사기 4~5장 & 히브리서 11장
                 </span>
                 <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
-                  바락(Barak)의 믿음: “하나님의 함께하심을 구하다”
+                  바락(Barak)의 겸손: “드보라 여선지자의 동행을 구하다”
                 </h3>
                 <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-4">
                   드보라 선지자가 가나안 군대와 싸우러 나가라 했을 때, 바락은 자신의 영광이나 명예보다 드보라와 함께 감으로 <strong>하나님이 함께하심</strong>을 최우선으로 여겼습니다(삿 4:8).
