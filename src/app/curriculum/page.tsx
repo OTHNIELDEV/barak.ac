@@ -115,88 +115,7 @@ export default function CurriculumPage() {
         }
     ];
 
-    const barakLectures = [
-        {
-            id: 1,
-            num: "01",
-            category: "성경해석학",
-            title: "이갈렙 목사의 성경해석학",
-            instructor: "이윤주 교수",
-            lectures: "5강",
-            desc: "성경을 구속사적 관점으로 바르게 해석하고 목회 현장과 설교에 접목하는 핵심 강해",
-            badgeColor: "bg-amber-100 text-amber-900 border-amber-200"
-        },
-        {
-            id: 2,
-            num: "02",
-            category: "구약학",
-            title: "구약 파노라마와 '바라크' 원어 영성",
-            instructor: "송민원 교수",
-            lectures: "5강",
-            desc: "구약의 맥을 잡고 히브리어 원어 '바라크(축복과 무릎 꿇음)'의 본래적 영성과 지혜 체득",
-            badgeColor: "bg-blue-100 text-blue-900 border-blue-200"
-        },
-        {
-            id: 3,
-            num: "03",
-            category: "신약학",
-            title: "요한 복음 연구",
-            instructor: "김영희 교수",
-            lectures: "5강",
-            desc: "요한복음을 통한 예수 그리스도의 구속사적 연구",
-            badgeColor: "bg-emerald-100 text-emerald-900 border-emerald-200"
-        },
-        {
-            id: 4,
-            num: "04",
-            category: "기독교교육학",
-            title: "기독교 교육의 이론과 실제",
-            instructor: "전예령 교수",
-            lectures: "5강",
-            desc: "기독교 교육의 핵심 이론 체계와 사역 현장의 교육적 실제",
-            badgeColor: "bg-purple-100 text-purple-900 border-purple-200"
-        },
-        {
-            id: 5,
-            num: "05",
-            category: "목회상담학",
-            title: "성경적 목회상담과 영혼의 전인적 치유",
-            instructor: "박은정 교수",
-            lectures: "5강",
-            desc: "사역 현장의 상처 입은 영혼과 가정을 돌보며 사역자의 자기돌봄과 정서 회복 실무",
-            badgeColor: "bg-rose-100 text-rose-900 border-rose-200"
-        },
-        {
-            id: 6,
-            num: "06",
-            category: "AI 미래목회",
-            title: "생성형 AI와 스마트 목회 콘텐츠 구축",
-            instructor: "김종우 교수",
-            lectures: "5강",
-            desc: "AI 기술을 복음 전파를 위해 거룩하게 전용하여 설교 및 사역 콘텐츠를 제작하는 실전 실무",
-            badgeColor: "bg-cyan-100 text-cyan-900 border-cyan-200"
-        },
-        {
-            id: 7,
-            num: "07",
-            category: "실전 영성",
-            title: "영적 전쟁과 디지털 선교 전략",
-            instructor: "바라크 전임 교수진",
-            lectures: "특화 강의",
-            desc: "공중 권세 잡은 세상 문화 속에서 복음의 권세로 승리하는 온오프라인 선교 전략",
-            badgeColor: "bg-slate-100 text-slate-800 border-slate-200"
-        },
-        {
-            id: 8,
-            num: "08",
-            category: "연합과 동역",
-            title: "동역의 신학: 거룩한 순종과 연합의 리더십",
-            instructor: "바라크 전임 교수진",
-            lectures: "특화 강의",
-            desc: "목회자와 성도, 영성과 지혜가 하나 되어 하나님 나라의 비전을 현실화하는 동역 원리",
-            badgeColor: "bg-slate-100 text-slate-800 border-slate-200"
-        }
-    ];
+
 
     const getTheme = (index: number) => {
         const themes = [
@@ -556,66 +475,9 @@ export default function CurriculumPage() {
                                         href="/apply?track=barak"
                                         className="inline-flex items-center gap-2 px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-extrabold text-sm transition-all shadow-lg hover:scale-105"
                                     >
-                                        바라크 과정 입학 신청하기 <ChevronRight className="w-4 h-4" />
+                                        바라크 과정 신청하기 <ChevronRight className="w-4 h-4" />
                                     </Link>
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Syllabus & Lectures List */}
-                        <div className="bg-slate-50 rounded-3xl p-6 md:p-10 border border-slate-200 shadow-sm">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-200">
-                                <div>
-                                    <h4 className="font-extrabold text-slate-900 text-lg md:text-xl flex items-center gap-2">
-                                        <BookOpen className="w-5 h-5 text-blue-900" />
-                                        바라크 과정 개설 강의 커리큘럼
-                                    </h4>
-                                    <p className="text-xs md:text-sm text-slate-500 mt-1">
-                                        6인의 전임 교수진 직강 및 사역 실천 심화 강의로 구성된 체계적인 실천 신학 교육
-                                    </p>
-                                </div>
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-100 text-blue-950 font-bold text-xs self-start sm:self-auto">
-                                    <PlayCircle className="w-4 h-4 text-blue-900" /> 100% 녹화 영상 자율 수강
-                                </span>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {barakLectures.map((item) => (
-                                    <div key={item.id} className="p-5 bg-white rounded-2xl border border-slate-200/90 flex gap-4 items-start shadow-sm hover:border-blue-400 hover:shadow-md transition-all group">
-                                        <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-900 group-hover:bg-blue-900 group-hover:text-white transition-colors flex items-center justify-center font-extrabold text-sm flex-shrink-0">
-                                            {item.num}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between gap-2 mb-1">
-                                                <span className={cn("px-2 py-0.5 rounded text-[10px] font-bold border", item.badgeColor)}>
-                                                    {item.category}
-                                                </span>
-                                                <span className="text-[11px] font-semibold text-slate-500">
-                                                    {item.instructor} • {item.lectures}
-                                                </span>
-                                            </div>
-                                            <h5 className="font-bold text-slate-900 text-sm md:text-base mb-1 group-hover:text-blue-900 transition-colors">
-                                                {item.title}
-                                            </h5>
-                                            <p className="text-slate-500 text-xs leading-relaxed">
-                                                {item.desc}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                <p className="text-xs text-slate-600 flex items-center gap-1.5">
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                                    모든 과목은 시험 없이 A4 1장 소감문 작성으로 이수되며, 자율 일정으로 수강할 수 있습니다.
-                                </p>
-                                <Link
-                                    href="/apply?track=barak"
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 text-white rounded-xl font-bold text-sm hover:bg-blue-800 transition-colors shadow-md flex-shrink-0"
-                                >
-                                    바라크 과정 입학 신청하기 <ChevronRight className="w-4 h-4" />
-                                </Link>
                             </div>
                         </div>
                     </div>
