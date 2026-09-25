@@ -184,13 +184,10 @@ export default function CurriculumPage() {
                                 발급 자격증 (3종)
                             </h4>
                             <ul className="space-y-1.5 text-slate-200 text-xs">
-                                <li>• <strong>목사 자격증:</strong> 바락 역 (전문 부목사) / 드보라 역 (담임목사)</li>
-                                <li>• <strong>선교사 자격증:</strong> 드보라 역 (선교사)</li>
-                                <li>• <strong>전도사 자격증:</strong> 야엘 역 (평신도전도인)</li>
+                                <li>• <strong>목사 자격증:</strong> 부목사 / 담임목사</li>
+                                <li>• <strong>선교사 자격증</strong></li>
+                                <li>• <strong>전도사 자격증</strong></li>
                             </ul>
-                            <p className="text-[11px] text-amber-200/90 pt-1 border-t border-white/10">
-                                • 교회들의 합법적 임직 절차를 위한 공식 증표 수여
-                            </p>
                         </div>
 
                         {/* 3. 소속 및 비학위 고지 */}
@@ -203,7 +200,7 @@ export default function CurriculumPage() {
                                 • <strong>소속:</strong> 산해원교회 산하 신학교 (2년제 총 4학기 과정)
                             </p>
                             <div className="p-2.5 bg-black/30 rounded-xl text-[11px] text-amber-200 border border-amber-400/30">
-                                ⚠️ <strong>공지:</strong> 본 과정은 교육부 인가 학위 과정이 아니며, 산해원교회 산하 신학교에서 수여하는 목회 실무 및 교회 임직 자격 과정입니다.
+                                ⚠️ <strong>공지:</strong> 본 과정은 교육부 인가 학위 과정이 아니며, 산해원교회 산하 신학교에서 수여하는 목회자 자격 과정입니다.
                             </div>
                         </div>
                     </div>
