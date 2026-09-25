@@ -58,72 +58,60 @@ export default function AboutPage() {
                         <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
                             바라크아카데미 3대 사역 모델
                         </h2>
-                        <p className="text-slate-600 mt-3 text-base md:text-lg">
-                            2025 해운대 세미나에서 선포된 하나님 나라의 실전적 사역자 원형
-                        </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* 1. Barak - Assistant Pastor */}
-                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
                             <div>
                                 <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-900 flex items-center justify-center mb-6">
                                     <Shield className="w-7 h-7" />
                                 </div>
                                 <span className="text-xs font-bold text-blue-900 bg-blue-200/60 px-3 py-1 rounded-full uppercase">
-                                    바락 (Barak) • 충성된 전문 부목사
+                                    바락 (Barak) • 충성된 부목사
                                 </span>
                                 <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
                                     더 나은 존귀를 얻은 부목사
                                 </h3>
-                                <p className="text-slate-700 text-sm leading-relaxed mb-4">
+                                <p className="text-slate-700 text-sm leading-relaxed">
                                     담임목사 역 여선지 사사 드보라를 백성들 앞에 존귀히 여김 받도록 시종일관 보좌하여, 그 사사보다 오히려 <strong>[히 11:35] 더 좋은 부활, [히 11:32] 더 나은 존귀</strong>를 얻은 충성된 부목사의 원형입니다.
                                 </p>
                             </div>
-                            <div className="p-4 bg-white rounded-2xl text-xs text-slate-600 border border-slate-100">
-                                약한 드보라들로 40년 태평 사사를 가능케 했던 바락처럼 교회를 든든히 받치는 최고의 동역자
-                            </div>
                         </div>
 
-                        {/* 2. Deborah - Women Senior Pastor / Leader */}
-                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                        {/* 2. Deborah - Senior Pastor / Leader */}
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
                             <div>
                                 <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center mb-6">
                                     <Sparkles className="w-7 h-7" />
                                 </div>
                                 <span className="text-xs font-bold text-amber-900 bg-amber-200/60 px-3 py-1 rounded-full uppercase">
-                                    드보라 (Deborah) • 여목 / 영적 지도자
+                                    드보라 (Deborah) • 담임목사
                                 </span>
                                 <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
                                     말씀과 영적 통찰의 여선지자
                                 </h3>
-                                <p className="text-slate-700 text-sm leading-relaxed mb-4">
-                                    하나님의 말씀을 받아 백성을 재판하고 영적 방향을 제시한 여선지 사사로서, 오늘날 시대를 분별하고 양 떼를 먹이는 <strong>여성 담임목회자 및 영적 지도자</strong>의 모형입니다.
+                                <p className="text-slate-700 text-sm leading-relaxed">
+                                    하나님의 말씀을 받아 백성을 재판하고 영적 방향을 제시한 여선지 사사로서, 오늘날 시대를 분별하고 양 떼를 먹이는 <strong>영적 지도자</strong>의 모형입니다.
                                 </p>
-                            </div>
-                            <div className="p-4 bg-white rounded-2xl text-xs text-slate-600 border border-slate-100">
-                                십자가 완성 후 만민에게 부어주신 성령의 영감으로 교회를 이끄는 예언자적 리더십
                             </div>
                         </div>
 
-                        {/* 3. Jael - Lay Evangelist */}
-                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between">
+                        {/* 3. Jael - Lay Minister */}
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
                             <div>
                                 <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-900 flex items-center justify-center mb-6">
                                     <Heart className="w-7 h-7" />
                                 </div>
                                 <span className="text-xs font-bold text-purple-900 bg-purple-200/60 px-3 py-1 rounded-full uppercase">
-                                    야엘 (Jael) • 평민 전도인 / 평신도 사역자
+                                    야엘 (Jael) • 평신도 사역자
                                 </span>
                                 <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
-                                    결정적 승리를 거둔 평신도 승부수
+                                    결정적 승리를 거둔 평신도
                                 </h3>
-                                <p className="text-slate-700 text-sm leading-relaxed mb-4">
-                                    평민 여성으로서 결행한 일로 [삿 5:24-27] 바락과 드보라의 찬양을 받고, 온 백성으로 하여금 빌립, 스데반 집사같이 하나님께 영광을 돌리게 한 <strong>평신도 전문인 전도인</strong>의 표상입니다.
+                                <p className="text-slate-700 text-sm leading-relaxed">
+                                    평민 여성으로서 결행한 일로 [삿 5:24-27] 바락과 드보라의 찬양을 받고, 온 백성으로 하여금 빌립, 스데반 집사같이 하나님께 영광을 돌리게 한 <strong>평신도 사역자</strong>의 표상입니다.
                                 </p>
-                            </div>
-                            <div className="p-4 bg-white rounded-2xl text-xs text-slate-600 border border-slate-100">
-                                일상과 직장의 현장에서 영적 전쟁의 쐐기를 박고 복음의 승리를 결행하는 사역자
                             </div>
                         </div>
                     </div>
