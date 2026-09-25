@@ -185,9 +185,6 @@ function AdmissionApplyForm() {
                     <h1 className="text-3xl md:text-5xl font-black mb-4">
                         입학 요건 및 학생 모집 요강
                     </h1>
-                    <p className="text-base md:text-xl text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
-                        성령과 불의 세례로 기름 부음 받은 사역자, 학덕을 갖춘 바락·드보라·야엘을 세웁니다.
-                    </p>
                 </div>
             </section>
 
@@ -203,40 +200,17 @@ function AdmissionApplyForm() {
                         바라크아카데미 입학 요건 및 자격증서 수여 기준
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        {/* 1차/2차 세례 요건 */}
-                        <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                            <div className="flex items-center gap-2 text-base font-bold text-slate-900">
-                                <Droplet className="w-5 h-5 text-blue-600" />
-                                1차 세례 (물세례 / 침례)
-                            </div>
-                            <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
-                                <strong>[요 3:5]</strong> 물과 성령으로 거듭남에 받은 1차 세례 곧 물세례 혹은 침례를 받은 자. <strong>[빌 2:11]</strong> 예수를 주라 시인함으로 구원의 은혜를 입은 자.
-                            </p>
-                        </div>
-
-                        <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                            <div className="flex items-center gap-2 text-base font-bold text-slate-900">
-                                <Flame className="w-5 h-5 text-amber-500" />
-                                2차 세례 (불과 성령의 권능 세례)
-                            </div>
-                            <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
-                                <strong>[마 3:11b, 요 7:39]</strong> 믿는 자의 받을 성령과 불의 2차 세례. <strong>[행 2:4, 2:17]</strong> 강한 바람과 불의 혀같이 임하여 권능과 각양 은사(지혜, 지식, 신유, 예언, 방언 등)가 나타남.
-                            </p>
-                        </div>
-                    </div>
-
                     {/* 열린 입학 안내 & 자격증서 수령 조항 */}
-                    <div className="p-5 bg-amber-50/80 rounded-2xl border border-amber-200/80 text-xs md:text-sm text-amber-950 space-y-2">
-                        <div className="font-bold flex items-center gap-2 text-amber-900">
-                            <CheckCircle2 className="w-4 h-4 text-amber-600" />
+                    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 text-xs md:text-sm text-slate-700 space-y-3">
+                        <div className="font-bold flex items-center gap-2 text-blue-900 text-base">
+                            <CheckCircle2 className="w-5 h-5 text-amber-500" />
                             누구나 제약 없이 입학 및 수강 가능 (열린 신학교육)
                         </div>
-                        <p className="leading-relaxed text-slate-700">
-                            위의 불세례 요건을 아직 온전히 갖추지 못한 자라도 <strong>제약 없이 입학하여 전 과목을 수강하고 수료</strong>할 수 있습니다.
+                        <p className="leading-relaxed">
+                            누구나 제약 없이 입학하여 전 과목을 수강하고 수료할 수 있습니다.
                         </p>
-                        <p className="leading-relaxed text-slate-700 pt-1 border-t border-amber-200/60">
-                            단, <strong>지도자/사역자 자격증서(임직 증표)</strong>의 정식 수령은 재학 중이거나 수료 후 임의의 때에 오순절 다락방<strong>[행 1:14]</strong> 전혀 기도 모임이나 기도원 집회 등에 적극 참여하여 <strong>[행 1:8]</strong> 성령 임하심과 권능을 받은 후에 수여합니다. <em>(예수님 분부: [행 1:4, 1:8] 권능을 받기 전엔 임지를 향해 출발하지 말고 약속하신 성령을 기다리라).</em>
+                        <p className="leading-relaxed pt-2 border-t border-slate-200">
+                            단, <strong>지도자·사역자 자격증서</strong>의 정식 수령은 재학 중이거나 수료 후 성령의 권능을 받은 자에게 수여됩니다.
                         </p>
                     </div>
                 </div>
@@ -253,7 +227,7 @@ function AdmissionApplyForm() {
                             <ul className="space-y-2.5 text-xs md:text-sm text-slate-600">
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                                    <span><strong>교회 목회 현장</strong>의 여성 사역자 및 전도인</span>
+                                    <span><strong>교회 목회 현장</strong>에서 필요로 하는 사역자 및 평신도</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -261,11 +235,11 @@ function AdmissionApplyForm() {
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                                    <span><strong>은퇴·원로 목회자(65세 이상)</strong> 중 '바락'과 같은 전문 부목자로 헌신할 분</span>
+                                    <span><strong>은퇴·원로 목회자</strong> 중 '바락'과 같은 부목자로 헌신할 분</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                                    <span><strong>성경과 신학의 학덕</strong>을 겸비하고자 하는 은사자</span>
+                                    <span><strong>성경 중심의 신학과 영성</strong>을 겸비하고자 하는 은사자</span>
                                 </li>
                             </ul>
                         </div>
@@ -317,12 +291,9 @@ function AdmissionApplyForm() {
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
-                                    <span><strong>졸업 기한 제한 없음</strong>: 평생 자율 이수</span>
+                                    <span><strong>졸업 기한 제한 없음</strong>: 자율 수강 이수</span>
                                 </li>
                             </ul>
-                        </div>
-                        <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-purple-900 font-semibold">
-                            * 교회들이 합법적으로 임직하는 절차에 모자람이 없도록 공인 자격증서 수여
                         </div>
                     </div>
                 </div>

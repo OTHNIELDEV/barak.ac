@@ -115,6 +115,89 @@ export default function CurriculumPage() {
         }
     ];
 
+    const barakLectures = [
+        {
+            id: 1,
+            num: "01",
+            category: "성경해석학",
+            title: "이갈렙 목사의 성경해석학 실무 강해",
+            instructor: "이윤주 학장",
+            lectures: "5강",
+            desc: "성경을 구속사적 관점으로 바르게 해석하고 목회 현장과 설교에 접목하는 핵심 강해",
+            badgeColor: "bg-amber-100 text-amber-900 border-amber-200"
+        },
+        {
+            id: 2,
+            num: "02",
+            category: "구약학",
+            title: "구약 파노라마와 '바라크' 원어 영성",
+            instructor: "송민원 교수",
+            lectures: "5강",
+            desc: "구약의 맥을 잡고 히브리어 원어 '바라크(축복과 무릎 꿇음)'의 본래적 영성과 지혜 체득",
+            badgeColor: "bg-blue-100 text-blue-900 border-blue-200"
+        },
+        {
+            id: 3,
+            num: "03",
+            category: "신약학",
+            title: "신약 복음서와 하나님 나라의 구속사",
+            instructor: "김영희 교수",
+            lectures: "5강",
+            desc: "사복음서에 나타난 예수 그리스도의 구속사와 초대교회 제자도의 실천적 적용",
+            badgeColor: "bg-emerald-100 text-emerald-900 border-emerald-200"
+        },
+        {
+            id: 4,
+            num: "04",
+            category: "기독교교육학",
+            title: "기독교 교육 철학과 영성형성 프락시스",
+            instructor: "전예령 교수",
+            lectures: "5강",
+            desc: "세대 통합 교육과 삶의 회복을 이끄는 실천적 교육철학 및 사역자 교육 리더십",
+            badgeColor: "bg-purple-100 text-purple-900 border-purple-200"
+        },
+        {
+            id: 5,
+            num: "05",
+            category: "목회상담학",
+            title: "성경적 목회상담과 영혼의 전인적 치유",
+            instructor: "박은정 교수",
+            lectures: "5강",
+            desc: "사역 현장의 상처 입은 영혼과 가정을 돌보며 사역자의 자기돌봄과 정서 회복 실무",
+            badgeColor: "bg-rose-100 text-rose-900 border-rose-200"
+        },
+        {
+            id: 6,
+            num: "06",
+            category: "AI 미래목회",
+            title: "생성형 AI와 스마트 목회 콘텐츠 구축",
+            instructor: "김종우 교수",
+            lectures: "5강",
+            desc: "AI 기술을 복음 전파를 위해 거룩하게 전용하여 설교 및 사역 콘텐츠를 제작하는 실전 실무",
+            badgeColor: "bg-cyan-100 text-cyan-900 border-cyan-200"
+        },
+        {
+            id: 7,
+            num: "07",
+            category: "실전 영성",
+            title: "영적 전쟁과 디지털 선교 전략",
+            instructor: "바라크 전임 교수진",
+            lectures: "특화 강의",
+            desc: "공중 권세 잡은 세상 문화 속에서 복음의 권세로 승리하는 온오프라인 선교 전략",
+            badgeColor: "bg-slate-100 text-slate-800 border-slate-200"
+        },
+        {
+            id: 8,
+            num: "08",
+            category: "연합과 동역",
+            title: "동역의 신학: 거룩한 순종과 연합의 리더십",
+            instructor: "바라크 전임 교수진",
+            lectures: "특화 강의",
+            desc: "목회자와 성도, 영성과 지혜가 하나 되어 하나님 나라의 비전을 현실화하는 동역 원리",
+            badgeColor: "bg-slate-100 text-slate-800 border-slate-200"
+        }
+    ];
+
     const getTheme = (index: number) => {
         const themes = [
             { color: "bg-amber-500", icon: BookOpen, accent: "text-amber-600", border: "group-hover:border-amber-500", bgAccent: "group-hover:bg-amber-50" },
@@ -435,83 +518,115 @@ export default function CurriculumPage() {
                 </div>
             </section>
 
-            {/* 4. Tracks Section */}
+            {/* 4. Single Barak Track Section */}
             <section className="py-20 bg-white border-t border-slate-200">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <span className="text-amber-600 font-bold text-sm tracking-widest uppercase">Specialization Tracks</span>
+                        <span className="text-amber-600 font-bold text-sm tracking-widest uppercase">Specialization Track</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
-                            3대 사역 특성화 트랙
+                            바라크 정규 사역 트랙
                         </h2>
                         <p className="text-slate-600 mt-3 text-base md:text-lg">
-                            성경적 리더십의 세 가지 모델(드보라, 바라크, 야엘)을 통한 사역자 맞춤 훈련
+                            순종과 동역, 영적 전쟁의 승리를 이끄는 바라크아카데미 단일 정규 사역자 과정
                         </p>
                     </div>
 
-                    <div className="space-y-16">
-                        {courses.map((track, idx) => {
-                            const theme = getTheme(idx);
-                            return (
-                                <div key={track.id} id={`track-${track.id}`} className="scroll-mt-24">
-                                    <div className="relative rounded-3xl overflow-hidden mb-6 shadow-xl group">
-                                        <div className="absolute inset-0 z-0">
-                                            <Image
-                                                src={
-                                                    track.id === 1 ? "/images/track-deborah-biblical.png" :
-                                                        track.id === 2 ? "/images/track-barak-biblical.png" :
-                                                            "/images/track-jael-biblical.png"
-                                                }
-                                                alt={track.title}
-                                                fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/85 to-transparent" />
-                                        </div>
+                    <div className="space-y-8">
+                        {/* Barak Track Hero Card */}
+                        <div className="relative rounded-3xl overflow-hidden shadow-2xl group border border-slate-200/80">
+                            <div className="absolute inset-0 z-0">
+                                <Image
+                                    src="/images/track-barak-biblical.png"
+                                    alt="바라크 트랙 (The Barak Track)"
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-blue-950/70" />
+                            </div>
 
-                                        <div className="relative z-10 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-6">
-                                            <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg backdrop-blur-sm bg-white/10 border border-white/20")}>
-                                                <theme.icon className="w-8 h-8" />
-                                            </div>
-                                            <div>
-                                                <div className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 rounded-lg text-xs font-bold uppercase mb-2">
-                                                    {track.subTitle}
-                                                </div>
-                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{track.title}</h3>
-                                                <p className="text-sm md:text-base text-slate-200 max-w-2xl font-light">
-                                                    {track.description}
-                                                </p>
-                                            </div>
-                                        </div>
+                            <div className="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                                <div className="flex items-start md:items-center gap-6">
+                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center text-white shadow-xl backdrop-blur-md bg-white/10 border border-white/20 flex-shrink-0">
+                                        <Shield className="w-8 h-8 md:w-10 md:h-10 text-amber-400" />
                                     </div>
-
-                                    {/* Syllabus List */}
-                                    <div className="bg-slate-50 rounded-3xl p-6 md:p-8 border border-slate-200">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {track.modules.map((item, itemIdx) => (
-                                                <div key={item.id} className="p-4 bg-white rounded-2xl border border-slate-200 flex gap-4 items-start shadow-sm">
-                                                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                                        {itemIdx + 1}
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-900 text-sm mb-1">{item.title}</h4>
-                                                        <p className="text-slate-500 text-xs leading-relaxed">{item.description}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                    <div>
+                                        <div className="inline-block px-3 py-1 bg-amber-500/20 backdrop-blur-md border border-amber-400/40 text-amber-300 rounded-lg text-xs font-bold uppercase mb-2">
+                                            다볼 산의 소집: 거룩한 순종과 연합의 영성
                                         </div>
-
-                                        <div className="mt-6 pt-6 border-t border-slate-200 flex justify-end">
-                                            <Link
-                                                href={`/apply?track=${track.id === 1 ? 'deborah' : track.id === 2 ? 'barak' : 'jael'}`}
-                                                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 text-white rounded-xl font-bold text-sm hover:bg-blue-800 transition-colors shadow-md"
-                                            >
-                                                이 트랙으로 입학 신청하기 <ChevronRight className="w-4 h-4" />
-                                            </Link>
-                                        </div>
+                                        <h3 className="text-2xl md:text-4xl font-black text-white mb-2">바라크 트랙 (The Barak Track)</h3>
+                                        <p className="text-sm md:text-base text-slate-200 max-w-2xl font-light leading-relaxed">
+                                            순종(Obedience)과 동역(Partnership), 그리고 영적 전쟁(Spiritual Warfare)을 다루며, 비전을 현실로 만드는 전략적 실행과 사역을 배웁니다.
+                                        </p>
                                     </div>
                                 </div>
-                            );
-                        })}
+
+                                <div className="flex-shrink-0">
+                                    <Link
+                                        href="/apply?track=barak"
+                                        className="inline-flex items-center gap-2 px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-extrabold text-sm transition-all shadow-lg hover:scale-105"
+                                    >
+                                        바라크 트랙 입학 신청하기 <ChevronRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Syllabus & Lectures List */}
+                        <div className="bg-slate-50 rounded-3xl p-6 md:p-10 border border-slate-200 shadow-sm">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-200">
+                                <div>
+                                    <h4 className="font-extrabold text-slate-900 text-lg md:text-xl flex items-center gap-2">
+                                        <BookOpen className="w-5 h-5 text-blue-900" />
+                                        바라크 트랙 개설 강의 커리큘럼
+                                    </h4>
+                                    <p className="text-xs md:text-sm text-slate-500 mt-1">
+                                        6인의 전임 교수진 직강 및 사역 실천 심화 강의로 구성된 체계적인 실천 신학 교육
+                                    </p>
+                                </div>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-100 text-blue-950 font-bold text-xs self-start sm:self-auto">
+                                    <PlayCircle className="w-4 h-4 text-blue-900" /> 100% 녹화 영상 자율 수강
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {barakLectures.map((item) => (
+                                    <div key={item.id} className="p-5 bg-white rounded-2xl border border-slate-200/90 flex gap-4 items-start shadow-sm hover:border-blue-400 hover:shadow-md transition-all group">
+                                        <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-900 group-hover:bg-blue-900 group-hover:text-white transition-colors flex items-center justify-center font-extrabold text-sm flex-shrink-0">
+                                            {item.num}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center justify-between gap-2 mb-1">
+                                                <span className={cn("px-2 py-0.5 rounded text-[10px] font-bold border", item.badgeColor)}>
+                                                    {item.category}
+                                                </span>
+                                                <span className="text-[11px] font-semibold text-slate-500">
+                                                    {item.instructor} • {item.lectures}
+                                                </span>
+                                            </div>
+                                            <h5 className="font-bold text-slate-900 text-sm md:text-base mb-1 group-hover:text-blue-900 transition-colors">
+                                                {item.title}
+                                            </h5>
+                                            <p className="text-slate-500 text-xs leading-relaxed">
+                                                {item.desc}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <p className="text-xs text-slate-600 flex items-center gap-1.5">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                                    모든 과목은 시험 없이 A4 1장 소감문 작성으로 이수되며, 자율 일정으로 수강할 수 있습니다.
+                                </p>
+                                <Link
+                                    href="/apply?track=barak"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 text-white rounded-xl font-bold text-sm hover:bg-blue-800 transition-colors shadow-md flex-shrink-0"
+                                >
+                                    바라크 트랙으로 입학 신청하기 <ChevronRight className="w-4 h-4" />
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -523,7 +638,7 @@ export default function CurriculumPage() {
                         지금, 2027학년도 1기 신입생에 도전하세요
                     </h2>
                     <p className="text-slate-300 text-base md:text-lg mb-8 max-w-2xl mx-auto font-light">
-                        1기 등록 장학금 30% 지급, 사모 특별 장학 50% 할인 혜택과 함께 성경 중심의 영적 성장을 시작하세요.
+                        1기 등록 장학금 30% 지급, 사모 특별 장학금 50% 할인 혜택과 함께 신학과 영성을 겸비한 사역자 과정을 시작하세요.
                     </p>
                     <Link
                         href="/apply"
