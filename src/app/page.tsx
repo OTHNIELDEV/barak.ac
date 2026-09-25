@@ -393,7 +393,7 @@ export default function LandingPage() {
                 <ul className="space-y-3.5 text-xs md:text-sm text-slate-200">
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
                     <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">1</span>
-                    <span><strong>교회 실제 목회 현장에 필요한 여성 사역자 및 전도인</strong></span>
+                    <span><strong>교회 실제 목회 현장에 필요한 여성 사역자 및 평신도</strong></span>
                   </li>
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
                     <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">2</span>
