@@ -309,7 +309,7 @@ export default function LandingPage() {
                 <span className="text-blue-900">삶과 사역의 변화</span>에 집중합니다.
               </h2>
               <p className="text-slate-600 text-base md:text-lg leading-relaxed font-light">
-                바라크아카데미는 시험 점수로 사역자를 평가하지 않습니다. 각 과목당 A4 1장 소감문을 통해 말씀을 삶에 적용하며, 바쁜 목회와 일상 속에서도 평생 자율적으로 수강할 수 있습니다.
+                바라크아카데미는 시험 점수로 사역자를 평가하지 않습니다. 각 강의당 A4 1장 소감문을 통해 말씀을 삶에 적용하며, 바쁜 목회와 일상 속에서도 자율적으로 수강할 수 있습니다.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
