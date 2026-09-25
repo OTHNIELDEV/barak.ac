@@ -209,7 +209,7 @@ export default function LandingPage() {
                   <span className="text-3xl font-serif font-bold">ברך</span>
                 </div>
                 <span className="text-xs font-bold text-amber-900 bg-amber-100/80 px-3 py-1 rounded-full uppercase">
-                  히브리어 원어 어원 • 송민원 교수 자문
+                  히브리어 원어 어원
                 </span>
                 <h3 className="text-2xl font-bold text-slate-900 mt-4 mb-3">
                   바라크(ברך): “하나님 앞에 무릎을 꿇는 삶”
