@@ -80,7 +80,7 @@ export default function LandingPage() {
     { name: "김영희 교수", field: "신약학", image: "/images/faculty/kim-younghee.jpg" },
     { name: "전예령 교수 (Ph.D)", field: "기독교교육학", image: "/images/faculty/jeon-yeryeong.jpg" },
     { name: "박은정 교수", field: "목회상담학", image: "/images/faculty/park-eunjung.jpg" },
-    { name: "김종우 교수", field: "AI와 기독교", image: "/images/faculty/kim-jongwoo.jpg" },
+    { name: "김종우 교수", field: "인공지능 시대의 기독교 신학", image: "/images/faculty/kim-jongwoo.jpg" },
   ];
 
   if (!mounted) return null;

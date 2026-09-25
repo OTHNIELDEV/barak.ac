@@ -175,8 +175,8 @@ export default function FacultyPage() {
         {
             id: 6,
             name: "김종우 교수",
-            title: "AI와 기독교 교수",
-            subject: "AI와 기독교 (AI & Ministry)",
+            title: "인공지능 시대의 기독교 신학 교수",
+            subject: "인공지능 시대의 기독교 신학",
             category: "미래 목회 & AI 사역",
             badge: "스마트목회 선도자",
             accentColor: "from-cyan-600 to-blue-600",

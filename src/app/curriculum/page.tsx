@@ -61,7 +61,7 @@ export default function CurriculumPage() {
             title: "AI와 미래목회 & 실전 사역",
             totalLectures: "30강",
             desc: "생성형 AI 기술을 거룩하게 전용하여 복음 콘텐츠를 제작하고 온누리(산, 바다, 들)로 나아가는 종합 실천 사역을 완성합니다.",
-            professors: "김종우 교수 (AI와 기독교), 이윤주 학장",
+            professors: "김종우 교수 (인공지능 시대의 기독교 신학), 이윤주 학장",
             subjects: ["생성형 AI와 스마트 목회 콘텐츠 (15강)", "실전 사역 프로젝트 및 소감문 완성 (15강)"]
         },
     ];
