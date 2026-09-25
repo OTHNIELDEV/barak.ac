@@ -176,7 +176,7 @@ export default function LandingPage() {
               「바라크(Barak)」에 담긴 두 가지 거룩한 의미
             </h2>
             <p className="text-slate-600 mt-3 text-base md:text-lg">
-              자신의 영광보다 하나님의 동행을 구했던 바락 장군의 겸손과, 하나님 앞에 엎드리는 축복의 태도
+              자신의 영광보다 드보라 선지자의 동행을 구했던 바락 장군의 겸손과, 하나님 앞에 엎드리는 축복의 태도
             </p>
           </div>
 
