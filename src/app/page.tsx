@@ -533,12 +533,18 @@ export default function LandingPage() {
                     <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                       <div>
                         <h3 className="text-2xl font-bold mb-3 drop-shadow-md">{course.title}</h3>
-                        <Link
-                          href={`/apply?track=${course.id === 1 ? 'deborah' : course.id === 2 ? 'barak' : 'jael'}`}
-                          className="inline-flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200"
-                        >
-                          이 트랙으로 지원하기 <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
+                        {course.id === 2 ? (
+                          <Link
+                            href="/apply?track=barak"
+                            className="inline-flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200"
+                          >
+                            이 트랙으로 지원하기 <ChevronRight className="w-3.5 h-3.5" />
+                          </Link>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-200 bg-white/20 px-3 py-1 rounded-full backdrop-blur-md">
+                            준비중
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -567,7 +573,7 @@ export default function LandingPage() {
               href="/apply"
               className="px-10 py-5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg font-bold shadow-2xl hover:from-amber-400 hover:to-orange-400 hover:scale-105 transition-all"
             >
-              2026학년도 1기 입학 원서 접수
+              2027학년도 1기 입학 원서 접수
             </Link>
             <Link
               href="/curriculum"

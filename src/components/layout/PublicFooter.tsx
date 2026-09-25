@@ -15,7 +15,7 @@ export function PublicFooter() {
                         </Link>
                         <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
                             하나님의 말씀을 바르게 배우고,<br />
-                            사역의 현장에서 능력 있게 쓰임 받는 리더를 양성합니다.
+                            사역의 현장에서 필요한 영적 리더를 양성합니다.
                         </p>
                     </div>
 
@@ -46,8 +46,8 @@ export function PublicFooter() {
                         <h4 className="text-white font-bold mb-6">문의처</h4>
                         <ul className="space-y-3 text-sm text-slate-400 md:text-right">
                             <li><strong className="text-slate-200">학장:</strong> 이윤주 목사 (Ph.D)</li>
-                            <li><strong className="text-slate-200">대표 사역:</strong> 산해원교회 / 제이합미션</li>
-                            <li><strong className="text-slate-200">Email:</strong> contact@barak.ac</li>
+                            <li><strong className="text-slate-200">HP:</strong> 010-5205-6970</li>
+                            <li><strong className="text-slate-200">Email:</strong> jhop3927@naver.com</li>
                             <li className="pt-2 text-xs text-slate-500 leading-relaxed">
                                 새 시대에 요구되는 성경 중심의 온라인 신학교<br />
                                 <strong>바라크아카데미 (BARAK ACADEMY)</strong>

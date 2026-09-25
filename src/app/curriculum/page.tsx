@@ -346,7 +346,7 @@ export default function CurriculumPage() {
             <section className="py-20 bg-slate-900 text-white text-center">
                 <div className="max-w-4xl mx-auto px-4">
                     <h2 className="text-3xl md:text-4xl font-black mb-4">
-                        지금, 2026학년도 1기 신입생에 도전하세요
+                        지금, 2027학년도 1기 신입생에 도전하세요
                     </h2>
                     <p className="text-slate-300 text-base md:text-lg mb-8 max-w-2xl mx-auto font-light">
                         1기 등록 장학금 30% 지급, 사모 특별 장학 50% 할인 혜택과 함께 성경 중심의 영적 성장을 시작하세요.

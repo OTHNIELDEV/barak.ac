@@ -180,7 +180,7 @@ function AdmissionApplyForm() {
             <section className="bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white py-20 px-4">
                 <div className="max-w-5xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase mb-6 border border-amber-400/30">
-                        <Sparkles className="w-4 h-4" /> 2026학년도 1기 신입생 모집
+                        <Sparkles className="w-4 h-4" /> 2027학년도 1기 신입생 모집
                     </div>
                     <h1 className="text-3xl md:text-5xl font-black mb-4">
                         입학 요건 및 학생 모집 요강
@@ -334,7 +334,7 @@ function AdmissionApplyForm() {
                     <div className="text-center mb-10">
                         <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Online Application</span>
                         <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 mt-1 mb-2">
-                            2026학년도 1기 입학 원서 접수
+                            2027학년도 1기 입학 원서 접수
                         </h2>
                         <p className="text-sm md:text-base text-slate-600">
                             아래 양식을 작성해 주시면 담당자가 확인 후 등록 절차 및 장학 혜택을 안내해 드립니다.
