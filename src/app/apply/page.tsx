@@ -223,7 +223,7 @@ function AdmissionApplyForm() {
                             <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-900 flex items-center justify-center mb-4">
                                 <GraduationCap className="w-6 h-6" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">모집 대상 (요강)</h3>
+                            <h3 className="text-xl font-bold text-slate-900 mb-3">모집 요강</h3>
                             <ul className="space-y-2.5 text-xs md:text-sm text-slate-600">
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
