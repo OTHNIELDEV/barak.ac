@@ -11,10 +11,10 @@ export default function FacultyPage() {
         {
             id: 1,
             name: "이윤주 학장 (Ph.D)",
-            title: "바라크아카데미 학장 / 총괄교수",
+            title: "바라크아카데미 학장 / 산해원교회 담임목사",
             subject: "이갈렙 목사의 성경해석학",
             category: "성경해석학 & 실천신학",
-            badge: "학장 / 총괄교수",
+            badge: "학장 / 산해원교회 담임목사",
             accentColor: "from-amber-500 to-orange-600",
             borderColor: "border-amber-400",
             bio: "이화여대와 호서대에서 구약학을 전공하였으며, 사역 현장과 학문을 잇는 탁월한 성경해석으로 사모와 여성 사역자, 충성된 부목자들을 깨우는 영적 지도자입니다.",
