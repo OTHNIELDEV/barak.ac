@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { MapPin, Clock, Calendar, Video, ArrowRight, Music, Heart, X, Play } from "lucide-react";
+import { MapPin, Clock, Calendar, Video, ArrowRight, Heart, X, Play } from "lucide-react";
 
 export default function ChapelPage() {
     const [selectedVideo, setSelectedVideo] = useState<{ title: string; youtubeId: string; speaker: string } | null>(null);
@@ -160,19 +160,7 @@ export default function ChapelPage() {
                 </div>
             )}
 
-            {/* Quote / Meditation */}
-            <section className="py-32 bg-stone-900 text-stone-100 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
-                <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-                    <Music className="w-12 h-12 text-amber-500 mx-auto mb-8 opacity-80" />
-                    <blockquote className="text-3xl md:text-5xl font-serif leading-tight mb-10">
-                        "예배는 우리의 마음을<br />하나님의 심장박동에<br />맞추는 시간입니다."
-                    </blockquote>
-                    <p className="text-stone-400 font-sans tracking-widest uppercase text-sm">
-                        - Sanhaewon Chapel Worship Team -
-                    </p>
-                </div>
-            </section>
+
 
             <PublicFooter />
         </div>
