@@ -96,7 +96,7 @@ export default function CurriculumPage() {
                     </h1>
                     <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
                         한 학기 30강, 총 120강으로 완성되는 성경 중심의 실전 신학.<br />
-                        <span className="text-amber-300 font-medium">시험 없는(No Exam) 소감문 중심</span>과 <span className="text-white font-medium">평생 자율 수강</span>을 지원합니다.
+                        <span className="text-amber-300 font-medium">시험 없는(No Exam) 소감문 중심</span>과 <span className="text-white font-medium">자율 수강</span>을 지원합니다.
                     </p>
                 </div>
             </section>
@@ -109,9 +109,6 @@ export default function CurriculumPage() {
                         <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">
                             자격증 발급 및 학사 운영 기준
                         </h2>
-                        <p className="text-xs md:text-sm text-slate-500 mt-2">
-                            성령의 기름부으심을 받은 사역자들에게 학덕 과목을 제공하여 교회들이 합법적으로 임직하는 절차에 모자람이 없도록 지원합니다.
-                        </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
