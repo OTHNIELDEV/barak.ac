@@ -34,9 +34,9 @@ export default function CurriculumPage() {
     const semester1Subjects = [
         {
             id: 1,
-            title: "이갈렙 목사의 성경해석학 실무",
+            title: "이갈렙 목사의 성경해석학",
             lectures: "5강",
-            professor: "이윤주 학장",
+            professor: "이윤주 교수",
             field: "성경해석학",
             image: "/images/faculty/lee-yoonju.jpg",
             desc: "성경을 바르게 해석하고 목회 현장에 접목하는 핵심 원리와 구속사적 강해"
@@ -94,8 +94,8 @@ export default function CurriculumPage() {
             title: "성경해석학과 교육목회 심화",
             totalLectures: "30강",
             desc: "이갈렙 목사의 성경해석학을 통해 성경을 바르게 해석하고 이를 교회와 가정에 가르치는 교육 리더십을 세웁니다.",
-            professors: "이윤주 학장, 전예령 교수",
-            subjects: ["이갈렙 목사의 성경해석학 실무 심화 (15강)", "기독교 교육 철학과 영성형성 심화 (15강)"]
+            professors: "이윤주 교수, 전예령 교수",
+            subjects: ["이갈렙 목사의 성경해석학 심화 (15강)", "기독교 교육 철학과 영성형성 심화 (15강)"]
         },
         {
             sem: "제 3학기",
@@ -110,7 +110,7 @@ export default function CurriculumPage() {
             title: "AI와 미래목회 & 실전 사역",
             totalLectures: "30강",
             desc: "생성형 AI 기술을 거룩하게 전용하여 복음 콘텐츠를 제작하고 온누리(산, 바다, 들)로 나아가는 종합 실천 사역을 완성합니다.",
-            professors: "김종우 교수, 이윤주 학장",
+            professors: "김종우 교수, 이윤주 교수",
             subjects: ["생성형 AI와 스마트 목회 콘텐츠 심화 (15강)", "실전 사역 프로젝트 및 소감문 완성 (15강)"]
         }
     ];
@@ -120,8 +120,8 @@ export default function CurriculumPage() {
             id: 1,
             num: "01",
             category: "성경해석학",
-            title: "이갈렙 목사의 성경해석학 실무 강해",
-            instructor: "이윤주 학장",
+            title: "이갈렙 목사의 성경해석학",
+            instructor: "이윤주 교수",
             lectures: "5강",
             desc: "성경을 구속사적 관점으로 바르게 해석하고 목회 현장과 설교에 접목하는 핵심 강해",
             badgeColor: "bg-amber-100 text-amber-900 border-amber-200"
