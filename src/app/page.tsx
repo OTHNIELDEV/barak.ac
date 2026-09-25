@@ -257,7 +257,7 @@ export default function LandingPage() {
                 <Heart className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">
-                2. 여성 사역자·목사 사모 발굴
+                2. 여성 사역자 발굴
               </h3>
               <p className="text-slate-300 text-sm leading-relaxed">
                 “내가 또 내 영을 남종과 여종에게 부어줄 것이며”(욜 2:29). 마지막 때 성령의 기름부으심을 받은 여성 사역자와 사모의 은사를 극대화합니다.
