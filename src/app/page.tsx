@@ -235,7 +235,7 @@ export default function LandingPage() {
               바라크아카데미 3대 설립 비전
             </h2>
             <p className="text-slate-300 mt-4 text-base md:text-lg font-light">
-              기존의 틀을 깨고 사역 현장에 가장 필요한 실전형 영적 리더를 양성합니다.
+              기존의 틀을 깨고 사역 현장에 가장 필요한 영적 리더를 양성합니다.
             </p>
           </div>
 
