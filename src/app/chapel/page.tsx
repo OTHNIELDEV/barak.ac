@@ -209,8 +209,8 @@ export default function ChapelPage() {
             <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
                     <div>
-                        <h2 className="text-3xl font-bold text-stone-900">최근 채플 설교</h2>
-                        <p className="text-stone-500 mt-2">산해원 채플과 바라크아카데미의 은혜로운 말씀을 시청하세요.</p>
+                        <h2 className="text-3xl font-bold text-stone-900">채플 예배</h2>
+                        <p className="text-stone-500 mt-2">산해원 채플과 바라크아카데미의 은혜로운 예배를 시청하세요.</p>
                     </div>
                     <a
                         href="https://www.youtube.com/@jhoptv/videos"
