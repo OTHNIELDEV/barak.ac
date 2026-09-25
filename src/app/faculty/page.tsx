@@ -240,7 +240,7 @@ export default function FacultyPage() {
                         className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light"
                     >
                         성경의 깊이와 사역의 실전, 그리고 미래 AI 기술을 아우르는<br />
-                        <span className="text-amber-300 font-semibold">6인의 최고 권위 교수진</span>이 여러분과 함께합니다.
+                        <span className="text-amber-300 font-semibold">6인의 교수진</span>이 여러분과 함께합니다.
                     </motion.p>
                 </div>
             </section>
