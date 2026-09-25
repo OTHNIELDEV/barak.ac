@@ -194,7 +194,7 @@ export default function LandingPage() {
                   바락(Barak)의 겸손: “드보라 여선지자의 동행을 구하다”
                 </h3>
                 <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-4">
-                  드보라 선지자가 가나안 군대와 싸우러 나가라 했을 때, 바락은 자신의 영광이나 명예보다 드보라와 함께 감으로 <strong>하나님이 함께하심</strong>을 최우선으로 여겼습니다(삿 4:8).
+                  드보라 선지자가 가나안 군대와 싸우러 나가라 했을 때, 바락은 자신의 영광이나 명예보다 <strong>드보라와 함께 가기</strong>를 구했습니다(삿 4:8).
                 </p>
                 <div className="bg-slate-50 p-4 rounded-xl text-xs md:text-sm text-slate-700 border border-slate-100">
                   성경은 바락을 주저한 자가 아닌, 당당한 <strong>“믿음의 사람”</strong>으로 증언합니다 (히 11:32-33).
