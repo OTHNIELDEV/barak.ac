@@ -129,7 +129,7 @@ export default function LandingPage() {
             {/* Sub Paragraph */}
             <p className="text-base sm:text-xl text-slate-200 leading-relaxed mb-8 max-w-3xl mx-auto font-light drop-shadow-lg">
               하나님 앞에 겸손히 무릎 꿇는 영성(<span className="text-amber-300 font-semibold">ברך</span>)과 최첨단 AI 기술을 융합하여,
-              마지막 때 <span className="text-white font-bold">여성 사역자·목사 사모·동역자</span>를 온누리(산, 바다, 들)의 영적 리더로 세웁니다.
+              마지막 때 <span className="text-white font-bold">부목사, 선교사, 전도사, 특히 여성 사역자</span>를 온누리의 영적 리더로 세웁니다.
             </p>
 
             {/* Scholarship & Accreditation Badge in Hero */}
@@ -138,13 +138,13 @@ export default function LandingPage() {
                 🌟 1기 개교 등록 장학금 30% 지급
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-blue-600/90 text-white font-bold border border-blue-400/40 backdrop-blur-sm">
-                💖 목사 사모 특별 장학 50% 할인
+                💖 목사 사모 특별 장학금 50% 할인
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-purple-600/80 text-white font-bold border border-purple-400/40 backdrop-blur-sm">
-                📜 전도사·선교사·목사 자격증 발급
+                📜 목사,선교사,전도사 자격증 발급
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-white/10 text-slate-200 border border-white/20">
-                🏛️ 산해원교회 산하 2년제(120강) 영상강의
+                🏛️ 2년제(120강) 영상강의
               </span>
             </div>
 
@@ -154,7 +154,7 @@ export default function LandingPage() {
                 href="/apply"
                 className="px-9 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg font-bold shadow-[0_15px_40px_rgba(245,158,11,0.35)] hover:shadow-orange-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
-                2026학년도 1기 입학 신청 <ArrowRight className="w-5 h-5" />
+                2027학년도 1기 입학 신청 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/about"
