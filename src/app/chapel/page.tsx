@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { MapPin, Clock, Calendar, Video, ArrowRight, Heart, X, Play, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Calendar, Video, ArrowRight, Heart, X, Play, ExternalLink, Globe } from "lucide-react";
 
 export default function ChapelPage() {
     const [selectedVideo, setSelectedVideo] = useState<{ title: string; youtubeId: string; speaker: string; scripture?: string } | null>(null);
@@ -106,18 +106,38 @@ export default function ChapelPage() {
             </section>
 
             {/* Service Info Bar */}
-            <section className="relative z-20 -mt-20 max-w-3xl mx-auto px-4">
-                <div className="bg-white rounded-3xl shadow-2xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8 divide-y md:divide-y-0 md:divide-x divide-stone-100 font-sans border border-stone-100">
-                    <div className="text-center p-4">
-                        <Clock className="w-8 h-8 text-stone-400 mx-auto mb-4" />
-                        <h3 className="font-bold text-stone-900 mb-2 text-lg">주일 예배</h3>
-                        <p className="text-stone-600 text-sm font-medium">매주일 오전 11:00</p>
-                        <p className="text-stone-500 text-xs mt-1">산해원 채플실</p>
+            <section className="relative z-20 -mt-20 max-w-4xl mx-auto px-4">
+                <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 divide-y md:divide-y-0 md:divide-x divide-stone-100 font-sans border border-stone-100">
+                    {/* 1. 주일 예배 */}
+                    <div className="text-center p-3 flex flex-col items-center justify-center">
+                        <Clock className="w-8 h-8 text-amber-600 mx-auto mb-3" />
+                        <h3 className="font-bold text-stone-900 mb-1.5 text-lg">주일 예배</h3>
+                        <p className="text-stone-700 text-sm font-semibold">매주일 오전 11:00</p>
+                        <p className="text-stone-500 text-xs mt-0.5">산해원 채플실</p>
                     </div>
-                    <div className="text-center p-4">
-                        <MapPin className="w-8 h-8 text-stone-400 mx-auto mb-4" />
-                        <h3 className="font-bold text-stone-900 mb-2 text-lg">예배 처소</h3>
-                        <p className="text-stone-600 text-sm font-medium">바라크아카데미 / 산해원교회</p>
+
+                    {/* 2. 예배 처소 */}
+                    <div className="text-center p-3 pt-6 md:pt-3 flex flex-col items-center justify-center">
+                        <MapPin className="w-8 h-8 text-blue-900 mx-auto mb-3" />
+                        <h3 className="font-bold text-stone-900 mb-1.5 text-lg">예배 처소</h3>
+                        <p className="text-stone-700 text-sm font-semibold">바라크아카데미 / 산해원교회</p>
+                        <p className="text-stone-500 text-xs mt-0.5">예배 및 세미나 홀</p>
+                    </div>
+
+                    {/* 3. 산해원교회 홈페이지 */}
+                    <div className="text-center p-3 pt-6 md:pt-3 flex flex-col items-center justify-center">
+                        <Globe className="w-8 h-8 text-emerald-600 mx-auto mb-3" />
+                        <h3 className="font-bold text-stone-900 mb-1.5 text-lg">산해원교회</h3>
+                        <p className="text-stone-700 text-xs font-medium mb-2.5">말씀과 은혜의 공동체</p>
+                        <a
+                            href="https://sanhaewon.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-amber-600 text-white font-bold text-xs transition-all shadow-sm hover:shadow group hover:scale-105"
+                        >
+                            <span>홈페이지 방문</span>
+                            <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                        </a>
                     </div>
                 </div>
             </section>
