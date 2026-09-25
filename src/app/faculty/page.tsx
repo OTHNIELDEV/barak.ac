@@ -12,7 +12,7 @@ export default function FacultyPage() {
             id: 1,
             name: "이윤주 학장 (Ph.D)",
             title: "바라크아카데미 학장 / 총괄교수",
-            subject: "이윤주 박사의 성경해석학",
+            subject: "이갈렙 목사의 성경해석학",
             category: "성경해석학 & 실천신학",
             badge: "학장 / 총괄교수",
             accentColor: "from-amber-500 to-orange-600",
@@ -30,12 +30,12 @@ export default function FacultyPage() {
                 "한국기독교신학교협의회(한기신협) 이사"
             ],
             books: [
-                "이윤주 박사의 성경해석학 실무 강해",
+                "이갈렙 목사의 성경해석학 실무 강해",
                 "십자가의 도와 구속사적 여종 환원론",
                 "사사기 바락의 영성과 리더십"
             ],
             courses: [
-                "이윤주 박사의 성경해석학 (15강)",
+                "이갈렙 목사의 성경해석학 (15강)",
                 "사사기적 영성과 바락 리더십 (15강)",
                 "말씀 중심의 실천 목회학"
             ]
