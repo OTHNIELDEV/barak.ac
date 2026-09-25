@@ -287,7 +287,7 @@ export default function CurriculumPage() {
                                 </span>
                             </div>
                             <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
-                                6인의 교수진과 함께하는 1학기 6대 핵심 신학
+                                6인의 교수진과 함께하는 1학기 6과목 핵심 신학
                             </h3>
                             <p className="text-slate-600 text-sm md:text-base mt-2 max-w-3xl leading-relaxed">
                                 6인의 전임 교수진 전원이 1학기에 참여하여 신학의 본질, 성경 해석, 교육, 상담, AI 사역까지 
