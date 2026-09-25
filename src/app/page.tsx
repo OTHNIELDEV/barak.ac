@@ -218,7 +218,7 @@ export default function LandingPage() {
                   ‘바라크(Barak)’는 히브리어로 <strong>“축복하다”</strong>이며, 어원적으로는 <strong>‘무릎을 꿇다’</strong>입니다. 축복하는 행위보다 하나님 앞에 복을 받는 사람의 겸손한 자세를 기준합니다.
                 </p>
                 <div className="bg-slate-50 p-4 rounded-xl text-xs md:text-sm text-slate-700 border border-slate-100">
-                  겸손히 하나님 앞에 엎드리는 영적 태도 자체가 바로 <strong>참된 축복(Barak)</strong>입니다.
+                  겸손히 하나님 앞에 엎드리는 영적 태도 자체가 바로 <strong>복을 받는 참된 모습</strong>입니다.
                 </div>
               </div>
             </div>
