@@ -342,7 +342,7 @@ export default function LandingPage() {
                     <CheckCircle2 className="w-5 h-5 text-amber-500" />
                     졸업 기한 제한 없음
                   </div>
-                  <p className="text-xs text-slate-500">시간에 쫓기지 않고 평생 자율 이수 및 복습 가능</p>
+                  <p className="text-xs text-slate-500">시간에 쫓기지 않고 자율 이수 및 복습 가능</p>
                 </div>
               </div>
 
