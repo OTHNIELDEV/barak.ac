@@ -210,7 +210,7 @@ function AdmissionApplyForm() {
                             누구나 제약 없이 입학하여 전 과목을 수강하고 수료할 수 있습니다.
                         </p>
                         <p className="leading-relaxed pt-2 border-t border-slate-200">
-                            단, <strong>지도자·사역자 자격증서</strong>의 정식 수령은 재학 중이거나 수료 후 성령의 권능을 받은 자에게 수여됩니다.
+                            단, <strong>자격증서</strong>의 정식 수령은 재학 중이거나 수료 후 성령을 받은 자에게 수여됩니다.
                         </p>
                     </div>
                 </div>

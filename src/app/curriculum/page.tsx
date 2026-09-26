@@ -198,7 +198,7 @@ export default function CurriculumPage() {
 
                     {/* Certification & Holy Spirit Requirement Note */}
                     <div className="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 leading-relaxed">
-                        <strong className="text-blue-900">📌 자격증서 수여 안내:</strong> 누구나 제약 없이 수강하고 수료할 수 있으며, 지도자·사역자 자격증서 수령은 재학 중이거나 수료 후 성령의 권능을 받은 자에게 수여됩니다.
+                        <strong className="text-blue-900">📌 자격증서 수여 안내:</strong> 누구나 제약 없이 수강하고 수료할 수 있으며, 자격증서의 정식 수령은 재학 중이거나 수료 후 성령을 받은 자에게 수여됩니다.
                     </div>
                 </div>
             </section>
