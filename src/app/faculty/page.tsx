@@ -238,6 +238,15 @@ export default function FacultyPage() {
                         성경의 깊이와 사역의 실전, 그리고 미래 AI 기술을 아우르는<br />
                         <span className="text-amber-300 font-semibold">6인의 교수진</span>이 여러분과 함께합니다.
                     </motion.p>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.3 }}
+                        className="text-xs sm:text-sm text-slate-400 mt-4 font-light tracking-tight opacity-80"
+                    >
+                        ※ 각 강의에서 제시되는 신학적 관점은 본원의 견해와 일치하지 않을 수 있습니다.
+                    </motion.p>
                 </div>
             </section>
 
