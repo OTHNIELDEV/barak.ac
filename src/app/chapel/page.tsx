@@ -27,6 +27,15 @@ export default function ChapelPage() {
     const chapelSermons = [
         {
             id: 1,
+            title: "최고한 법 (3) 자유하는 율법 (가)",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "약 2:8-13",
+            desc: "사랑과 긍휼로 율법을 완성하며 성도를 참된 자유로 이끄는 온전한 구속사적 말씀입니다.",
+            youtubeId: "T-kY9XBB8io",
+            thumb: "https://img.youtube.com/vi/T-kY9XBB8io/hqdefault.jpg"
+        },
+        {
+            id: 2,
             title: "자유하는 율법 #2  최고한 법 (나)",
             speaker: "이갈렙 목사 (제이합미션)",
             scripture: "마 19:16-22",
@@ -35,7 +44,7 @@ export default function ChapelPage() {
             thumb: "https://img.youtube.com/vi/bftZuUKSfM8/hqdefault.jpg"
         },
         {
-            id: 2,
+            id: 3,
             title: "자유하는 율법 #1  최고한 법 (가)",
             speaker: "이갈렙 목사 (제이합미션)",
             scripture: "약 2:8-9",
@@ -44,7 +53,7 @@ export default function ChapelPage() {
             thumb: "https://img.youtube.com/vi/OP79-8l715c/hqdefault.jpg"
         },
         {
-            id: 3,
+            id: 4,
             title: "항상 들으시니 항상 기도할 것인가",
             speaker: "이갈렙 목사 (제이합미션)",
             scripture: "요 11:41-44",
@@ -53,7 +62,7 @@ export default function ChapelPage() {
             thumb: "https://img.youtube.com/vi/ZbAzIGAuywg/hqdefault.jpg"
         },
         {
-            id: 4,
+            id: 5,
             title: "기록되었으되, 부제(2) 겸손하여야",
             speaker: "이갈렙 목사 (제이합미션)",
             scripture: "대상 21:1, 마 4:1-4",
@@ -62,85 +71,76 @@ export default function ChapelPage() {
             thumb: "https://img.youtube.com/vi/tvWiKoF_MI8/hqdefault.jpg"
         },
         {
-            id: 5,
+            id: 6,
             title: "모든 말씀으로 살 것이라",
             speaker: "이갈렙 목사 (제이합미션)",
             scripture: "큰집 큰사람(2)",
             desc: "기록된 말씀의 권세로 원수를 물리치고 하나님의 입에서 나오는 말씀으로 사는 삶을 선포합니다.",
             youtubeId: "5hTDZu3H8mo",
             thumb: "https://img.youtube.com/vi/5hTDZu3H8mo/hqdefault.jpg"
-        },
-        {
-            id: 6,
-            title: "주여, 구원을 얻는 자가 적으니이까",
-            speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "눅 13:18-21, 마 7:22-23",
-            desc: "눅 13:18-21, 마 7:22-23 말씀을 중심으로 하나님 나라의 진리와 사역자의 바른 영성을 증거합니다.",
-            youtubeId: "iE0UZ2fipx0",
-            thumb: "https://img.youtube.com/vi/iE0UZ2fipx0/hqdefault.jpg"
         }
     ];
 
     const broadcastSermons = [
         {
             id: 101,
-            title: "생베 조각을 낡은 옷에 깁지 않는다",
+            title: "최고한 법 (3) 자유하는 율법 (가)",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "마태복음 9:14-17",
-            series: "큰집 큰사람 (1)",
-            desc: "복음의 새 포도주를 담는 영적 그릇과 생베 조각의 거룩한 연합의 비밀을 강해합니다.",
-            youtubeId: "YxU9WnNvNP0",
-            thumb: "https://img.youtube.com/vi/YxU9WnNvNP0/hqdefault.jpg"
+            scripture: "약 2:8-13",
+            series: "주일 예배",
+            desc: "사랑과 긍휼로 율법을 완성하며 성도를 참된 자유로 이끄는 온전한 구속사적 말씀입니다.",
+            youtubeId: "vT9TZw_V_gw",
+            thumb: "https://img.youtube.com/vi/vT9TZw_V_gw/hqdefault.jpg"
         },
         {
             id: 102,
+            title: "자유하는 율법 #2  최고한 법 (나)",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "마 19:16-22",
+            series: "주일 예배",
+            desc: "사랑과 긍휼로 율법을 완성하며 성도를 참된 자유로 이끄는 온전한 구속사적 말씀입니다.",
+            youtubeId: "HQ4nZqKAE3Y",
+            thumb: "https://img.youtube.com/vi/HQ4nZqKAE3Y/hqdefault.jpg"
+        },
+        {
+            id: 103,
+            title: "항상 들으시니 항상 기도할 것인가",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "요 11:41-44",
+            series: "주일 예배",
+            desc: "우리의 간구를 항상 들으시는 하나님의 신실하심 속에서 마땅히 품어야 할 기도의 영성입니다.",
+            youtubeId: "BQdB74k4TIo",
+            thumb: "https://img.youtube.com/vi/BQdB74k4TIo/hqdefault.jpg"
+        },
+        {
+            id: 104,
+            title: "기록되었으되, 부제(2) 겸손하여야",
+            speaker: "이갈렙 목사 (제이합미션)",
+            scripture: "대상 21:1, 마 4:1-4",
+            series: "주일 예배",
+            desc: "대상 21:1, 마 4:1-4 말씀을 중심으로 하나님 나라의 진리와 사역자의 바른 영성을 증거합니다.",
+            youtubeId: "hdtlrKi-n64",
+            thumb: "https://img.youtube.com/vi/hdtlrKi-n64/hqdefault.jpg"
+        },
+        {
+            id: 105,
             title: "모든 말씀으로 살 것이라",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "마태복음 4:1-11",
-            series: "큰집 큰사람 (2)",
-            desc: "육신의 떡을 넘어 하나님의 입에서 나오는 모든 말씀으로 원수를 이기는 신앙의 삶",
+            scripture: "큰집 큰사람(2)",
+            series: "주일 예배",
+            desc: "기록된 말씀의 권세로 원수를 물리치고 하나님의 입에서 나오는 말씀으로 사는 삶을 선포합니다.",
             youtubeId: "FlYdXHkAK08",
             thumb: "https://img.youtube.com/vi/FlYdXHkAK08/hqdefault.jpg"
         },
         {
-            id: 103,
-            title: "다만 주를 섬기라 하였느니라",
-            speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "누가복음 4:1-13",
-            series: "큰집 큰사람 (3)",
-            desc: "오직 주 하나님만을 경외하고 섬김으로 악한 권세를 꺾는 거룩한 성도의 권능",
-            youtubeId: "Du1FyiPPqIQ",
-            thumb: "https://img.youtube.com/vi/Du1FyiPPqIQ/hqdefault.jpg"
-        },
-        {
-            id: 104,
-            title: "아버지의 약속하신 것 그대로",
-            speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "사도행전 1:4-5, 요엘 2:28-32",
-            series: "성경성령론 (1)",
-            desc: "약속하신 성령을 기다리며 권능과 성령의 세례를 온전히 사모하는 성경적 성령론 강해",
-            youtubeId: "7c3CMFPsTFA",
-            thumb: "https://img.youtube.com/vi/7c3CMFPsTFA/hqdefault.jpg"
-        },
-        {
-            id: 105,
-            title: "성령, 예루살렘으로부터라야",
-            speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "누가복음 24:45-49, 요엘 2:28-32",
-            series: "성경성령론 (2)",
-            desc: "위로부터 입혀지는 성령의 능력과 예루살렘에서부터 온 땅 끝으로 향하는 구속사적 사명",
-            youtubeId: "2KyVQqoj0HM",
-            thumb: "https://img.youtube.com/vi/2KyVQqoj0HM/hqdefault.jpg"
-        },
-        {
             id: 106,
-            title: "필경은 성신을 그의 제자된 자에게",
+            title: "주여, 구원을 얻는 자가 적으니이까",
             speaker: "이갈렙 목사 (제이합미션)",
-            scripture: "이사야 32:9-15, 사도행전 2:32, 36",
-            series: "성경성령론 (3)",
-            desc: "광야가 아름다운 밭이 되고 주를 주로 시인하는 제자들에게 부어주시는 성령의 충만하심",
-            youtubeId: "SNFWAkc05NY",
-            thumb: "https://img.youtube.com/vi/SNFWAkc05NY/hqdefault.jpg"
+            scripture: "눅 13:18-21, 마 7:22-23",
+            series: "주일 예배",
+            desc: "눅 13:18-21, 마 7:22-23 말씀을 중심으로 하나님 나라의 진리와 사역자의 바른 영성을 증거합니다.",
+            youtubeId: "wa_kV_rK2z4",
+            thumb: "https://img.youtube.com/vi/wa_kV_rK2z4/hqdefault.jpg"
         }
     ];
 
