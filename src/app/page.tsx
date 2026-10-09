@@ -10,6 +10,7 @@ import { Course, db } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 import { cn } from "@/lib/utils";
 import { PromoVideoModal } from "@/components/features/video/PromoVideoModal";
+import { PreOpenNoticeModal } from "@/components/features/notice/PreOpenNoticeModal";
 
 export default function LandingPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -678,6 +679,9 @@ export default function LandingPage() {
         videoId="tGMVYSRAVP8"
         title="바라크아카데미 공식 홍보영상"
       />
+
+      {/* 정식 오픈 준비 안내 팝업 모달 (하루 안보기 & 닫기 지원) */}
+      <PreOpenNoticeModal />
     </div>
   );
 }
