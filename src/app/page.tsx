@@ -3,16 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { ChevronRight, PlayCircle, Shield, Award, Users, BookOpen, ArrowRight, Star, Sparkles, Heart, Globe, Gift, Clock, FileText, CheckCircle2, GraduationCap } from "lucide-react";
+import { ChevronRight, PlayCircle, Shield, Award, Users, BookOpen, ArrowRight, Star, Sparkles, Heart, Globe, Gift, Clock, FileText, CheckCircle2, GraduationCap, Play } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Course, db } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 import { cn } from "@/lib/utils";
+import { PromoVideoModal } from "@/components/features/video/PromoVideoModal";
 
 export default function LandingPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -149,19 +151,93 @@ export default function LandingPage() {
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+            <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full justify-center">
               <Link
                 href="/apply"
-                className="px-9 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg font-bold shadow-[0_15px_40px_rgba(245,158,11,0.35)] hover:shadow-orange-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-base sm:text-lg font-bold shadow-[0_15px_40px_rgba(245,158,11,0.35)] hover:shadow-orange-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
                 2027학년도 1기 입학 신청 <ArrowRight className="w-5 h-5" />
               </Link>
+              <button
+                type="button"
+                onClick={() => setIsPromoOpen(true)}
+                className="w-full sm:w-auto px-7 py-4 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-amber-400/50 text-amber-300 hover:text-white text-base sm:text-lg font-bold transition-all flex items-center justify-center gap-2.5 backdrop-blur-md shadow-[0_0_25px_rgba(245,158,11,0.2)] hover:border-amber-300 hover:scale-105 group"
+              >
+                <div className="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 group-hover:bg-amber-400 group-hover:text-slate-950 flex items-center justify-center transition-colors">
+                  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                </div>
+                홍보영상 시청
+              </button>
               <Link
                 href="/about"
-                className="px-8 py-4 rounded-full border border-white/30 text-white text-lg font-bold hover:bg-white/10 transition-all flex items-center justify-center backdrop-blur-sm"
+                className="w-full sm:w-auto px-7 py-4 rounded-full border border-white/30 text-white text-base sm:text-lg font-bold hover:bg-white/10 transition-all flex items-center justify-center backdrop-blur-sm"
               >
                 설립 취지 & 비전 보기
               </Link>
+            </div>
+
+            {/* Cinematic Promo Video Preview Card */}
+            <div className="mt-12 w-full max-w-4xl mx-auto">
+              <div
+                onClick={() => setIsPromoOpen(true)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIsPromoOpen(true);
+                  }
+                }}
+                className="relative group cursor-pointer rounded-2xl sm:rounded-3xl overflow-hidden border border-amber-500/40 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-2 sm:p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(245,158,11,0.15)] backdrop-blur-xl transition-all duration-300 hover:border-amber-400 hover:shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_45px_rgba(245,158,11,0.3)] hover:-translate-y-1 text-left"
+              >
+                {/* 16:9 / 21:9 Aspect Ratio Video Card */}
+                <div className="relative aspect-video sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950">
+                  <Image
+                    src="/images/promo-video-thumb.jpg"
+                    alt="바라크아카데미 공식 홍보영상"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.75] group-hover:brightness-90"
+                    priority
+                  />
+                  {/* Dark Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/30" />
+
+                  {/* Top Badge */}
+                  <div className="absolute top-3 left-3 sm:top-5 sm:left-5 flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/80 border border-amber-400/40 backdrop-blur-md">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-[11px] sm:text-xs font-bold text-amber-300 tracking-wider">
+                      공식 홍보영상 &bull; HD
+                    </span>
+                  </div>
+
+                  {/* Center Play Button with Glow & Pulse */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative flex items-center justify-center">
+                      <div className="absolute -inset-4 sm:-inset-6 rounded-full bg-amber-500/25 animate-ping duration-1000" />
+                      <div className="absolute -inset-2 sm:-inset-3 rounded-full bg-amber-400/40 blur-md" />
+                      <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-300 text-slate-950 flex items-center justify-center shadow-[0_0_35px_rgba(245,158,11,0.6)] group-hover:scale-110 transition-transform duration-300">
+                        <Play className="w-6 h-6 sm:w-9 sm:h-9 fill-slate-950 ml-1 text-slate-950" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Info Bar */}
+                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-5 sm:left-6 sm:right-6 flex items-end justify-between">
+                    <div>
+                      <p className="text-amber-300 text-[11px] sm:text-xs font-bold uppercase tracking-widest drop-shadow">
+                        Barak Academy Official Video
+                      </p>
+                      <h3 className="text-white text-sm sm:text-lg md:text-xl font-bold mt-0.5 drop-shadow-md">
+                        바라크아카데미 홍보영상 &bull; 지금 시청하기
+                      </h3>
+                    </div>
+                    <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold backdrop-blur-md border border-white/20 transition-colors">
+                      <Play className="w-3 h-3 fill-current" />
+                      클릭하여 재생
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -568,16 +644,24 @@ export default function LandingPage() {
           <p className="text-slate-300 text-base md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
             바라크아카데미가 여러분의 든든한 영적 동역자가 되어 드리겠습니다.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/apply"
-              className="px-10 py-5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg font-bold shadow-2xl hover:from-amber-400 hover:to-orange-400 hover:scale-105 transition-all"
+              className="w-full sm:w-auto px-10 py-5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg font-bold shadow-2xl hover:from-amber-400 hover:to-orange-400 hover:scale-105 transition-all flex items-center justify-center gap-2"
             >
               2027학년도 1기 입학 원서 접수
             </Link>
+            <button
+              type="button"
+              onClick={() => setIsPromoOpen(true)}
+              className="w-full sm:w-auto px-8 py-5 rounded-full bg-slate-900/90 border border-amber-400/50 text-amber-300 hover:text-white text-lg font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2.5 backdrop-blur-md hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+            >
+              <Play className="w-5 h-5 fill-current" />
+              홍보영상 다시보기
+            </button>
             <Link
               href="/curriculum"
-              className="px-8 py-5 rounded-full bg-white/10 border border-white/20 text-white text-lg font-bold hover:bg-white/20 transition-all"
+              className="w-full sm:w-auto px-8 py-5 rounded-full bg-white/10 border border-white/20 text-white text-lg font-bold hover:bg-white/20 transition-all flex items-center justify-center"
             >
               교육과정 자세히 보기
             </Link>
@@ -586,6 +670,14 @@ export default function LandingPage() {
       </section>
 
       <PublicFooter />
+
+      {/* 중앙 세련된 홍보영상 팝업 모달 */}
+      <PromoVideoModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        videoId="tGMVYSRAVP8"
+        title="바라크아카데미 공식 홍보영상"
+      />
     </div>
   );
 }
