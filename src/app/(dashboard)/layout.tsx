@@ -26,7 +26,7 @@ import { PublicFooter } from "@/components/layout/PublicFooter";
 export default function DashboardGroupLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const pathname = usePathname();
-    const { user, logout } = useAuth();
+    const { user, logout, isLoading } = useAuth();
 
     const avatarSrc = user?.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.name || "barak")}`;
     const userSubtitle = user?.role === "admin"
@@ -75,7 +75,15 @@ export default function DashboardGroupLayout({ children }: { children: React.Rea
                     </nav>
 
                     <div className="p-4 border-t border-slate-100">
-                        {user ? (
+                        {isLoading ? (
+                            <div className="flex items-center gap-3 px-2 py-2 mb-2 animate-pulse">
+                                <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0" />
+                                <div className="flex-1 min-w-0 space-y-1.5">
+                                    <div className="h-4 bg-slate-200 rounded w-20" />
+                                    <div className="h-3 bg-slate-200 rounded w-28" />
+                                </div>
+                            </div>
+                        ) : user ? (
                             <>
                                 <div className="flex items-center gap-3 px-2 py-2 mb-2">
                                     <img
@@ -191,7 +199,15 @@ export default function DashboardGroupLayout({ children }: { children: React.Rea
                             ))}
                         </nav>
                         <div className="p-4 border-t border-slate-100">
-                            {user ? (
+                            {isLoading ? (
+                                <div className="flex items-center gap-3 px-2 py-2 mb-2 animate-pulse">
+                                    <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0" />
+                                    <div className="flex-1 min-w-0 space-y-1.5">
+                                        <div className="h-4 bg-slate-200 rounded w-20" />
+                                        <div className="h-3 bg-slate-200 rounded w-28" />
+                                    </div>
+                                </div>
+                            ) : user ? (
                                 <>
                                     <div className="flex items-center gap-3 px-2 py-2 mb-2">
                                         <img

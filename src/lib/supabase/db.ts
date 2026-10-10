@@ -362,10 +362,13 @@ export const supabaseDb = {
         },
 
         getAll: async (): Promise<Application[]> => {
-            // 1. Try server API route first
+            // 1. Try server API route first (bypass caching)
             if (typeof window !== "undefined") {
                 try {
-                    const res = await fetch("/api/admin/applications");
+                    const res = await fetch("/api/admin/applications", {
+                        cache: "no-store",
+                        headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" }
+                    });
                     if (res.ok) {
                         const json = await res.json();
                         if (json.applications) {

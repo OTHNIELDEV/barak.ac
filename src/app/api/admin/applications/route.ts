@@ -10,6 +10,9 @@ function getAdminClient() {
 const isValidUUID = (str: string) =>
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // GET: All applications
 export async function GET() {
     try {
@@ -38,7 +41,13 @@ export async function GET() {
             submittedAt: a.submitted_at,
         }));
 
-        return NextResponse.json({ applications: formatted });
+        return NextResponse.json({ applications: formatted }, {
+            headers: {
+                "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0"
+            }
+        });
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }

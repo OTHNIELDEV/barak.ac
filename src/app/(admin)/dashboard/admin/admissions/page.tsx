@@ -7,7 +7,7 @@ import {
     Filter, GraduationCap, Building2, User, ChevronDown, Check, X,
     Edit3, Trash2, RefreshCw
 } from "lucide-react";
-import { db, Application } from "@/lib/storage";
+import { db, Application, safeStorage, STORAGE_KEYS } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 
 // Reusable Section Header
@@ -55,66 +55,109 @@ export default function AdminAdmissionsPage() {
     const loadApplications = async () => {
         setIsLoading(true);
         try {
-            const localApps = db.admin.applications.getAll();
+            // 1. Fetch remote applications (Primary Source of Truth, no-cache)
             let remoteApps: Application[] = [];
             try {
-                remoteApps = await supabaseDb.applications.getAll();
-            } catch (e) {
-                console.warn("[Admin Admissions] Failed to load remote applications:", e);
+                const res = await fetch("/api/admin/applications", {
+                    cache: "no-store",
+                    headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" }
+                });
+                if (res.ok) {
+                    const json = await res.json();
+                    remoteApps = json.applications || [];
+                } else {
+                    remoteApps = await supabaseDb.applications.getAll();
+                }
+            } catch (apiErr) {
+                console.warn("[Admin Admissions] Direct API route fallback to supabaseDb:", apiErr);
+                try {
+                    remoteApps = await supabaseDb.applications.getAll();
+                } catch (dbErr) {
+                    console.warn("[Admin Admissions] SupabaseDb getAll failed:", dbErr);
+                }
             }
 
-            // Get deleted blacklist
-            const deletedList = db.admin.applications.getDeleted();
-            const deletedSet = new Set(deletedList.map(d => d.toLowerCase()));
+            // 2. Fetch local applications
+            let localApps: Application[] = [];
+            try {
+                localApps = db.admin.applications.getAll() || [];
+            } catch (localErr) {
+                console.warn("[Admin Admissions] Local storage fetch failed:", localErr);
+            }
 
-            const filteredLocal = localApps.filter(a => !deletedSet.has(a.id.toLowerCase()) && (!a.email || !deletedSet.has(a.email.toLowerCase())));
-            const filteredRemote = remoteApps.filter(a => !deletedSet.has(a.id.toLowerCase()) && (!a.email || !deletedSet.has(a.email.toLowerCase())));
+            // 3. Get deleted blacklist safely
+            let deletedSet = new Set<string>();
+            try {
+                const deletedList = db.admin.applications.getDeleted() || [];
+                deletedSet = new Set(deletedList.map(d => (d || "").toLowerCase()));
+            } catch (delErr) { }
 
-            // Smart Merge: combine remote (Source of Truth) and local without resurrected items
+            // Safe filter against null/undefined
+            const safeFilter = (a: Application) => {
+                if (!a) return false;
+                const idLower = (a.id || "").toLowerCase();
+                const emailLower = (a.email || "").toLowerCase();
+                if (idLower && deletedSet.has(idLower)) return false;
+                if (emailLower && deletedSet.has(emailLower)) return false;
+                return true;
+            };
+
+            const filteredLocal = localApps.filter(safeFilter);
+            const filteredRemote = remoteApps.filter(safeFilter);
+
+            // 4. Smart Merge (Remote is priority, with local fallback)
             const mergedMap = new Map<string, Application>();
 
-            // 1. Put filtered local applications
+            // Put local first
             filteredLocal.forEach(app => {
-                const key = app.id || `${app.email}_${app.name}`;
+                const key = (app.email ? app.email.toLowerCase() : "") || app.id || `${app.name}_${Math.random()}`;
                 mergedMap.set(key, app);
             });
 
-            // 2. Merge remote applications (remote overrides local)
+            // Remote overwrites local (Remote is Source of Truth)
             filteredRemote.forEach(remoteApp => {
-                let matchedKey: string | null = null;
-                for (const [key, existing] of mergedMap.entries()) {
-                    if (existing.id === remoteApp.id || 
-                        (existing.email && existing.email.toLowerCase() === remoteApp.email.toLowerCase())) {
-                        matchedKey = key;
-                        break;
-                    }
-                }
-
-                if (matchedKey) {
-                    mergedMap.set(matchedKey, { ...mergedMap.get(matchedKey)!, ...remoteApp });
-                } else {
-                    mergedMap.set(remoteApp.id, remoteApp);
-                }
+                const key = (remoteApp.email ? remoteApp.email.toLowerCase() : "") || remoteApp.id;
+                mergedMap.set(key, remoteApp);
             });
 
             const mergedList = Array.from(mergedMap.values()).sort((a, b) => {
-                const dateA = new Date(a.submittedAt).getTime() || 0;
-                const dateB = new Date(b.submittedAt).getTime() || 0;
+                const dateA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+                const dateB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
                 return dateB - dateA;
             });
 
+            // 5. Synchronize merged applications back to local storage
+            try {
+                safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(mergedList));
+            } catch (syncErr) { }
+
             setApplications(mergedList);
+
+            // Maintain selectedApp reference if still existing
+            setSelectedApp(prev => {
+                if (!prev) return null;
+                const found = mergedList.find(a => a.id === prev.id || (a.email && a.email.toLowerCase() === (prev.email || "").toLowerCase()));
+                return found || null;
+            });
         } catch (e) {
-            console.warn("Failed to load applications, fallback to local:", e);
-            setApplications(db.admin.applications.getAll());
+            console.error("Critical error in loadApplications:", e);
+            try {
+                setApplications(db.admin.applications.getAll() || []);
+            } catch { }
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Initial Load
+    // Initial Load & Window focus auto-refresh
     useEffect(() => {
         loadApplications();
+
+        const handleFocus = () => {
+            loadApplications();
+        };
+        window.addEventListener("focus", handleFocus);
+        return () => window.removeEventListener("focus", handleFocus);
     }, []);
 
     const handleCreateApplication = async (e: React.FormEvent) => {
@@ -254,12 +297,15 @@ export default function AdminAdmissionsPage() {
     };
 
     const filteredApps = applications.filter(app => {
+        if (!app) return false;
         const matchesStatus = filterStatus === "all" || app.status === filterStatus;
-        const matchesSearch =
-            app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            app.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            app.church.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesStatus && matchesSearch;
+        const searchLower = (searchTerm || "").toLowerCase().trim();
+        if (!searchLower) return matchesStatus;
+
+        const nameMatch = (app.name || "").toLowerCase().includes(searchLower);
+        const emailMatch = (app.email || "").toLowerCase().includes(searchLower);
+        const churchMatch = (app.church || "").toLowerCase().includes(searchLower);
+        return matchesStatus && (nameMatch || emailMatch || churchMatch);
     });
 
     return (
@@ -268,12 +314,23 @@ export default function AdminAdmissionsPage() {
                 title="입학 신청 관리"
                 subtitle="신청서를 검토하고 입학 승인 여부를 결정합니다."
                 action={
-                    <button
-                        onClick={() => setIsAddModalOpen(true)}
-                        className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-bold hover:bg-blue-800 transition-colors flex items-center gap-2"
-                    >
-                        <User className="w-4 h-4" /> 신청서 수기 등록
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => loadApplications()}
+                            disabled={isLoading}
+                            className="flex items-center justify-center px-3.5 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg font-medium transition-all shadow-sm text-sm"
+                            title="신청서 목록 새로고침"
+                        >
+                            <RefreshCw className={`w-4 h-4 mr-1.5 ${isLoading ? "animate-spin" : ""}`} />
+                            새로고침
+                        </button>
+                        <button
+                            onClick={() => setIsAddModalOpen(true)}
+                            className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-bold hover:bg-blue-800 transition-colors flex items-center gap-2 shadow-sm"
+                        >
+                            <User className="w-4 h-4" /> 신청서 수기 등록
+                        </button>
+                    </div>
                 }
             />
 
