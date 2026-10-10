@@ -13,11 +13,23 @@ import {
     Pie,
     Cell
 } from "recharts";
-import { Users, Activity, Award, MessageSquare, TrendingUp, MoreHorizontal } from "lucide-react";
+import { Users, Activity, Award, MessageSquare, TrendingUp, MoreHorizontal, RefreshCw } from "lucide-react";
 import { db, AILog, User } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 
 // --- Components ---
+
+const DEFAULT_STATS = {
+    totalStudents: 0,
+    activeToday: 12,
+    completionRate: 0,
+    totalAiQueries: 0,
+    trackData: [
+        { name: 'Deborah', value: 0 },
+        { name: 'Barak', value: 0 },
+        { name: 'Jael', value: 0 },
+    ]
+};
 
 const StatCard = ({ title, value, change, icon: Icon, colorClass }: any) => (
     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-start justify-between">
@@ -50,49 +62,92 @@ const SectionHeader = ({ title, subtitle, action }: any) => (
 // --- Main Page ---
 
 export default function AdminDashboardPage() {
-    const [stats, setStats] = useState<any>(null);
-    const [recentLogs, setRecentLogs] = useState<AILog[]>([]);
-    const [recentUsers, setRecentUsers] = useState<User[]>([]);
-
-    useEffect(() => {
-        const loadDashboard = async () => {
+    const [stats, setStats] = useState<any>(() => {
+        if (typeof window !== "undefined") {
             try {
-                const [users, logs] = await Promise.all([
-                    supabaseDb.admin.users.getAll(),
-                    supabaseDb.admin.aiLogs.getAll(),
-                ]);
+                const localStats = db.admin.getStats();
+                const cachedUsers = db.admin.users.getAll() || [];
+                if (cachedUsers.length > 0) {
+                    localStats.totalStudents = cachedUsers.filter((u: any) => u.role !== 'admin').length;
+                }
+                return localStats;
+            } catch {
+                return DEFAULT_STATS;
+            }
+        }
+        return DEFAULT_STATS;
+    });
 
-                if (users && users.length > 0) {
-                    setRecentUsers(users.slice(0, 5));
-                } else {
-                    setRecentUsers(db.admin.users.getAll().slice(-5).reverse());
-                }
+    const [recentLogs, setRecentLogs] = useState<AILog[]>(() => {
+        if (typeof window !== "undefined") {
+            try {
+                return db.admin.aiLogs.getAll().slice(0, 5);
+            } catch {
+                return [];
+            }
+        }
+        return [];
+    });
 
-                if (logs && logs.length > 0) {
-                    setRecentLogs(logs.slice(0, 5));
-                } else {
-                    setRecentLogs(db.admin.aiLogs.getAll().slice(0, 5));
-                }
+    const [recentUsers, setRecentUsers] = useState<User[]>(() => {
+        if (typeof window !== "undefined") {
+            try {
+                return db.admin.users.getAll().slice(-5).reverse();
+            } catch {
+                return [];
+            }
+        }
+        return [];
+    });
 
-                const dashboardStats = db.admin.getStats();
-                if (users && users.length > 0) {
-                    dashboardStats.totalStudents = users.filter(u => u.role !== 'admin').length;
-                }
-                if (logs && logs.length > 0) {
-                    dashboardStats.totalAiQueries = logs.length;
-                }
-                setStats(dashboardStats);
-            } catch (e) {
-                console.warn("Failed to load remote admin stats, using local:", e);
-                setStats(db.admin.getStats());
-                setRecentLogs(db.admin.aiLogs.getAll().slice(0, 5));
+    const [isLoading, setIsLoading] = useState(false);
+
+    const loadDashboard = async () => {
+        setIsLoading(true);
+        try {
+            const [users, logs] = await Promise.all([
+                supabaseDb.admin.users.getAll(),
+                supabaseDb.admin.aiLogs.getAll(),
+            ]);
+
+            if (users && users.length > 0) {
+                setRecentUsers(users.slice(0, 5));
+            } else {
                 setRecentUsers(db.admin.users.getAll().slice(-5).reverse());
             }
-        };
+
+            if (logs && logs.length > 0) {
+                setRecentLogs(logs.slice(0, 5));
+            } else {
+                setRecentLogs(db.admin.aiLogs.getAll().slice(0, 5));
+            }
+
+            const dashboardStats = db.admin.getStats();
+            if (users && users.length > 0) {
+                dashboardStats.totalStudents = users.filter((u: any) => u.role !== 'admin').length;
+            }
+            if (logs && logs.length > 0) {
+                dashboardStats.totalAiQueries = logs.length;
+            }
+            setStats(dashboardStats);
+        } catch (e) {
+            console.warn("Failed to load remote admin stats, using local:", e);
+            setStats(db.admin.getStats());
+            setRecentLogs(db.admin.aiLogs.getAll().slice(0, 5));
+            setRecentUsers(db.admin.users.getAll().slice(-5).reverse());
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         loadDashboard();
     }, []);
 
-    if (!stats) return <div className="p-10 text-center">대시보드 로딩 중...</div>;
+    const safeStats = stats || DEFAULT_STATS;
+    const trackData = safeStats.trackData && safeStats.trackData.length > 0
+        ? safeStats.trackData
+        : DEFAULT_STATS.trackData;
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -110,37 +165,50 @@ export default function AdminDashboardPage() {
     return (
         <div className="space-y-8">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl font-bold text-slate-900">대시보드 개요</h1>
-                <p className="text-slate-500">관리자님 환영합니다. 오늘의 주요 현황입니다.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900">대시보드 개요</h1>
+                    <p className="text-slate-500">관리자님 환영합니다. 오늘의 주요 현황입니다.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={loadDashboard}
+                        disabled={isLoading}
+                        className="flex items-center justify-center px-3.5 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg font-medium transition-all shadow-sm text-sm"
+                        title="대시보드 새로고침"
+                    >
+                        <RefreshCw className={`w-4 h-4 mr-1.5 ${isLoading ? "animate-spin" : ""}`} />
+                        새로고침
+                    </button>
+                </div>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                     title="총 학생 수"
-                    value={stats.totalStudents}
+                    value={safeStats.totalStudents}
                     change="지난주 대비 +12%"
                     icon={Users}
                     colorClass="bg-blue-500"
                 />
                 <StatCard
                     title="오늘의 접속자"
-                    value={stats.activeToday}
+                    value={safeStats.activeToday}
                     change="어제 대비 +5%"
                     icon={Activity}
                     colorClass="bg-emerald-500"
                 />
                 <StatCard
                     title="수료율"
-                    value={`${stats.completionRate}%`}
+                    value={`${safeStats.completionRate}%`}
                     change="+2% 상승"
                     icon={Award}
                     colorClass="bg-amber-500"
                 />
                 <StatCard
                     title="AI 질문 수"
-                    value={stats.totalAiQueries}
+                    value={safeStats.totalAiQueries}
                     change="+28% 급증"
                     icon={MessageSquare}
                     colorClass="bg-indigo-500"
@@ -176,7 +244,7 @@ export default function AdminDashboardPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
-                                    data={stats.trackData}
+                                    data={trackData}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={60}
@@ -185,7 +253,7 @@ export default function AdminDashboardPage() {
                                     paddingAngle={5}
                                     dataKey="value"
                                 >
-                                    {stats.trackData.map((entry: any, index: number) => (
+                                    {trackData.map((entry: any, index: number) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
@@ -194,12 +262,12 @@ export default function AdminDashboardPage() {
                         </ResponsiveContainer>
                         {/* Legend */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span className="text-3xl font-bold text-slate-900">{stats.totalStudents}</span>
+                            <span className="text-3xl font-bold text-slate-900">{safeStats.totalStudents}</span>
                             <span className="text-xs text-slate-500 uppercase tracking-widest">명</span>
                         </div>
                     </div>
                     <div className="flex justify-center gap-4 mt-4">
-                        {stats.trackData.map((entry: any, index: number) => (
+                        {trackData.map((entry: any, index: number) => (
                             <div key={entry.name} className="flex items-center text-xs text-slate-500">
                                 <div className="w-2 h-2 rounded-full mr-1" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
                                 {entry.name}
