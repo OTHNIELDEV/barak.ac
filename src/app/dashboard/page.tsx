@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { PlayCircle, ArrowRight, Trophy, Sparkles, MessageSquare, BookOpen, Clock, Activity, Calendar } from "lucide-react";
-import { db, Progress } from "@/lib/storage";
+import { PlayCircle, ArrowRight, Trophy, Sparkles, MessageSquare, BookOpen, Clock, Activity, Calendar, GraduationCap, CheckCircle2, AlertCircle } from "lucide-react";
+import { db, Progress, Application } from "@/lib/storage";
 import { useAuth } from "@/context/AuthContext";
+import { supabaseDb } from "@/lib/supabase/db";
 import { mockCourses, Course, Module } from "@/lib/mockData";
 import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
@@ -58,6 +59,7 @@ export default function DashboardPage() {
         lastAccessedCourse: null as (Course & { progress: number, nextModule?: Module }) | null,
     });
     const [weeklyData, setWeeklyData] = useState<{ day: string; value: number }[]>([]);
+    const [userApplication, setUserApplication] = useState<Application | null>(null);
 
     useEffect(() => {
         if (user) {
@@ -113,6 +115,25 @@ export default function DashboardPage() {
                 completedCourses: completedCount,
                 lastAccessedCourse: lastAccessed,
             });
+
+            // Fetch user application status
+            const loadAppStatus = async () => {
+                let app = db.applications.getByUserId(user.id) || db.applications.getByEmail(user.email);
+                if (!app) {
+                    try {
+                        const remoteApps = await supabaseDb.applications.getAll();
+                        const matched = remoteApps.find(a => 
+                            (a.userId === user.id) || 
+                            (a.email?.toLowerCase() === user.email.toLowerCase())
+                        );
+                        if (matched) app = matched;
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+                setUserApplication(app || null);
+            };
+            loadAppStatus();
         }
     }, [user]);
 
@@ -142,7 +163,7 @@ export default function DashboardPage() {
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900">
-                        Shalom, <span className="text-blue-900">{user.name}</span> 목사님.
+                        Shalom, <span className="text-blue-900">{user.name}</span>님.
                     </h1>
                     <p className="text-slate-500 mt-1 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
@@ -153,11 +174,114 @@ export default function DashboardPage() {
                     <Link href="/my-classroom" className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors flex items-center justify-center">
                         내 강의실
                     </Link>
-                    <button className="px-4 py-2 bg-blue-900 text-white rounded-xl text-sm font-bold hover:bg-blue-800 transition-colors shadow-lg shadow-blue-900/20">
+                    <Link href="/curriculum" className="px-4 py-2 bg-blue-900 text-white rounded-xl text-sm font-bold hover:bg-blue-800 transition-colors shadow-lg shadow-blue-900/20">
                         새로운 과정 찾기
-                    </button>
+                    </Link>
                 </div>
             </header>
+
+            {/* Admission Application Status Banner */}
+            {userApplication ? (
+                userApplication.status === 'approved' ? (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-5 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
+                        <div className="flex items-start sm:items-center gap-3.5">
+                            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                                <CheckCircle2 className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <div className="text-base font-bold text-emerald-950 flex items-center gap-2">
+                                    <span>2027학년도 1기 신입생 입학 승인 완료</span>
+                                    <span className="text-xs px-2.5 py-0.5 bg-emerald-600 text-white rounded-full font-bold uppercase">
+                                        {userApplication.track} Track
+                                    </span>
+                                </div>
+                                <p className="text-xs text-emerald-800 mt-0.5">
+                                    바라크 아카데미 정식 입학이 승인되었습니다. 등록된 커리큘럼의 모든 강의와 AI 멘토링을 자유롭게 수강하실 수 있습니다.
+                                </p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/my-classroom"
+                            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm shrink-0 text-center"
+                        >
+                            정규 강의실 바로가기 &rarr;
+                        </Link>
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-5 bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 border border-amber-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
+                        <div className="flex items-start sm:items-center gap-3.5">
+                            <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md">
+                                <Clock className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <div className="text-base font-bold text-amber-950 flex items-center gap-2">
+                                    <span>2027학년도 1기 입학 원서 서류 심사 중</span>
+                                    <span className="text-xs px-2.5 py-0.5 bg-amber-500 text-white rounded-full font-bold uppercase">
+                                        {userApplication.track} Track (심사대기)
+                                    </span>
+                                </div>
+                                <p className="text-xs text-amber-800 mt-0.5">
+                                    입학 원서가 안전하게 접수되었습니다. 현재 <strong>제1강 무료 맛보기</strong>를 시청하실 수 있으며, 학사팀 승인 완료 시 2~5강 및 자격증 발급이 즉시 열립니다.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                            <Link
+                                href="/my-classroom"
+                                className="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-amber-300 text-xs font-bold rounded-xl transition-all shadow-sm text-center"
+                            >
+                                제1강 맛보기 시청
+                            </Link>
+                            <span className="text-xs text-amber-700 font-semibold px-3 py-2 bg-amber-100/70 rounded-xl border border-amber-300/60 text-center">
+                                심사 대기중
+                            </span>
+                        </div>
+                    </motion.div>
+                )
+            ) : user.role !== 'admin' && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-5 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 border border-blue-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                >
+                    <div className="flex items-start sm:items-center gap-3.5">
+                        <div className="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center shrink-0 shadow-md">
+                            <GraduationCap className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <div className="text-base font-bold text-blue-950 flex items-center gap-2">
+                                <span>2027학년도 1기 신입생 모집 진행 중</span>
+                                <span className="text-xs px-2.5 py-0.5 bg-blue-900 text-white rounded-full font-bold">1기 장학 혜택</span>
+                            </div>
+                            <p className="text-xs text-blue-800 mt-0.5">
+                                현재 <strong>제1강 신학입문 무료 맛보기</strong>가 제공됩니다. 제2강~5강 정규 강좌 수강과 공인 자격증서 취득을 원하시면 입학 원서를 접수해 주세요.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                        <Link
+                            href="/my-classroom"
+                            className="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl transition-all shadow-sm text-center"
+                        >
+                            제1강 맛보기 시청
+                        </Link>
+                        <Link
+                            href="/apply"
+                            className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm text-center"
+                        >
+                            입학 원서 작성하기 &rarr;
+                        </Link>
+                    </div>
+                </motion.div>
+            )}
 
             {/* 2. Bento Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(180px,auto)]">

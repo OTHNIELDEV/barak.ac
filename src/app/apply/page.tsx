@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
-import { Shield, CheckCircle, ArrowRight, User, GraduationCap, Building2, BookOpen, Gift, Heart, Sparkles, AlertCircle, FileText, CheckCircle2, Flame, Droplet, Clock } from "lucide-react";
+import { Shield, CheckCircle, ArrowRight, User, GraduationCap, Building2, BookOpen, Gift, Heart, Sparkles, AlertCircle, FileText, CheckCircle2, Flame, Droplet, Clock, Lock, KeyRound } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { db } from "@/lib/storage";
@@ -17,13 +17,17 @@ function AdmissionApplyForm() {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [stepError, setStepError] = useState("");
+    const [submitError, setSubmitError] = useState("");
 
     // Form State
     const [formData, setFormData] = useState({
-        // Step 1: Personal & Baptism
+        // Step 1: Personal & Account
         name: "",
         email: "",
         phone: "",
+        password: "",
+        passwordConfirm: "",
         waterBaptism: "yes", // yes, no (물세례/침례)
         holySpiritBaptism: "experienced", // experienced, seeking (불과 성령 세례)
         
@@ -57,18 +61,25 @@ function AdmissionApplyForm() {
             }));
         }
 
+        const scholarshipParam = searchParams.get("scholarship");
+        if (scholarshipParam && ["first_batch_30", "pastor_wife_50", "none"].includes(scholarshipParam)) {
+            setFormData(prev => ({ ...prev, scholarshipType: scholarshipParam }));
+        }
+
         if (user) {
             setFormData(prev => ({
                 ...prev,
-                name: user.name,
-                email: user.email,
-                church: user.church || "",
+                name: user.name || prev.name,
+                email: user.email || prev.email,
+                church: user.church || prev.church,
             }));
         }
     }, [user, searchParams]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+        setStepError("");
+        setSubmitError("");
         setFormData(prev => {
             const updated = { ...prev, [name]: value };
             if (name === "applicantType" && value === "pastor_wife") {
@@ -83,33 +94,122 @@ function AdmissionApplyForm() {
         });
     };
 
-    const handleNext = () => setStep(prev => prev + 1);
-    const handleBack = () => setStep(prev => prev - 1);
+    const handleNext = () => {
+        setStepError("");
+        if (step === 1) {
+            if (!formData.name.trim()) {
+                setStepError("지원자 성명(본명)을 입력해 주세요.");
+                return;
+            }
+            if (!formData.phone.trim()) {
+                setStepError("연락처(휴대폰 번호)를 입력해 주세요.");
+                return;
+            }
+            if (!formData.email.trim()) {
+                setStepError("이메일 주소를 입력해 주세요.");
+                return;
+            }
+            // Check password if not logged in
+            if (!user) {
+                if (!formData.password || formData.password.length < 4) {
+                    setStepError("학사 계정 접속을 위해 비밀번호(최소 4자 이상)를 입력해 주세요.");
+                    return;
+                }
+                if (formData.password !== formData.passwordConfirm) {
+                    setStepError("비밀번호 확인이 일치하지 않습니다. 다시 확인해 주세요.");
+                    return;
+                }
+            }
+        } else if (step === 2) {
+            if (!formData.church.trim()) {
+                setStepError("소속 교회 또는 기관명을 입력해 주세요.");
+                return;
+            }
+            if (!formData.position.trim()) {
+                setStepError("현재 직분을 입력해 주세요.");
+                return;
+            }
+        }
+        setStep(prev => prev + 1);
+    };
+
+    const handleBack = () => {
+        setStepError("");
+        setStep(prev => prev - 1);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-
-        const applicationData = {
-            userId: user?.id,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            church: formData.church,
-            position: `${formData.position} (${formData.applicantType})`,
-            department: formData.department,
-            track: formData.track,
-            motivation: `[장학희망: ${formData.scholarshipType === 'pastor_wife_50' ? '사모 50% 할인' : formData.scholarshipType === 'first_batch_30' ? '1기 등록 장학금 30%' : '일반'}] ${formData.motivation}`
-        };
+        setSubmitError("");
 
         try {
-            await supabaseDb.applications.create(applicationData);
+            let activeUserId = user?.id;
+
+            // 1. If not logged in, auto-create user account & log in
+            if (!user) {
+                if (formData.password.length < 4) {
+                    throw new Error("비밀번호는 최소 4자 이상이어야 합니다.");
+                }
+                if (formData.password !== formData.passwordConfirm) {
+                    throw new Error("비밀번호 확인이 일치하지 않습니다.");
+                }
+
+                try {
+                    const newUser = db.auth.signup({
+                        email: formData.email.trim(),
+                        name: formData.name.trim(),
+                        password: formData.password,
+                        role: "student",
+                        church: formData.church.trim(),
+                        profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(formData.name)}`,
+                        level: "신입생 지원자"
+                    });
+                    activeUserId = newUser.id;
+
+                    // Automatically login to create active local session
+                    db.auth.login(formData.email.trim(), formData.password);
+                } catch (signupErr: any) {
+                    // If account already exists, try logging in
+                    try {
+                        const existingUser = db.auth.login(formData.email.trim(), formData.password);
+                        activeUserId = existingUser.id;
+                    } catch {
+                        throw new Error(signupErr.message || "이미 등록된 이메일입니다. 비밀번호를 확인하시거나 기존 계정으로 로그인 후 신청해 주세요.");
+                    }
+                }
+            }
+
+            // 2. Format detailed motivation
+            const baptismNote = `[세례문답: 물세례=${formData.waterBaptism === 'yes' ? '완료' : '예정'}, 성령세례=${formData.holySpiritBaptism === 'experienced' ? '체험' : '사모'}]`;
+            const certTargetNote = `[희망자격증: ${formData.certificateTarget === 'pastor_cert' ? '목사' : formData.certificateTarget === 'missionary_cert' ? '선교사' : '전도사'}]`;
+            const scholarshipNote = `[장학희망: ${formData.scholarshipType === 'pastor_wife_50' ? '사모 50% 할인' : formData.scholarshipType === 'first_batch_30' ? '1기 등록 장학금 30%' : '일반'}]`;
+            const fullMotivation = `${baptismNote} ${certTargetNote} ${scholarshipNote}\n\n${formData.motivation}`.trim();
+
+            const applicationData = {
+                userId: activeUserId,
+                name: formData.name.trim(),
+                email: formData.email.trim(),
+                phone: formData.phone.trim(),
+                church: formData.church.trim(),
+                position: `${formData.position.trim()} (${formData.applicantType})`,
+                department: formData.department.trim(),
+                track: formData.track,
+                motivation: fullMotivation
+            };
+
+            // 3. Save to Supabase & LocalStorage
+            try {
+                await supabaseDb.applications.create(applicationData);
+            } catch (error) {
+                console.warn("[Admission] Supabase apply error (fallback to local):", error);
+            }
+
             db.applications.create(applicationData);
             setIsCompleted(true);
-        } catch (error) {
-            console.warn("Remote apply failed, using local:", error);
-            db.applications.create(applicationData);
-            setIsCompleted(true);
+        } catch (err: any) {
+            console.error("[Admission] Submit Error:", err);
+            setSubmitError(err.message || "원서 접수 중 오류가 발생했습니다. 입력 정보를 확인해 주세요.");
         } finally {
             setIsSubmitting(false);
         }
@@ -128,16 +228,27 @@ function AdmissionApplyForm() {
                     <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
                         <CheckCircle className="w-10 h-10" />
                     </div>
-                    <h2 className="text-3xl font-extrabold text-slate-900 mb-2">입학 지원서가 접수되었습니다</h2>
-                    <p className="text-slate-600 mb-6 text-sm md:text-base leading-relaxed">
-                        바라크아카데미 지원이 성공적으로 완료되었습니다.<br />
-                        등록금 납부 및 장학 승인 안내는 개별 연락처로 안내드립니다.
+                    <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full mb-3 border border-emerald-200">
+                        원스톱 접수 및 계정 생성 완료
+                    </span>
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">입학 지원서가 접수되었습니다</h2>
+                    <p className="text-slate-600 mb-6 text-xs md:text-sm leading-relaxed">
+                        바라크아카데미 2027학년도 1기 신입생 지원이 성공적으로 완료되었습니다.<br />
+                        학사 계정이 함께 생성되어 관리자 심사 중에도 강의실 시스템을 미리 둘러보실 수 있습니다.
                     </p>
 
                     <div className="p-5 bg-slate-50 rounded-2xl mb-8 text-left space-y-2.5 border border-slate-200/80 text-xs md:text-sm">
                         <div className="flex justify-between items-center">
-                            <span className="text-slate-500">지원자</span>
-                            <span className="font-bold text-slate-800">{formData.name} ({formData.phone})</span>
+                            <span className="text-slate-500">지원자 / 계정</span>
+                            <span className="font-bold text-slate-800">{formData.name} ({formData.email})</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-slate-500">연락처</span>
+                            <span className="font-medium text-slate-700">{formData.phone}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-slate-500">소속 교회</span>
+                            <span className="font-medium text-slate-700">{formData.church} ({formData.position})</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-slate-500">지망 트랙</span>
@@ -155,16 +266,18 @@ function AdmissionApplyForm() {
                         </div>
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
                         <button
-                            onClick={() => router.push('/dashboard')}
-                            className="flex-1 py-4 bg-blue-900 text-white rounded-xl font-bold hover:bg-blue-800 transition-colors shadow-md text-sm"
+                            onClick={() => {
+                                window.location.href = '/dashboard';
+                            }}
+                            className="flex-1 py-4 bg-blue-900 text-white rounded-xl font-bold hover:bg-blue-800 transition-colors shadow-md text-sm flex items-center justify-center gap-2"
                         >
-                            내 강의실 입장하기
+                            내 강의실 입장하기 <ArrowRight className="w-4 h-4" />
                         </button>
                         <Link
                             href="/"
-                            className="px-6 py-4 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors text-sm"
+                            className="px-6 py-4 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors text-sm text-center"
                         >
                             홈으로
                         </Link>
@@ -343,13 +456,72 @@ function AdmissionApplyForm() {
                     >
                         <form onSubmit={handleSubmit} className="p-6 md:p-10">
 
+                            {/* 1. Account Status Guidance Banner */}
+                            {user ? (
+                                <div className="mb-8 p-4 rounded-2xl bg-blue-50/80 border border-blue-200/80 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                                            {user.name?.[0] || 'U'}
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-bold text-blue-950 flex items-center gap-1.5">
+                                                <span>안녕하세요, <strong>{user.name}</strong>님!</span>
+                                                <span className="text-[11px] font-semibold px-2 py-0.5 bg-blue-200/70 text-blue-800 rounded-full">인증 완료</span>
+                                            </div>
+                                            <div className="text-xs text-blue-700 mt-0.5">
+                                                회원 계정({user.email}) 정보가 입학 지원서에 자동으로 연동됩니다.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="mb-8 p-4 rounded-2xl bg-amber-50/90 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div className="flex items-start gap-3">
+                                        <div className="p-2 bg-amber-500 text-white rounded-xl shadow-sm shrink-0 mt-0.5">
+                                            <Sparkles className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-bold text-amber-950 flex items-center gap-1.5">
+                                                <span>원스톱 간편 입학 신청</span>
+                                                <span className="text-[11px] font-bold px-2 py-0.2 bg-amber-200/80 text-amber-900 rounded-full">회원가입 자동</span>
+                                            </div>
+                                            <div className="text-xs text-amber-800 leading-relaxed mt-0.5">
+                                                별도의 회원가입 없이 아래 원서를 작성하시면 <strong>학사 계정이 자동 생성</strong>되어 합격 확인 및 내 강의실 이용이 즉시 가능합니다.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Link
+                                        href="/login?redirect=/apply"
+                                        className="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-amber-300 text-amber-900 hover:bg-amber-100/50 text-xs font-bold transition-all text-center shadow-sm"
+                                    >
+                                        기존 회원 로그인 &rarr;
+                                    </Link>
+                                </div>
+                            )}
+
+                            {/* Step Error Banner */}
+                            {stepError && (
+                                <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span>{stepError}</span>
+                                </div>
+                            )}
+
+                            {/* Submit Error Banner */}
+                            {submitError && (
+                                <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span>{submitError}</span>
+                                </div>
+                            )}
+
                             {/* Step 1: Personal Info */}
                             {step === 1 && (
                                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                                     <div className="space-y-4">
                                         <h3 className="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
                                             <User className="w-5 h-5 text-blue-900" />
-                                            지원자 기본 정보
+                                            지원자 기본 정보 및 계정 설정
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                                             <div>
@@ -370,12 +542,102 @@ function AdmissionApplyForm() {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-semibold text-slate-700 mb-2">이메일 주소 *</label>
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">이메일 주소 (학사 로그인 ID) *</label>
                                             <input
                                                 type="email" name="email" required value={formData.email} onChange={handleInputChange} readOnly={!!user?.email}
                                                 className={`w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none text-sm ${user?.email ? 'cursor-not-allowed opacity-80' : ''}`}
                                                 placeholder="example@domain.com"
                                             />
+                                            {!user && (
+                                                <p className="text-[11px] text-slate-400 mt-1">
+                                                    ※ 이메일은 수강 안내문 수신 및 내 강의실 로그인 아이디로 사용됩니다.
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Password Field for New Guests (One-stop Sign Up) */}
+                                        {!user && (
+                                            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200 space-y-3 pt-4">
+                                                <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                                    <Lock className="w-4 h-4 text-amber-600" />
+                                                    학사 계정 비밀번호 설정 (합격 확인 및 강의실 접속용) *
+                                                </div>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-semibold text-slate-600 mb-1.5">비밀번호 (4자 이상)</label>
+                                                        <input
+                                                            type="password"
+                                                            name="password"
+                                                            required
+                                                            value={formData.password}
+                                                            onChange={handleInputChange}
+                                                            placeholder="비밀번호 입력"
+                                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-blue-900 outline-none"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-semibold text-slate-600 mb-1.5">비밀번호 확인</label>
+                                                        <input
+                                                            type="password"
+                                                            name="passwordConfirm"
+                                                            required
+                                                            value={formData.passwordConfirm}
+                                                            onChange={handleInputChange}
+                                                            placeholder="비밀번호 재입력"
+                                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-blue-900 outline-none"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Faith & Baptism Questionnaire */}
+                                        <div className="pt-2">
+                                            <div className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-1.5">
+                                                <Droplet className="w-4 h-4 text-blue-600" />
+                                                신앙 및 세례 문답 (자격증서 수여 기준 반영)
+                                            </div>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                                <div className="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200">
+                                                    <div className="text-xs font-bold text-slate-700 mb-2">물세례(침례) 여부 *</div>
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setFormData(p => ({ ...p, waterBaptism: 'yes' }))}
+                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.waterBaptism === 'yes' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                                        >
+                                                            받음 (기세례자)
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setFormData(p => ({ ...p, waterBaptism: 'no' }))}
+                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.waterBaptism === 'no' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                                        >
+                                                            미세례 (학기 중 예정)
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200">
+                                                    <div className="text-xs font-bold text-slate-700 mb-2">성령 세례(은사/기름부으심) *</div>
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setFormData(p => ({ ...p, holySpiritBaptism: 'experienced' }))}
+                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.holySpiritBaptism === 'experienced' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                                        >
+                                                            체험함
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setFormData(p => ({ ...p, holySpiritBaptism: 'seeking' }))}
+                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.holySpiritBaptism === 'seeking' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                                        >
+                                                            체험 사모함
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -558,8 +820,23 @@ function AdmissionApplyForm() {
                                 </motion.div>
                             )}
 
+                            {/* Bottom Error Notice */}
+                            {stepError && (
+                                <div className="mt-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span>{stepError}</span>
+                                </div>
+                            )}
+
+                            {submitError && (
+                                <div className="mt-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span>{submitError}</span>
+                                </div>
+                            )}
+
                             {/* Navigation Buttons */}
-                            <div className="mt-10 flex justify-between pt-6 border-t border-slate-100">
+                            <div className="mt-8 flex justify-between pt-6 border-t border-slate-100">
                                 {step > 1 ? (
                                     <button
                                         type="button" onClick={handleBack}

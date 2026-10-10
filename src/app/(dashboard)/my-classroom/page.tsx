@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
     BookOpen, PlayCircle, CheckCircle2, ArrowRight, Award, FileText,
     Sparkles, Download, Shield, Play, Clock, User, Check, Send, Loader2,
-    MessageSquare, HelpCircle, ChevronRight, FastForward, RotateCcw, AlertCircle
+    MessageSquare, HelpCircle, ChevronRight, FastForward, RotateCcw, AlertCircle,
+    Lock, Unlock, GraduationCap, ShieldAlert
 } from "lucide-react";
 import { mockCourses } from "@/lib/mockData";
-import { db, CertificateIssued } from "@/lib/storage";
+import { db, CertificateIssued, Application } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 import { useAuth } from "@/context/AuthContext";
 import { Progress } from "@/components/ui/progress";
@@ -92,6 +94,7 @@ const DEMO_LECTURES = [
 
 export default function MyClassroomPage() {
     const { user } = useAuth();
+    const router = useRouter();
     const [activeLectureIndex, setActiveLectureIndex] = useState(0);
     const [completedLectures, setCompletedLectures] = useState<string[]>([]);
     const [isVideoEnded, setIsVideoEnded] = useState(false);
@@ -100,6 +103,10 @@ export default function MyClassroomPage() {
     const [issuedCert, setIssuedCert] = useState<CertificateIssued | null>(null);
     const [showCertModal, setShowCertModal] = useState(false);
     const [activeTab, setActiveTab] = useState<"video" | "handout" | "reflection" | "ai">("video");
+
+    // Admission & Permission state
+    const [admissionStatus, setAdmissionStatus] = useState<"approved" | "pending" | "unapplied">("unapplied");
+    const [userApplication, setUserApplication] = useState<Application | null>(null);
 
     // AI Chat local state
     const [aiInput, setAiInput] = useState("");
@@ -118,7 +125,14 @@ export default function MyClassroomPage() {
     const isAllLecturesCompleted = completedCount === totalCount;
     const isCurrentLectureDone = completedLectures.includes(currentLecture.id);
 
-    // Initial Load: Check saved progress & certificates
+    // Option 1 Freemium Gate: Lecture 1 is free for everyone, 2~5 require approved admission
+    const isLectureLocked = (idx: number) => {
+        if (idx === 0) return false; // 제1강: 누구나 무료 맛보기 개방!
+        return admissionStatus !== "approved"; // 제2강~: 정규 입학 승인자만 개방!
+    };
+    const isCurrentLectureLocked = isLectureLocked(activeLectureIndex);
+
+    // Initial Load: Check saved progress, certificates & admission status
     useEffect(() => {
         if (typeof window === "undefined" || !user) return;
 
@@ -143,6 +157,43 @@ export default function MyClassroomPage() {
         if (myCert) {
             setIssuedCert(myCert);
         }
+
+        // 4. Check Admission Status (for Option 1 Freemium Gate)
+        const checkAdmission = async () => {
+            // Admins & Pastors always have full access
+            if (user.role === "admin" || user.role === "pastor") {
+                setAdmissionStatus("approved");
+                return;
+            }
+
+            // Check Local DB First
+            let app = db.applications.getByUserId(user.id) || db.applications.getByEmail(user.email);
+            if (!app) {
+                try {
+                    const remoteApps = await supabaseDb.applications.getAll();
+                    const matched = remoteApps.find(a =>
+                        (a.userId === user.id) ||
+                        (a.email && a.email.toLowerCase() === user.email.toLowerCase())
+                    );
+                    if (matched) app = matched;
+                } catch (e) {
+                    console.warn("[MyClassroom] Error checking admission:", e);
+                }
+            }
+
+            if (app) {
+                setUserApplication(app);
+                if (app.status === "approved") {
+                    setAdmissionStatus("approved");
+                } else {
+                    setAdmissionStatus("pending");
+                }
+            } else {
+                setAdmissionStatus("unapplied");
+            }
+        };
+
+        checkAdmission();
     }, [user]);
 
     // Handle Amen / Complete
@@ -168,6 +219,10 @@ export default function MyClassroomPage() {
 
     // Fast Test Pass
     const handleFastPass = () => {
+        if (isCurrentLectureLocked) {
+            alert("🔒 본 강좌는 정규 입학 승인자 전용 강좌입니다. 입학 원서를 먼저 작성해 주세요.");
+            return;
+        }
         setIsVideoEnded(true);
     };
 
@@ -175,6 +230,14 @@ export default function MyClassroomPage() {
     const handleReflectionSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user || !reflectionContent.trim()) return;
+
+        if (admissionStatus !== "approved") {
+            const goToApply = confirm("🔒 A4 과목 실천 소감문 제출 및 공인 자격증서 취득은 [정규 신입생 승인자] 전용 혜택입니다.\n\n정규 입학 원서 접수 페이지로 이동하시겠습니까?");
+            if (goToApply) {
+                router.push("/apply");
+            }
+            return;
+        }
 
         localStorage.setItem(`barak_demo_reflection_${user.id}`, reflectionContent);
         setHasSubmittedReflection(true);
@@ -185,9 +248,13 @@ export default function MyClassroomPage() {
         }
     };
 
-    // Auto Issue Certificate
+    // Auto Issue Certificate (Restricted to approved students)
     const autoIssueCertificate = async () => {
         if (!user) return;
+        if (admissionStatus !== "approved") {
+            console.warn("[MyClassroom] Certificate issue blocked: User is not an approved student.");
+            return;
+        }
 
         const rolePrefix = "BARAK";
         const randomKey = Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -277,6 +344,74 @@ export default function MyClassroomPage() {
                 </div>
             </div>
 
+            {/* 1-1. Admission Status Banner (Freemium Gate Indicator) */}
+            {admissionStatus === "unapplied" && (
+                <div className="mb-6 p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-amber-400/40 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5">
+                        <div className="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-400 border border-amber-400/30 flex items-center justify-center flex-shrink-0">
+                            <Sparkles className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                    무료 맛보기 청강 모드
+                                </span>
+                                <h3 className="font-bold text-sm sm:text-base text-amber-200">
+                                    제1강 무료 맛보기가 열려 있습니다!
+                                </h3>
+                            </div>
+                            <p className="text-xs text-slate-300 mt-0.5">
+                                제2강~5강 정규 강좌 수강 및 공인 사역자 자격증서 취득을 원하시면 간편하게 <strong>입학 원서</strong>를 접수해 주세요.
+                            </p>
+                        </div>
+                    </div>
+                    <Link
+                        href="/apply"
+                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs hover:brightness-110 transition-all flex items-center justify-center gap-1.5 shadow-md flex-shrink-0"
+                    >
+                        <GraduationCap className="w-4 h-4" /> 정규 입학 원서 접수하기
+                    </Link>
+                </div>
+            )}
+
+            {admissionStatus === "pending" && (
+                <div className="mb-6 p-4 sm:p-5 bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border border-amber-500/50 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5">
+                        <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                            <Clock className="w-5 h-5 animate-spin" />
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/30 text-amber-200 border border-amber-400/40">
+                                    입학 심사 진행 중
+                                </span>
+                                <h3 className="font-bold text-sm sm:text-base text-white">
+                                    제출하신 입학 신청서가 학사관리팀에서 심사 중입니다
+                                </h3>
+                            </div>
+                            <p className="text-xs text-slate-300 mt-0.5">
+                                심사 중에도 제1강은 자유롭게 수강하실 수 있으며, 관리자 승인 시 제2강~5강이 즉시 자동 개방됩니다.
+                            </p>
+                        </div>
+                    </div>
+                    <Link
+                        href="/dashboard"
+                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md flex-shrink-0"
+                    >
+                        심사 현황 확인하기 <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                </div>
+            )}
+
+            {admissionStatus === "approved" && user?.role === "student" && (
+                <div className="mb-6 p-3.5 sm:p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-2xl text-emerald-200 shadow-md flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <div className="text-xs">
+                        <strong className="text-emerald-300">정규 신입생 승인 완료:</strong> 전체 5개 핵심 강좌 열람, 실천 소감문 제출 및 공인 사역자 자격증서 취득 권한이 정상 활성화되었습니다.
+                    </div>
+                </div>
+            )}
+
             {/* 2. Certificate Issued Notification Banner (If Ready) */}
             {issuedCert && (
                 <div className="mb-6 p-5 bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 rounded-2xl text-slate-950 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 font-sans animate-in fade-in duration-300">
@@ -313,37 +448,121 @@ export default function MyClassroomPage() {
                         {/* Player Header */}
                         <div className="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-white text-xs">
                             <div className="flex items-center gap-2">
-                                <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                                <span className={`w-2.5 h-2.5 rounded-full ${isCurrentLectureLocked ? "bg-amber-500" : "bg-red-500 animate-pulse"}`} />
                                 <span className="font-bold text-amber-300">{currentLecture.category}</span>
                                 <span className="text-slate-500">•</span>
                                 <span className="font-medium text-slate-300">{currentLecture.duration}</span>
                             </div>
-                            <span className="text-slate-400 font-mono text-[11px]">
-                                Lecture {activeLectureIndex + 1} / {totalCount}
-                            </span>
+                            <div className="flex items-center gap-2">
+                                {isCurrentLectureLocked ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                                        <Lock className="w-3 h-3" /> 정규 신입생 전용
+                                    </span>
+                                ) : activeLectureIndex === 0 ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                        <Sparkles className="w-3 h-3" /> 무료 맛보기 개방
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                                        <Unlock className="w-3 h-3" /> 정규 과정 수강 중
+                                    </span>
+                                )}
+                                <span className="text-slate-400 font-mono text-[11px]">
+                                    Lecture {activeLectureIndex + 1} / {totalCount}
+                                </span>
+                            </div>
                         </div>
 
-                        {/* YouTube Embed Frame */}
+                        {/* YouTube Embed Frame or Locked Overlay */}
                         <div className="relative aspect-video w-full bg-black">
-                            <iframe
-                                key={currentLecture.youtubeId}
-                                src={`https://www.youtube-nocookie.com/embed/${currentLecture.youtubeId}?autoplay=0&rel=0&modestbranding=1&enablejsapi=1`}
-                                title={currentLecture.title}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowFullScreen
-                                className="w-full h-full border-0"
-                            />
+                            {isCurrentLectureLocked ? (
+                                /* Locked Screen for Lectures 2~5 */
+                                <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 flex flex-col items-center justify-center p-6 text-center text-white z-10">
+                                    <div className="relative mb-4">
+                                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-amber-500/20 border-2 border-amber-400/50 flex items-center justify-center shadow-2xl backdrop-blur-md">
+                                            <Lock className="w-8 h-8 sm:w-10 sm:h-10 text-amber-400" />
+                                        </div>
+                                        <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900 border border-amber-400/40 flex items-center justify-center text-[11px] font-black text-amber-300">
+                                            {activeLectureIndex + 1}
+                                        </div>
+                                    </div>
 
-                            {/* Test Fast-Pass Button Overlay */}
-                            {!isVideoEnded && !isCurrentLectureDone && (
-                                <button
-                                    onClick={handleFastPass}
-                                    className="absolute bottom-3 right-3 z-20 px-3 py-1.5 bg-black/80 hover:bg-amber-500 hover:text-black text-amber-300 text-xs font-bold rounded-xl border border-amber-400/40 backdrop-blur-md transition-all shadow-lg flex items-center gap-1.5"
-                                    title="테스트 목적으로 시청 완료 상태로 전환합니다."
-                                >
-                                    <FastForward className="w-3.5 h-3.5" />
-                                    <span>[테스트] 시청 완료 처리</span>
-                                </button>
+                                    <span className="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wider mb-2">
+                                        Regular Seminary Course Locked
+                                    </span>
+
+                                    <h3 className="text-lg sm:text-2xl font-black text-white max-w-lg mb-2">
+                                        {currentLecture.title}
+                                    </h3>
+
+                                    <p className="text-xs sm:text-sm text-slate-300 max-w-md mb-6 leading-relaxed">
+                                        {admissionStatus === "pending" ? (
+                                            <>
+                                                제출하신 입학 신청서가 <strong className="text-amber-300">현재 심사 중</strong>입니다.
+                                                <br />
+                                                학사관리팀 승인 완료 시 본 강좌가 즉시 자동 잠금 해제됩니다.
+                                            </>
+                                        ) : (
+                                            <>
+                                                본 강좌는 <strong className="text-amber-300">바라크아카데미 정규 신입생</strong> 전용 과정입니다.
+                                                <br />
+                                                입학 원서를 접수하시면 5대 핵심 강좌 전체와 공인 사역자 자격증 취득 혜택이 주어집니다.
+                                            </>
+                                        )}
+                                    </p>
+
+                                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs sm:max-w-md justify-center">
+                                        {admissionStatus === "pending" ? (
+                                            <button
+                                                onClick={() => router.push("/dashboard")}
+                                                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xl transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                심사 진행현황 확인하기 <ArrowRight className="w-3.5 h-3.5" />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => router.push("/apply")}
+                                                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-black text-xs shadow-xl transition-all flex items-center justify-center gap-1.5 animate-pulse"
+                                            >
+                                                <GraduationCap className="w-4 h-4" /> 정규 입학 원서 접수하기 (무료/장학)
+                                            </button>
+                                        )}
+
+                                        <button
+                                            onClick={() => {
+                                                setActiveLectureIndex(0);
+                                                setIsVideoEnded(false);
+                                            }}
+                                            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 font-bold text-xs transition-all flex items-center justify-center gap-1.5"
+                                        >
+                                            <Play className="w-3.5 h-3.5 text-amber-400" /> 제1강 무료 맛보기 시청하기
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                /* Active YouTube Player */
+                                <>
+                                    <iframe
+                                        key={currentLecture.youtubeId}
+                                        src={`https://www.youtube-nocookie.com/embed/${currentLecture.youtubeId}?autoplay=0&rel=0&modestbranding=1&enablejsapi=1`}
+                                        title={currentLecture.title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                        className="w-full h-full border-0"
+                                    />
+
+                                    {/* Test Fast-Pass Button Overlay */}
+                                    {!isVideoEnded && !isCurrentLectureDone && (
+                                        <button
+                                            onClick={handleFastPass}
+                                            className="absolute bottom-3 right-3 z-20 px-3 py-1.5 bg-black/80 hover:bg-amber-500 hover:text-black text-amber-300 text-xs font-bold rounded-xl border border-amber-400/40 backdrop-blur-md transition-all shadow-lg flex items-center gap-1.5"
+                                            title="테스트 목적으로 시청 완료 상태로 전환합니다."
+                                        >
+                                            <FastForward className="w-3.5 h-3.5" />
+                                            <span>[테스트] 시청 완료 처리</span>
+                                        </button>
+                                    )}
+                                </>
                             )}
                         </div>
 
@@ -351,7 +570,11 @@ export default function MyClassroomPage() {
                         <div className="p-6 bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800">
                             <div className="text-left w-full sm:w-auto">
                                 <h4 className="text-white font-bold text-sm sm:text-base flex items-center gap-2">
-                                    {isCurrentLectureDone ? (
+                                    {isCurrentLectureLocked ? (
+                                        <span className="text-amber-400/80 flex items-center gap-1.5 text-xs sm:text-sm">
+                                            <Lock className="w-4 h-4" /> 정규 신입생 승인 후 본 강좌의 출석 및 진도 저장이 가능합니다.
+                                        </span>
+                                    ) : isCurrentLectureDone ? (
                                         <span className="text-emerald-400 flex items-center gap-1">
                                             <CheckCircle2 className="w-4 h-4" /> 수강 완료됨 (Amen)
                                         </span>
@@ -367,20 +590,30 @@ export default function MyClassroomPage() {
                                 </h4>
                             </div>
 
-                            <button
-                                onClick={handleAmenComplete}
-                                disabled={!isVideoEnded && !isCurrentLectureDone}
-                                className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-extrabold text-sm transition-all shadow-xl flex items-center justify-center gap-2 ${
-                                    isCurrentLectureDone
-                                        ? "bg-slate-800 text-slate-400 cursor-default border border-slate-700"
-                                        : isVideoEnded
-                                        ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 hover:scale-105 active:scale-95 animate-pulse"
-                                        : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
-                                }`}
-                            >
-                                <Sparkles className="w-4 h-4" />
-                                <span>{isCurrentLectureDone ? "출석 완료 (Amen)" : "AMEN / 묵상 완료"}</span>
-                            </button>
+                            {isCurrentLectureLocked ? (
+                                <button
+                                    onClick={() => router.push(admissionStatus === "pending" ? "/dashboard" : "/apply")}
+                                    className="w-full sm:w-auto px-6 py-3.5 rounded-2xl font-bold text-xs bg-slate-800 text-amber-400 border border-amber-500/30 hover:bg-slate-750 transition-all flex items-center justify-center gap-2 shadow-md"
+                                >
+                                    <Lock className="w-4 h-4" />
+                                    <span>{admissionStatus === "pending" ? "입학 심사 대기 중" : "입학 원서 작성 필요"}</span>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleAmenComplete}
+                                    disabled={!isVideoEnded && !isCurrentLectureDone}
+                                    className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-extrabold text-sm transition-all shadow-xl flex items-center justify-center gap-2 ${
+                                        isCurrentLectureDone
+                                            ? "bg-slate-800 text-slate-400 cursor-default border border-slate-700"
+                                            : isVideoEnded
+                                            ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 hover:scale-105 active:scale-95 animate-pulse"
+                                            : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
+                                    }`}
+                                >
+                                    <Sparkles className="w-4 h-4" />
+                                    <span>{isCurrentLectureDone ? "출석 완료 (Amen)" : "AMEN / 묵상 완료"}</span>
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -441,25 +674,66 @@ export default function MyClassroomPage() {
                         {/* Tab 2: A4 Reflection Form */}
                         {activeTab === "reflection" && (
                             <div className="space-y-4">
-                                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-950 leading-relaxed">
-                                    <strong>📜 자격증 발급 필수 덕목:</strong> 본 아카데미는 시험 대신 배운 진리를 삶과 사역에 어떻게 적용할 것인지 작성하는 <strong>A4 1장 내외의 실천 소감문</strong>을 평가 기준으로 삼습니다.
-                                </div>
+                                {admissionStatus !== "approved" ? (
+                                    <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-start gap-3">
+                                        <Lock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                                        <div className="text-xs text-amber-950 space-y-1">
+                                            <p className="font-bold text-amber-900 text-sm">
+                                                🔒 정규 신입생 승인자 전용 필수 과제입니다
+                                            </p>
+                                            <p className="text-amber-800 leading-relaxed">
+                                                A4 실천 소감문 제출 및 공인 사역자 자격증서 발급은 입학 심사를 통과한 정규 신입생에게만 제공됩니다. (제1강 무료 맛보기 청강생은 과제 제출 및 자격증 발급 대상에서 제외됩니다.)
+                                            </p>
+                                            {admissionStatus === "unapplied" ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => router.push("/apply")}
+                                                    className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 rounded-xl font-black text-xs shadow-md transition-all"
+                                                >
+                                                    <GraduationCap className="w-3.5 h-3.5" /> 정규 입학 원서 접수하러 가기
+                                                </button>
+                                            ) : (
+                                                <p className="font-bold text-amber-700 mt-1 flex items-center gap-1">
+                                                    <Clock className="w-3.5 h-3.5 animate-spin" /> 현재 학사관리팀에서 입학 심사 진행 중입니다. 승인 완료 후 즉시 제출 가능합니다.
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-950 leading-relaxed">
+                                        <strong>📜 자격증 발급 필수 덕목:</strong> 본 아카데미는 시험 대신 배운 진리를 삶과 사역에 어떻게 적용할 것인지 작성하는 <strong>A4 1장 내외의 실천 소감문</strong>을 평가 기준으로 삼습니다.
+                                    </div>
+                                )}
 
                                 <form onSubmit={handleReflectionSubmit} className="space-y-4">
                                     <textarea
                                         value={reflectionContent}
                                         onChange={(e) => setReflectionContent(e.target.value)}
+                                        disabled={admissionStatus !== "approved"}
                                         rows={6}
-                                        placeholder="본 강좌를 통해 깨달은 성경적 진리와 사역 현장(또는 가정과 삶)에서의 구체적 실천 다짐을 기록해 주세요..."
-                                        className="w-full p-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm leading-relaxed"
+                                        placeholder={
+                                            admissionStatus === "approved"
+                                                ? "본 강좌를 통해 깨달은 성경적 진리와 사역 현장(또는 가정과 삶)에서의 구체적 실천 다짐을 기록해 주세요..."
+                                                : "정규 신입생 승인 완료 후 실천 소감문을 작성 및 제출하실 수 있습니다."
+                                        }
+                                        className={`w-full p-4 rounded-2xl border text-sm leading-relaxed ${
+                                            admissionStatus === "approved"
+                                                ? "border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+                                                : "border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed"
+                                        }`}
                                     />
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs text-slate-400">
-                                            {hasSubmittedReflection ? "✓ 제출 및 승인 완료됨" : "미제출 상태"}
+                                            {hasSubmittedReflection ? "✓ 제출 및 승인 완료됨" : admissionStatus === "approved" ? "미제출 상태" : "승인 대기 상태"}
                                         </span>
                                         <button
                                             type="submit"
-                                            className="px-6 py-3 bg-blue-900 text-white font-bold rounded-xl text-xs hover:bg-blue-800 transition-all shadow-md flex items-center gap-1.5"
+                                            disabled={admissionStatus !== "approved"}
+                                            className={`px-6 py-3 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 ${
+                                                admissionStatus === "approved"
+                                                    ? "bg-blue-900 text-white hover:bg-blue-800"
+                                                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                            }`}
                                         >
                                             <Send className="w-3.5 h-3.5" /> 소감문 제출 및 즉시 승인
                                         </button>
@@ -531,13 +805,14 @@ export default function MyClassroomPage() {
                     <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
                         <h3 className="font-bold text-slate-900 text-base mb-4 flex items-center justify-between">
                             <span>📚 5대 핵심 강좌 목록</span>
-                            <span className="text-xs text-slate-400 font-normal">클릭 시 바로 재생</span>
+                            <span className="text-xs text-slate-400 font-normal">선택 시 즉시 이동</span>
                         </h3>
 
                         <div className="space-y-2.5">
                             {DEMO_LECTURES.map((lec, idx) => {
                                 const isCurrent = activeLectureIndex === idx;
                                 const isDone = completedLectures.includes(lec.id);
+                                const isLocked = isLectureLocked(idx);
 
                                 return (
                                     <div
@@ -549,29 +824,54 @@ export default function MyClassroomPage() {
                                         className={`p-3.5 rounded-2xl cursor-pointer transition-all border flex items-start gap-3 ${
                                             isCurrent
                                                 ? "bg-blue-50/80 border-blue-900 shadow-sm"
+                                                : isLocked
+                                                ? "bg-slate-50/50 border-slate-100 hover:bg-amber-50/40"
                                                 : "bg-slate-50/70 border-slate-100 hover:bg-slate-100"
                                         }`}
                                     >
                                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5 ${
                                             isDone
                                                 ? "bg-emerald-500 text-white"
+                                                : isLocked
+                                                ? "bg-amber-100 border border-amber-300 text-amber-700"
                                                 : isCurrent
                                                 ? "bg-blue-900 text-white"
                                                 : "bg-white border border-slate-200 text-slate-600"
                                         }`}>
-                                            {isDone ? <Check className="w-4 h-4" /> : idx + 1}
+                                            {isDone ? (
+                                                <Check className="w-4 h-4" />
+                                            ) : isLocked ? (
+                                                <Lock className="w-3.5 h-3.5 text-amber-600" />
+                                            ) : (
+                                                idx + 1
+                                            )}
                                         </div>
 
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between gap-1 mb-1">
-                                                <span className="text-[10px] font-bold text-blue-900 uppercase">
-                                                    {lec.category}
-                                                </span>
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="text-[10px] font-bold text-blue-900 uppercase">
+                                                        {lec.category}
+                                                    </span>
+                                                    {idx === 0 ? (
+                                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                            무료 맛보기
+                                                        </span>
+                                                    ) : isLocked ? (
+                                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200 flex items-center gap-0.5">
+                                                            <Lock className="w-2.5 h-2.5" /> 잠김
+                                                        </span>
+                                                    ) : (
+                                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-100 text-blue-800">
+                                                            정규
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <span className="text-[10px] text-slate-400 font-mono">
                                                     {lec.duration}
                                                 </span>
                                             </div>
-                                            <h4 className={`text-xs font-bold leading-snug line-clamp-1 ${isCurrent ? "text-blue-950" : "text-slate-800"}`}>
+                                            <h4 className={`text-xs font-bold leading-snug line-clamp-1 ${isCurrent ? "text-blue-950 font-extrabold" : "text-slate-800"}`}>
                                                 {lec.title}
                                             </h4>
                                             <p className="text-[11px] text-slate-500 mt-0.5">

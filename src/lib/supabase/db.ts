@@ -315,11 +315,32 @@ export const supabaseDb = {
     // 4. Applications
     applications: {
         create: async (appData: Omit<Application, "id" | "status" | "submittedAt">) => {
+            // 1. Try server API route first (runs with service role, bypassing RLS issues)
+            if (typeof window !== "undefined") {
+                try {
+                    const res = await fetch("/api/admin/applications", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(appData),
+                    });
+                    if (res.ok) {
+                        const json = await res.json();
+                        return json.application;
+                    }
+                } catch (apiErr) {
+                    console.warn("[supabaseDb.applications.create] API route fallback:", apiErr);
+                }
+            }
+
+            // 2. Direct Supabase Client fallback
             const supabase = createClient();
+            const isValidUUID = typeof appData.userId === "string" && 
+                /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(appData.userId);
+
             const { data, error } = await supabase
                 .from("applications")
                 .insert({
-                    user_id: appData.userId || null,
+                    user_id: isValidUUID ? appData.userId : null,
                     name: appData.name,
                     email: appData.email,
                     phone: appData.phone,
@@ -333,18 +354,40 @@ export const supabaseDb = {
                 .select()
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                console.error("[supabaseDb.applications.create] Error:", error);
+                throw error;
+            }
             return data;
         },
 
         getAll: async (): Promise<Application[]> => {
+            // 1. Try server API route first
+            if (typeof window !== "undefined") {
+                try {
+                    const res = await fetch("/api/admin/applications");
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json.applications) {
+                            return json.applications;
+                        }
+                    }
+                } catch (apiErr) {
+                    console.warn("[supabaseDb.applications.getAll] API route fallback:", apiErr);
+                }
+            }
+
+            // 2. Direct Supabase Client fallback
             const supabase = createClient();
             const { data, error } = await supabase
                 .from("applications")
                 .select("*")
                 .order("submitted_at", { ascending: false });
 
-            if (error || !data) return [];
+            if (error || !data) {
+                if (error) console.warn("[supabaseDb.applications.getAll] Error:", error);
+                return [];
+            }
             return data.map(a => ({
                 id: a.id,
                 userId: a.user_id,
@@ -362,8 +405,30 @@ export const supabaseDb = {
         },
 
         updateStatus: async (id: string, status: "approved" | "rejected") => {
+            // 1. Try server API route first (runs with service role for full RLS permission)
+            if (typeof window !== "undefined") {
+                try {
+                    const res = await fetch("/api/admin/applications", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id, status }),
+                    });
+                    if (res.ok) {
+                        const json = await res.json();
+                        return json.application;
+                    }
+                } catch (apiErr) {
+                    console.warn("[supabaseDb.applications.updateStatus] API route fallback:", apiErr);
+                }
+            }
+
+            // 2. Direct Supabase Client fallback
             const supabase = createClient();
-            await supabase.from("applications").update({ status }).eq("id", id);
+            const { error } = await supabase.from("applications").update({ status }).eq("id", id);
+            if (error) {
+                console.warn("[supabaseDb.applications.updateStatus] Error:", error);
+                throw error;
+            }
         }
     },
 
@@ -371,6 +436,22 @@ export const supabaseDb = {
     admin: {
         users: {
             getAll: async (): Promise<User[]> => {
+                // 1. Try server API route first (runs with service role for complete list)
+                if (typeof window !== "undefined") {
+                    try {
+                        const res = await fetch("/api/admin/users");
+                        if (res.ok) {
+                            const json = await res.json();
+                            if (Array.isArray(json.users)) {
+                                return json.users;
+                            }
+                        }
+                    } catch (apiErr) {
+                        console.warn("[supabaseDb.admin.users.getAll] API route fallback:", apiErr);
+                    }
+                }
+
+                // 2. Direct Supabase Client fallback
                 const supabase = createClient();
                 const { data, error } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
                 if (error || !data) return [];
@@ -384,7 +465,45 @@ export const supabaseDb = {
                     level: u.level,
                 }));
             },
+            delete: async (id: string, email?: string): Promise<boolean> => {
+                // 1. Try server API route first (runs with service role for full deletion)
+                if (typeof window !== "undefined") {
+                    try {
+                        const res = await fetch(`/api/admin/users?id=${encodeURIComponent(id)}${email ? `&email=${encodeURIComponent(email)}` : ""}`, {
+                            method: "DELETE",
+                        });
+                        if (res.ok) {
+                            return true;
+                        }
+                    } catch (apiErr) {
+                        console.warn("[supabaseDb.admin.users.delete] API route fallback:", apiErr);
+                    }
+                }
+
+                // 2. Direct Supabase Client fallback
+                const supabase = createClient();
+                const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+                if (isValidUUID) {
+                    await supabase.from("profiles").delete().eq("id", id);
+                } else if (email) {
+                    await supabase.from("profiles").delete().eq("email", email);
+                }
+                return true;
+            },
             updateRole: async (id: string, role: "student" | "pastor" | "admin", level?: string) => {
+                if (typeof window !== "undefined") {
+                    try {
+                        const res = await fetch("/api/admin/users", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id, role, level }),
+                        });
+                        if (res.ok) return;
+                    } catch (apiErr) {
+                        console.warn("[supabaseDb.admin.users.updateRole] API route fallback:", apiErr);
+                    }
+                }
+
                 const supabase = createClient();
                 await supabase.from("profiles").update({ role, level }).eq("id", id);
             }

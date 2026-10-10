@@ -215,7 +215,7 @@ export default function LoginPage() {
                             </button>
                         </form>
 
-                        <div className="mt-8 text-center">
+                        <div className="mt-8 text-center space-y-4">
                             <p className="text-sm text-slate-500">
                                 {isLogin ? "계정이 없으신가요?" : "이미 계정이 있으신가요?"}{" "}
                                 <button
@@ -225,6 +225,24 @@ export default function LoginPage() {
                                     {isLogin ? "회원가입" : "로그인"}
                                 </button>
                             </p>
+
+                            <div className="pt-4 border-t border-slate-100">
+                                <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-left space-y-1.5 shadow-sm">
+                                    <div className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+                                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                                        2027학년도 1기 신입생 입학 원서 접수
+                                    </div>
+                                    <p className="text-[11px] text-amber-800 leading-relaxed">
+                                        별도 회원가입 없이 입학 원서를 작성하시면 학사 계정이 원스톱으로 자동 생성됩니다.
+                                    </p>
+                                    <Link
+                                        href="/apply"
+                                        className="inline-flex items-center gap-1 text-xs font-bold text-amber-950 hover:text-amber-700 hover:underline pt-1"
+                                    >
+                                        입학 원서 바로 작성하기 &rarr;
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 </div>

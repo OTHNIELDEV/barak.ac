@@ -44,3 +44,12 @@ next-env.d.ts
 .codex-history/
 .claude-code-history/
 .omc/
+
+# temp work files
+__pycache__/
+*.docx
+*.py
+*.txt
+yt_dump.json
+yt_playlists.json
+jhoptv_videos_all.json

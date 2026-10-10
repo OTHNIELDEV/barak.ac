@@ -168,18 +168,8 @@ export interface AILog {
     category?: string; // e.g., "Theology", "Counseling"
 }
 
-// Initial Seed Data - Strictly following Prompt
+// Initial Seed Data - Only Director Admin
 const SEED_USERS: User[] = [
-    {
-        id: "user_1",
-        email: "axasoft@naver.com",
-        password: "1111",
-        name: "김바라크",
-        role: "pastor",
-        church: "서울은혜교회",
-        profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Barak",
-        level: "부목사"
-    },
     {
         id: "user_admin",
         email: "a@a.com",
@@ -215,8 +205,8 @@ const SEED_FACULTY: Faculty[] = [
 ];
 
 const SEED_AI_LOGS: AILog[] = [
-    { id: "log_1", studentId: "user_1", studentName: "김바라크", query: "설교 준비할 때 본문 분석을 어떻게 하나요?", timestamp: new Date(Date.now() - 3600000).toISOString(), category: "Ministry", responseSummary: "본문 분석의 3단계 방법론 제시 및 예시 제공" },
-    { id: "log_2", studentId: "user_1", studentName: "김바라크", query: "재정 위기 상황에서의 목회적 조언", timestamp: new Date(Date.now() - 86400000).toISOString(), category: "Counseling", responseSummary: "재정 투명성 확보 및 성도들과의 소통 중요성 강조" },
+    { id: "log_1", studentId: "user_demo", studentName: "수강생", query: "설교 준비할 때 본문 분석을 어떻게 하나요?", timestamp: new Date(Date.now() - 3600000).toISOString(), category: "Ministry", responseSummary: "본문 분석의 3단계 방법론 제시 및 예시 제공" },
+    { id: "log_2", studentId: "user_demo", studentName: "수강생", query: "재정 위기 상황에서의 목회적 조언", timestamp: new Date(Date.now() - 86400000).toISOString(), category: "Counseling", responseSummary: "재정 투명성 확보 및 성도들과의 소통 중요성 강조" },
 ];
 
 const SEED_APPLICATIONS: Application[] = [
@@ -256,16 +246,41 @@ export const db = {
         if (typeof window === "undefined") return;
 
         try {
-            // Force reset users if 'demo@barak.ac' or 'admin' doesn't exist to ensure demo works
+            const isInitialized = safeStorage.getItem("barak_storage_initialized_v3");
             const existingUsers = safeStorage.getItem(STORAGE_KEYS.USERS);
 
-            // Check if we need to re-seed (missing demo or missing admin)
-            const needsSeed = !existingUsers ||
-                !existingUsers.includes("axasoft@naver.com") ||
-                !existingUsers.includes('"email":"a@a.com"');
+            // 1. Purge deleted seed account (axasoft@naver.com) from existing localStorage if present
+            if (existingUsers && existingUsers.includes("axasoft@naver.com")) {
+                try {
+                    let parsed: User[] = JSON.parse(existingUsers);
+                    parsed = parsed.filter(u => u.email?.toLowerCase() !== "axasoft@naver.com" && u.id !== "user_1");
+                    safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(parsed));
+                } catch (e) { }
+            }
 
-            if (needsSeed) {
-                safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+            // 2. Purge session if it belonged to axasoft@naver.com
+            const currentSession = safeStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+            if (currentSession && currentSession.includes("axasoft@naver.com")) {
+                safeStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+            }
+
+            // 3. 최초 1회 SEED_USERS 세팅 (Director admin만 보장)
+            if (!isInitialized) {
+                if (!existingUsers) {
+                    safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+                } else {
+                    try {
+                        let parsed: User[] = JSON.parse(existingUsers);
+                        parsed = parsed.filter(u => u.email?.toLowerCase() !== "axasoft@naver.com" && u.id !== "user_1");
+                        if (!parsed.some(u => u.email === "a@a.com")) {
+                            parsed.push(SEED_USERS[0]); // Ensure Director admin exists
+                        }
+                        safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(parsed));
+                    } catch (e) {
+                        safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+                    }
+                }
+                safeStorage.setItem("barak_storage_initialized_v3", "true");
             }
 
             // FORCE SYNC COURSES: Always update seed courses to reflect code changes (translations)
@@ -605,6 +620,15 @@ export const db = {
             safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
             return newApp;
         },
+        getByUserId: (userId: string): Application | null => {
+            const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+            return list.find(app => app.userId === userId) || null;
+        },
+        getByEmail: (email: string): Application | null => {
+            if (!email) return null;
+            const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+            return list.find(app => app.email.toLowerCase() === email.toLowerCase()) || null;
+        },
         hasApplied: (userId: string): boolean => {
             const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
             return list.some(app => app.userId === userId);
@@ -618,10 +642,17 @@ export const db = {
                 if (typeof window === "undefined") return [];
                 return JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
             },
-            delete: (id: string) => {
-                let users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-                users = users.filter((u: User) => u.id !== id);
+            delete: (idOrEmail: string) => {
+                let users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                const target = users.find((u: User) => u.id === idOrEmail || u.email?.toLowerCase() === idOrEmail.toLowerCase());
+                users = users.filter((u: User) => u.id !== idOrEmail && u.email?.toLowerCase() !== idOrEmail.toLowerCase());
                 safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+
+                // If currently logged in user was deleted, clear session
+                const currentUser = JSON.parse(safeStorage.getItem(STORAGE_KEYS.CURRENT_USER) || "null");
+                if (currentUser && (currentUser.id === idOrEmail || (target && currentUser.email?.toLowerCase() === target.email?.toLowerCase()))) {
+                    safeStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+                }
             },
             updateRole: (id: string, role: "student" | "pastor" | "admin", level?: string) => {
                 const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
@@ -682,16 +713,25 @@ export const db = {
                 list[appIndex] = app;
                 safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
 
-                // If approved, verify/upgrade user
-                if (status === 'approved' && app.userId) {
+                // If approved, verify/upgrade user (by userId or by email)
+                if (status === 'approved') {
                     const users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-                    const userIndex = users.findIndex(u => u.id === app.userId);
+                    const userIndex = users.findIndex(u => 
+                        (app.userId && u.id === app.userId) || 
+                        (app.email && u.email?.toLowerCase() === app.email.toLowerCase())
+                    );
 
                     if (userIndex >= 0) {
                         users[userIndex].role = 'student';
                         users[userIndex].level = 'Student Member';
-                        users[userIndex].church = app.church; // Sync church info
+                        if (app.church) users[userIndex].church = app.church;
                         safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+
+                        // If current session is this user, update session as well
+                        const currentUser = db.auth.getCurrentUser();
+                        if (currentUser && currentUser.email?.toLowerCase() === users[userIndex].email.toLowerCase()) {
+                            safeStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(users[userIndex]));
+                        }
                     }
                 }
             }

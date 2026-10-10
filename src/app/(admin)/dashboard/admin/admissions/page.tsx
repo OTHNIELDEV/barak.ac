@@ -32,14 +32,50 @@ export default function AdminAdmissionsPage() {
 
     const loadApplications = async () => {
         try {
-            const remoteApps = await supabaseDb.applications.getAll();
-            if (remoteApps && remoteApps.length > 0) {
-                setApplications(remoteApps);
-            } else {
-                setApplications(db.admin.applications.getAll());
+            const localApps = db.admin.applications.getAll();
+            let remoteApps: Application[] = [];
+            try {
+                remoteApps = await supabaseDb.applications.getAll();
+            } catch (e) {
+                console.warn("[Admin Admissions] Failed to load remote applications:", e);
             }
+
+            // Smart Merge: combine remote and local without losing any submissions
+            const mergedMap = new Map<string, Application>();
+
+            // 1. Put local applications
+            localApps.forEach(app => {
+                const key = app.id || `${app.email}_${app.name}`;
+                mergedMap.set(key, app);
+            });
+
+            // 2. Merge remote applications
+            remoteApps.forEach(remoteApp => {
+                let matchedKey: string | null = null;
+                for (const [key, existing] of mergedMap.entries()) {
+                    if (existing.id === remoteApp.id || 
+                        (existing.email && existing.email.toLowerCase() === remoteApp.email.toLowerCase() && existing.name === remoteApp.name)) {
+                        matchedKey = key;
+                        break;
+                    }
+                }
+
+                if (matchedKey) {
+                    mergedMap.set(matchedKey, { ...mergedMap.get(matchedKey)!, ...remoteApp });
+                } else {
+                    mergedMap.set(remoteApp.id, remoteApp);
+                }
+            });
+
+            const mergedList = Array.from(mergedMap.values()).sort((a, b) => {
+                const dateA = new Date(a.submittedAt).getTime() || 0;
+                const dateB = new Date(b.submittedAt).getTime() || 0;
+                return dateB - dateA;
+            });
+
+            setApplications(mergedList);
         } catch (e) {
-            console.warn("Failed to load remote applications, fallback:", e);
+            console.warn("Failed to load applications, fallback to local:", e);
             setApplications(db.admin.applications.getAll());
         }
     };
@@ -52,20 +88,19 @@ export default function AdminAdmissionsPage() {
     const handleCreateApplication = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const created = await supabaseDb.applications.create({
-                ...newApp,
-            });
+            db.applications.create({ ...newApp });
+            try {
+                await supabaseDb.applications.create({ ...newApp });
+            } catch (remoteErr) {
+                console.warn("[Admin] Supabase remote create fallback:", remoteErr);
+            }
             await loadApplications();
             setIsAddModalOpen(false);
             setNewApp({ name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah", motivation: "관리자 수기 등록" });
             alert("신청서가 등록되었습니다.");
         } catch (error) {
             console.error(error);
-            const created = db.applications.create({ ...newApp });
-            setApplications(prev => [created, ...prev]);
-            setIsAddModalOpen(false);
-            setNewApp({ name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah", motivation: "관리자 수기 등록" });
-            alert("신청서가 등록되었습니다.");
+            alert("신청서 등록 중 오류가 발생했습니다.");
         }
     };
 
@@ -84,6 +119,7 @@ export default function AdminAdmissionsPage() {
         if (selectedApp && selectedApp.id === id) {
             setSelectedApp(prev => prev ? { ...prev, status } : null);
         }
+        alert(`${status === 'approved' ? '승인' : '거절'} 처리가 완료되었습니다.`);
     };
 
     const filteredApps = applications.filter(app => {
@@ -246,22 +282,35 @@ export default function AdminAdmissionsPage() {
                                     <div className="text-sm text-slate-500">{selectedApp.phone}</div>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="space-y-5">
+                                    {/* Track Badge & Date */}
+                                    <div className="p-3.5 bg-blue-50/70 rounded-xl border border-blue-100 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <GraduationCap className="w-4 h-4 text-blue-900" />
+                                            <span className="text-xs font-bold text-blue-950 uppercase">
+                                                {selectedApp.track} Track
+                                            </span>
+                                        </div>
+                                        <span className="text-[11px] text-slate-500">
+                                            {new Date(selectedApp.submittedAt).toLocaleDateString('ko-KR')}
+                                        </span>
+                                    </div>
+
                                     <div>
-                                        <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">교회 및 사역</div>
-                                        <div className="bg-slate-50 p-4 rounded-lg space-y-2 text-sm border border-slate-100">
-                                            <div className="flex justify-between">
+                                        <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">교회 및 사역 정보</div>
+                                        <div className="bg-slate-50 p-4 rounded-xl space-y-2.5 text-xs md:text-sm border border-slate-100">
+                                            <div className="flex justify-between items-center">
                                                 <span className="text-slate-500">교회명</span>
-                                                <span className="font-medium">{selectedApp.church}</span>
+                                                <span className="font-bold text-slate-800">{selectedApp.church}</span>
                                             </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-500">직분</span>
-                                                <span className="font-medium text-indigo-600">{selectedApp.position}</span>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-slate-500">직분 / 구분</span>
+                                                <span className="font-bold text-blue-900">{selectedApp.position}</span>
                                             </div>
                                             {selectedApp.department && (
-                                                <div className="flex justify-between">
+                                                <div className="flex justify-between items-center">
                                                     <span className="text-slate-500">소속 부서</span>
-                                                    <span className="font-medium">{selectedApp.department}</span>
+                                                    <span className="font-medium text-slate-700">{selectedApp.department}</span>
                                                 </div>
                                             )}
                                         </div>

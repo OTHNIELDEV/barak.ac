@@ -56,8 +56,8 @@ export function PublicHeader() {
                         <Link href="/login" className="text-sm font-bold text-slate-600 hover:text-blue-900 transition-colors">
                             로그인
                         </Link>
-                        <Link href="/login?mode=signup" className="px-5 py-2.5 bg-blue-900 text-white text-sm font-bold rounded-full hover:bg-blue-800 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
-                            무료 수강 신청
+                        <Link href="/apply" className="px-5 py-2.5 bg-blue-900 text-white text-sm font-bold rounded-full hover:bg-blue-800 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
+                            신입생 입학 신청
                         </Link>
                     </div>
 
@@ -90,8 +90,8 @@ export function PublicHeader() {
                         ))}
                         <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
                             <Link href="/login" className="text-center font-bold text-slate-600 py-2 hover:bg-slate-50 rounded-lg">로그인</Link>
-                            <Link href="/login?mode=signup" className="block w-full px-5 py-3 bg-blue-900 text-white text-center font-bold rounded-lg hover:bg-blue-800">
-                                무료 수강 신청
+                            <Link href="/apply" className="block w-full px-5 py-3 bg-blue-900 text-white text-center font-bold rounded-lg hover:bg-blue-800">
+                                신입생 입학 신청
                             </Link>
                         </div>
                     </div>

@@ -104,10 +104,10 @@ export function Header() {
                                 로그인
                             </Link>
                             <Link
-                                href="/login?mode=signup"
-                                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-bold hover:shadow-lg hover:from-amber-400 hover:to-orange-500 transition-all active:scale-95"
+                                href="/apply"
+                                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-bold hover:shadow-lg hover:from-amber-400 hover:to-orange-500 transition-all active:scale-95 flex items-center gap-1.5"
                             >
-                                입학 신청
+                                <GraduationCap className="w-4 h-4" /> 입학 신청
                             </Link>
                         </>
                     )}
@@ -181,7 +181,7 @@ export function Header() {
                                             로그인
                                         </Link>
                                         <Link
-                                            href="/login?mode=signup"
+                                            href="/apply"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                             className="flex items-center justify-center p-3 rounded-xl bg-blue-900 text-white font-bold hover:bg-blue-800 transition-colors"
                                         >
