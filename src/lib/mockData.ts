@@ -1,10 +1,10 @@
 export const mockUser = {
-    name: "Kim Barak",
-    role: "Assistant Pastor",
-    email: "barak.kim@example.com",
-    profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Barak",
-    currentTrack: "Deborah Track",
-    level: "Associate Leader",
+    name: "수강생",
+    role: "수강생",
+    email: "student@barak.ac",
+    profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=student",
+    currentTrack: "Barak Track",
+    level: "수강생",
 };
 
 export interface Module {

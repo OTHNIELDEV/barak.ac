@@ -7,6 +7,7 @@ import { mockCourses } from "@/lib/mockData";
 import { Loader2, User, Award, Save, Download, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 export default function MyPage() {
     const { user, login } = useAuth(); // login used to refresh user session if implementation supports it, or we manual update
@@ -49,12 +50,24 @@ export default function MyPage() {
         setIsSaving(true);
         try {
             if (user) {
-                const updatedUser = db.auth.updateUser(user.id, {
+                db.auth.updateUser(user.id, {
                     name: formData.name,
                     church: formData.church
                 });
-                // In a real app we'd update context, but for now we might need a reload or a context method to update user state
-                // Assuming AuthContext automatically picks up changes if we force it, but purely local storage might strictly need a re-fetch
+
+                try {
+                    const supabase = createClient();
+                    await supabase
+                        .from("profiles")
+                        .update({
+                            name: formData.name,
+                            church: formData.church
+                        })
+                        .eq("id", user.id);
+                } catch (supaErr) {
+                    console.warn("[MyPage] Supabase update profile fallback:", supaErr);
+                }
+
                 alert("프로필이 업데이트 되었습니다.");
                 window.location.reload();
             }

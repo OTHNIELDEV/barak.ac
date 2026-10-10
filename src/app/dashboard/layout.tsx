@@ -15,16 +15,23 @@ import {
     Menu,
     X,
     Search,
-    LogOut
+    LogOut,
+    LogIn
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { mockUser } from "@/lib/mockData";
+import { useAuth } from "@/context/AuthContext";
 import { Logo } from "@/components/ui/Logo";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const pathname = usePathname();
+    const { user, logout } = useAuth();
+
+    const avatarSrc = user?.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.name || "barak")}`;
+    const userSubtitle = user?.role === "admin"
+        ? "관리자"
+        : user?.church || (user?.role === "pastor" ? "목회자" : (user?.level || "수강생"));
 
     const navItems = [
         { name: "대시보드", href: "/dashboard", icon: LayoutDashboard },
@@ -68,17 +75,36 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </nav>
 
                     <div className="p-4 border-t border-slate-100">
-                        <div className="flex items-center gap-3 px-2 py-2 mb-2">
-                            <img src={mockUser.profileImage} alt={mockUser.name} className="w-10 h-10 rounded-full bg-slate-100" />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-slate-900 truncate">{mockUser.name}</p>
-                                <p className="text-xs text-slate-500 truncate">{mockUser.role}</p>
-                            </div>
-                        </div>
-                        <Link href="/login" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors">
-                            <LogOut className="w-5 h-5" />
-                            로그아웃
-                        </Link>
+                        {user ? (
+                            <>
+                                <div className="flex items-center gap-3 px-2 py-2 mb-2">
+                                    <img
+                                        src={avatarSrc}
+                                        alt={user.name || "사용자"}
+                                        className="w-10 h-10 rounded-full bg-slate-100 object-cover shrink-0"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-bold text-slate-900 truncate">{user.name || "사용자"}</p>
+                                        <p className="text-xs text-slate-500 truncate">{userSubtitle}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={logout}
+                                    className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                                >
+                                    <LogOut className="w-5 h-5" />
+                                    로그아웃
+                                </button>
+                            </>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                            >
+                                <LogIn className="w-5 h-5" />
+                                로그인
+                            </Link>
+                        )}
                     </div>
                 </aside>
 
@@ -164,6 +190,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 </Link>
                             ))}
                         </nav>
+                        <div className="p-4 border-t border-slate-100">
+                            {user ? (
+                                <>
+                                    <div className="flex items-center gap-3 px-2 py-2 mb-2">
+                                        <img
+                                            src={avatarSrc}
+                                            alt={user.name || "사용자"}
+                                            className="w-10 h-10 rounded-full bg-slate-100 object-cover shrink-0"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-bold text-slate-900 truncate">{user.name || "사용자"}</p>
+                                            <p className="text-xs text-slate-500 truncate">{userSubtitle}</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setIsSidebarOpen(false);
+                                            logout();
+                                        }}
+                                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                                    >
+                                        <LogOut className="w-5 h-5" />
+                                        로그아웃
+                                    </button>
+                                </>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    onClick={() => setIsSidebarOpen(false)}
+                                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                                >
+                                    <LogIn className="w-5 h-5" />
+                                    로그인
+                                </Link>
+                            )}
+                        </div>
                     </aside>
                 </div>
             )}
