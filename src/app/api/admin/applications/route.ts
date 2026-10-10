@@ -79,13 +79,13 @@ export async function POST(request: Request) {
     }
 }
 
-// PATCH: Update application fields (status, name, phone, track, motivation, etc.)
+// PATCH: Update application fields (or upsert if record does not exist in DB yet)
 export async function PATCH(request: Request) {
     try {
         const body = await request.json();
         const { id, ...updates } = body;
-        if (!id) {
-            return NextResponse.json({ error: "Missing application id" }, { status: 400 });
+        if (!id && !updates.email) {
+            return NextResponse.json({ error: "Missing application id or email" }, { status: 400 });
         }
 
         const supabase = getAdminClient();
@@ -102,28 +102,70 @@ export async function PATCH(request: Request) {
         if (updates.track !== undefined) dbPayload.track = updates.track;
         if (updates.motivation !== undefined) dbPayload.motivation = updates.motivation;
 
-        let query = supabase.from("applications").update(dbPayload);
-        if (isValidUUID(id)) {
-            query = query.eq("id", id);
-        } else if (updates.email) {
-            query = query.eq("email", updates.email);
+        // 1. Check if record exists by UUID or by email
+        let existingRecord: any = null;
+        if (id && isValidUUID(id)) {
+            const { data } = await supabase.from("applications").select("*").eq("id", id).maybeSingle();
+            existingRecord = data;
+        }
+
+        if (!existingRecord && (updates.email || (typeof id === "string" && id.includes("@")))) {
+            const targetEmail = updates.email || id;
+            const { data } = await supabase.from("applications").select("*").eq("email", targetEmail).maybeSingle();
+            existingRecord = data;
+        }
+
+        let resultData: any = null;
+
+        if (existingRecord) {
+            // Update existing
+            const { data, error } = await supabase
+                .from("applications")
+                .update(dbPayload)
+                .eq("id", existingRecord.id)
+                .select()
+                .maybeSingle();
+
+            if (error) {
+                console.error("[API PATCH Applications] Update error:", error);
+                return NextResponse.json({ error: error.message }, { status: 500 });
+            }
+            resultData = data;
         } else {
-            query = query.eq("id", id);
+            // Record doesn't exist in Supabase yet (was local-only), so insert it!
+            const newPayload = {
+                name: updates.name || "신청자",
+                email: updates.email || id,
+                phone: updates.phone || "",
+                church: updates.church || "",
+                position: updates.position || "pastor",
+                department: updates.department || "",
+                track: updates.track || "deborah",
+                motivation: updates.motivation || "",
+                status: updates.status || "pending",
+                ...dbPayload
+            };
+            const { data, error } = await supabase
+                .from("applications")
+                .insert(newPayload)
+                .select()
+                .maybeSingle();
+
+            if (error) {
+                console.error("[API PATCH Applications] Insert fallback error:", error);
+                return NextResponse.json({ error: error.message }, { status: 500 });
+            }
+            resultData = data;
         }
 
-        const { data, error } = await query.select().single();
-
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-
-        return NextResponse.json({ application: data });
+        return NextResponse.json({ application: resultData });
     } catch (err: any) {
+        console.error("[API PATCH Applications] Exception:", err);
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
 
-// DELETE: Delete application permanently
+// DELETE: Delete application permanently from DB
 export async function DELETE(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -141,24 +183,27 @@ export async function DELETE(request: Request) {
         }
 
         const supabase = getAdminClient();
-        let query = supabase.from("applications").delete();
 
+        // 1. Delete by UUID if valid
         if (id && isValidUUID(id)) {
-            query = query.eq("id", id);
-        } else if (email) {
-            query = query.eq("email", email);
-        } else if (id) {
-            query = query.eq("id", id);
+            const { error } = await supabase.from("applications").delete().eq("id", id);
+            if (error) console.warn("[API DELETE Applications] UUID delete warning:", error);
         }
 
-        const { error } = await query;
+        // 2. Delete by email if provided
+        if (email) {
+            const { error } = await supabase.from("applications").delete().eq("email", email);
+            if (error) console.warn("[API DELETE Applications] Email delete warning:", error);
+        }
 
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
+        // 3. Fallback: if id happens to be an email string
+        if (id && typeof id === "string" && id.includes("@")) {
+            await supabase.from("applications").delete().eq("email", id);
         }
 
         return NextResponse.json({ success: true, deletedId: id, deletedEmail: email });
     } catch (err: any) {
+        console.error("[API DELETE Applications] Exception:", err);
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

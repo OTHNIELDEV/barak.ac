@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
     CERTIFICATES: "barak_admin_certificates",
     AI_LOGS: "barak_admin_ai_logs",
     APPLICATIONS: "barak_admin_applications",
+    DELETED_APPLICATIONS: "barak_deleted_applications",
 };
 
 // In-Memory Storage Fallback to prevent QuotaExceededError or SSR crashes
@@ -295,7 +296,23 @@ export const db = {
             if (!safeStorage.getItem(STORAGE_KEYS.BANNERS)) safeStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(SEED_BANNERS));
             if (!safeStorage.getItem(STORAGE_KEYS.FACULTY)) safeStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(SEED_FACULTY));
             if (!safeStorage.getItem(STORAGE_KEYS.AI_LOGS)) safeStorage.setItem(STORAGE_KEYS.AI_LOGS, JSON.stringify(SEED_AI_LOGS));
-            if (!safeStorage.getItem(STORAGE_KEYS.APPLICATIONS)) safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(SEED_APPLICATIONS));
+            // Applications Seed & Purge Deleted
+            const deletedApps: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+            const deletedSet = new Set(deletedApps.map(d => d.toLowerCase()));
+
+            if (!safeStorage.getItem(STORAGE_KEYS.APPLICATIONS)) {
+                const filteredSeed = SEED_APPLICATIONS.filter(a => !deletedSet.has(a.id.toLowerCase()) && !deletedSet.has(a.email.toLowerCase()));
+                safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(filteredSeed));
+            } else if (deletedSet.size > 0) {
+                // Clean up any deleted applications from existing storage
+                try {
+                    let existingApps: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                    const cleaned = existingApps.filter(a => !deletedSet.has(a.id.toLowerCase()) && (!a.email || !deletedSet.has(a.email.toLowerCase())));
+                    if (cleaned.length !== existingApps.length) {
+                        safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(cleaned));
+                    }
+                } catch (e) { }
+            }
         } catch (error) {
             console.warn("[Storage init error]", error);
         }
@@ -701,10 +718,39 @@ export const db = {
         },
 
         applications: {
-            getAll: (): Application[] => JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]"),
+            getDeleted: (): string[] => {
+                try {
+                    return JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                } catch {
+                    return [];
+                }
+            },
+            getAll: (): Application[] => {
+                try {
+                    const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                    const deleted: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    const deletedLower = new Set(deleted.map(d => d.toLowerCase()));
+                    return list.filter(a => !deletedLower.has(a.id.toLowerCase()) && (!a.email || !deletedLower.has(a.email.toLowerCase())));
+                } catch {
+                    return [];
+                }
+            },
             delete: (idOrEmail: string) => {
+                if (!idOrEmail) return;
+                const normalized = idOrEmail.toLowerCase();
+                
+                // 1. Add to permanent deleted blacklist
+                try {
+                    const deleted: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    if (!deleted.map(d => d.toLowerCase()).includes(normalized)) {
+                        deleted.push(idOrEmail);
+                        safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(deleted));
+                    }
+                } catch (e) { }
+
+                // 2. Remove from active local applications
                 let list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
-                list = list.filter(a => a.id !== idOrEmail && a.email?.toLowerCase() !== idOrEmail.toLowerCase());
+                list = list.filter(a => a.id.toLowerCase() !== normalized && (!a.email || a.email.toLowerCase() !== normalized));
                 safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
             },
             update: (id: string, data: Partial<Application>) => {
@@ -714,8 +760,26 @@ export const db = {
                     list[idx] = { ...list[idx], ...data };
                     safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
                     return list[idx];
+                } else {
+                    // New record inserted locally
+                    const newRecord: Application = {
+                        id,
+                        name: data.name || "신청자",
+                        email: data.email || "",
+                        phone: data.phone || "",
+                        church: data.church || "",
+                        position: data.position || "pastor",
+                        department: data.department || "",
+                        track: data.track || "deborah",
+                        motivation: data.motivation || "",
+                        status: data.status || "pending",
+                        submittedAt: data.submittedAt || new Date().toISOString(),
+                        ...data
+                    };
+                    list.unshift(newRecord);
+                    safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
+                    return newRecord;
                 }
-                return null;
             },
             updateStatus: (id: string, status: "approved" | "rejected") => {
                 const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");

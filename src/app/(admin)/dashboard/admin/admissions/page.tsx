@@ -49,21 +49,28 @@ export default function AdminAdmissionsPage() {
                 console.warn("[Admin Admissions] Failed to load remote applications:", e);
             }
 
-            // Smart Merge: combine remote and local without losing any submissions
+            // Get deleted blacklist
+            const deletedList = db.admin.applications.getDeleted();
+            const deletedSet = new Set(deletedList.map(d => d.toLowerCase()));
+
+            const filteredLocal = localApps.filter(a => !deletedSet.has(a.id.toLowerCase()) && (!a.email || !deletedSet.has(a.email.toLowerCase())));
+            const filteredRemote = remoteApps.filter(a => !deletedSet.has(a.id.toLowerCase()) && (!a.email || !deletedSet.has(a.email.toLowerCase())));
+
+            // Smart Merge: combine remote (Source of Truth) and local without resurrected items
             const mergedMap = new Map<string, Application>();
 
-            // 1. Put local applications
-            localApps.forEach(app => {
+            // 1. Put filtered local applications
+            filteredLocal.forEach(app => {
                 const key = app.id || `${app.email}_${app.name}`;
                 mergedMap.set(key, app);
             });
 
-            // 2. Merge remote applications
-            remoteApps.forEach(remoteApp => {
+            // 2. Merge remote applications (remote overrides local)
+            filteredRemote.forEach(remoteApp => {
                 let matchedKey: string | null = null;
                 for (const [key, existing] of mergedMap.entries()) {
                     if (existing.id === remoteApp.id || 
-                        (existing.email && existing.email.toLowerCase() === remoteApp.email.toLowerCase() && existing.name === remoteApp.name)) {
+                        (existing.email && existing.email.toLowerCase() === remoteApp.email.toLowerCase())) {
                         matchedKey = key;
                         break;
                     }
@@ -127,22 +134,29 @@ export default function AdminAdmissionsPage() {
         if (!editingApp) return;
 
         try {
-            // 1. Update Remote
+            // 1. Update Remote (Supabase)
             try {
-                await supabaseDb.applications.update(editingApp.id, editingApp);
+                const updatedRemote = await supabaseDb.applications.update(editingApp.id, editingApp);
+                if (updatedRemote && updatedRemote.id) {
+                    editingApp.id = updatedRemote.id; // Sync UUID
+                }
             } catch (remoteErr) {
                 console.warn("[Admin] Remote update warning:", remoteErr);
             }
 
-            // 2. Update Local
+            // 2. Update Local Storage
             db.admin.applications.update(editingApp.id, editingApp);
             if (editingApp.status === "approved" || editingApp.status === "rejected") {
                 db.admin.applications.updateStatus(editingApp.id, editingApp.status);
             }
 
-            // 3. Update state
-            setApplications(prev => prev.map(a => a.id === editingApp.id ? { ...a, ...editingApp } : a));
-            if (selectedApp && selectedApp.id === editingApp.id) {
+            // 3. Update React State immediately
+            setApplications(prev => prev.map(a => 
+                (a.id === editingApp.id || (editingApp.email && a.email?.toLowerCase() === editingApp.email.toLowerCase())) 
+                    ? { ...a, ...editingApp } 
+                    : a
+            ));
+            if (selectedApp && (selectedApp.id === editingApp.id || (editingApp.email && selectedApp.email?.toLowerCase() === editingApp.email.toLowerCase()))) {
                 setSelectedApp({ ...selectedApp, ...editingApp });
             }
 
@@ -154,28 +168,31 @@ export default function AdminAdmissionsPage() {
         }
     };
 
-    // Delete Application
+    // Delete Application Permanently
     const handleDeleteApplication = async (app: Application) => {
         const confirmMsg = `[${app.name} (${app.email})] 입학 신청서를 영구 삭제하시겠습니까?\n\n이 작업은 데이터베이스와 로컬 스토리지 모두에서 되돌릴 수 없이 영구 삭제됩니다.`;
         if (!confirm(confirmMsg)) return;
 
         try {
-            // 1. Remote Delete
+            // 1. Local Blacklist and Deletion
+            db.admin.applications.delete(app.id);
+            if (app.email) {
+                db.admin.applications.delete(app.email);
+            }
+
+            // 2. Remote Database Delete (Supabase)
             try {
                 await supabaseDb.applications.delete(app.id, app.email);
             } catch (remoteErr) {
                 console.warn("[Admin] Remote delete warning:", remoteErr);
             }
 
-            // 2. Local Delete
-            db.admin.applications.delete(app.id);
-            if (app.email) {
-                db.admin.applications.delete(app.email);
-            }
-
-            // 3. Update State
-            setApplications(prev => prev.filter(a => a.id !== app.id && a.email?.toLowerCase() !== app.email?.toLowerCase()));
-            if (selectedApp && (selectedApp.id === app.id || selectedApp.email?.toLowerCase() === app.email?.toLowerCase())) {
+            // 3. Update State immediately
+            setApplications(prev => prev.filter(a => 
+                a.id !== app.id && 
+                (!app.email || a.email?.toLowerCase() !== app.email.toLowerCase())
+            ));
+            if (selectedApp && (selectedApp.id === app.id || (app.email && selectedApp.email?.toLowerCase() === app.email.toLowerCase()))) {
                 setSelectedApp(null);
             }
 
@@ -190,7 +207,7 @@ export default function AdminAdmissionsPage() {
         if (!confirm(`${status === 'approved' ? '승인' : '거절'} 처리하시겠습니까?`)) return;
 
         try {
-            await supabaseDb.applications.updateStatus(id, status);
+            await supabaseDb.applications.updateStatus(id, status, selectedApp?.email);
         } catch (e) {
             console.warn("Remote status update error:", e);
         }
@@ -475,6 +492,24 @@ export default function AdminAdmissionsPage() {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Bottom Quick Actions */}
+                                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleOpenEdit(selectedApp)}
+                                        className="text-xs text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1.5 py-1.5 px-3 rounded-lg hover:bg-blue-50 transition-colors border border-blue-200"
+                                    >
+                                        <Edit3 className="w-3.5 h-3.5" /> 신청서 내용 수정
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDeleteApplication(selectedApp)}
+                                        className="text-xs text-red-600 hover:text-red-800 font-bold flex items-center gap-1.5 py-1.5 px-3 rounded-lg hover:bg-red-50 transition-colors border border-red-200"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" /> 신청서 영구 삭제
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     )}
@@ -648,16 +683,32 @@ export default function AdminAdmissionsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-1">직분</label>
-                                        <select
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">직분 / 구분</label>
+                                        <input
+                                            type="text" required
+                                            placeholder="예: 목사 사모, 목회자, 신학생 등"
                                             className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
-                                            value={editingApp.position} onChange={(e) => setEditingApp({ ...editingApp, position: e.target.value as any })}
-                                        >
-                                            <option value="pastor">목회자</option>
-                                            <option value="theology_student">신학생</option>
-                                            <option value="missionary">선교사</option>
-                                            <option value="lay_leader">평신도 리더</option>
-                                        </select>
+                                            value={editingApp.position || ""} onChange={(e) => setEditingApp({ ...editingApp, position: e.target.value })}
+                                        />
+                                        <div className="flex flex-wrap gap-1 mt-1.5">
+                                            {[
+                                                { label: "목사 사모", val: "목사 사모 (pastor_wife)" },
+                                                { label: "목회자", val: "목회자 (pastor)" },
+                                                { label: "신학생", val: "신학생 (theology_student)" },
+                                                { label: "선교사", val: "선교사 (missionary)" },
+                                                { label: "평신도", val: "평신도 리더 (lay_leader)" },
+                                                { label: "은퇴/원로", val: "은퇴/원로 목사 (retired_pastor)" }
+                                            ].map((preset) => (
+                                                <button
+                                                    key={preset.label}
+                                                    type="button"
+                                                    onClick={() => setEditingApp({ ...editingApp, position: preset.val })}
+                                                    className="text-[11px] px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded transition-colors"
+                                                >
+                                                    {preset.label}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                                 <div>

@@ -405,13 +405,16 @@ export const supabaseDb = {
         },
 
         update: async (id: string, data: Partial<Application>) => {
-            // 1. Try server API route first
+            // Strip out client-only camelCase metadata that don't match table schema directly
+            const { userId: _u, submittedAt: _s, ...cleanData } = data as any;
+            
+            // 1. Try server API route first (runs with service role for full RLS permission)
             if (typeof window !== "undefined") {
                 try {
                     const res = await fetch("/api/admin/applications", {
                         method: "PATCH",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ id, ...data }),
+                        body: JSON.stringify({ id, ...cleanData }),
                     });
                     if (res.ok) {
                         const json = await res.json();
@@ -424,10 +427,14 @@ export const supabaseDb = {
 
             // 2. Direct Supabase Client fallback
             const supabase = createClient();
-            const { data: updated, error } = await supabase.from("applications").update(data).eq("id", id).select().single();
-            if (error) {
-                console.warn("[supabaseDb.applications.update] direct error:", error);
+            const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+            let query = supabase.from("applications").update(cleanData);
+            if (isValidUUID) {
+                query = query.eq("id", id);
+            } else if (cleanData.email) {
+                query = query.eq("email", cleanData.email);
             }
+            const { data: updated } = await query.select().maybeSingle();
             return updated;
         },
 
@@ -451,20 +458,21 @@ export const supabaseDb = {
             const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
             if (isValidUUID) {
                 await supabase.from("applications").delete().eq("id", id);
-            } else if (email) {
+            }
+            if (email) {
                 await supabase.from("applications").delete().eq("email", email);
             }
             return true;
         },
 
-        updateStatus: async (id: string, status: "approved" | "rejected") => {
+        updateStatus: async (id: string, status: "approved" | "rejected", email?: string) => {
             // 1. Try server API route first (runs with service role for full RLS permission)
             if (typeof window !== "undefined") {
                 try {
                     const res = await fetch("/api/admin/applications", {
                         method: "PATCH",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ id, status }),
+                        body: JSON.stringify({ id, status, email }),
                     });
                     if (res.ok) {
                         const json = await res.json();
@@ -477,10 +485,11 @@ export const supabaseDb = {
 
             // 2. Direct Supabase Client fallback
             const supabase = createClient();
-            const { error } = await supabase.from("applications").update({ status }).eq("id", id);
-            if (error) {
-                console.warn("[supabaseDb.applications.updateStatus] Error:", error);
-                throw error;
+            const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+            if (isValidUUID) {
+                await supabase.from("applications").update({ status }).eq("id", id);
+            } else if (email) {
+                await supabase.from("applications").update({ status }).eq("email", email);
             }
         }
     },
