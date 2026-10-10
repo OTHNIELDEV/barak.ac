@@ -818,7 +818,7 @@ export const db = {
 
                     if (userIndex >= 0) {
                         users[userIndex].role = 'student';
-                        users[userIndex].level = 'Student Member';
+                        users[userIndex].level = '정규 학생 (Student)';
                         if (app.church) users[userIndex].church = app.church;
                         safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 

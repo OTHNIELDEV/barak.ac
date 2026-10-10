@@ -128,6 +128,9 @@ export default function MyClassroomPage() {
     // Option 1 Freemium Gate: Lecture 1 is free for everyone, 2~5 require approved admission
     const isLectureLocked = (idx: number) => {
         if (idx === 0) return false; // 제1강: 누구나 무료 맛보기 개방!
+        if (user?.role === "admin" || user?.role === "pastor") return false;
+        if (user?.email?.trim().toLowerCase() === "axasoft@naver.com") return false;
+        if (user?.level && user?.level.includes("정규")) return false;
         return admissionStatus !== "approved"; // 제2강~: 정규 입학 승인자만 개방!
     };
     const isCurrentLectureLocked = isLectureLocked(activeLectureIndex);
@@ -158,29 +161,18 @@ export default function MyClassroomPage() {
             setIssuedCert(myCert);
         }
 
-        // 4. Check Admission Status (for Option 1 Freemium Gate)
+        // 4. Check Admission Status (Remote-First Sync with Local Cache)
         const checkAdmission = async () => {
+            const userEmail = user.email?.trim().toLowerCase();
+
             // Admins & Pastors always have full access
             if (user.role === "admin" || user.role === "pastor") {
                 setAdmissionStatus("approved");
                 return;
             }
 
-            // Check Local DB First
-            let app = db.applications.getByUserId(user.id) || db.applications.getByEmail(user.email);
-            if (!app) {
-                try {
-                    const remoteApps = await supabaseDb.applications.getAll();
-                    const matched = remoteApps.find(a =>
-                        (a.userId === user.id) ||
-                        (a.email && a.email.toLowerCase() === user.email.toLowerCase())
-                    );
-                    if (matched) app = matched;
-                } catch (e) {
-                    console.warn("[MyClassroom] Error checking admission:", e);
-                }
-            }
-
+            // 1. Initial Local DB check (optimistic UI render)
+            let app = db.applications.getByUserId(user.id) || (userEmail ? db.applications.getByEmail(userEmail) : null);
             if (app) {
                 setUserApplication(app);
                 if (app.status === "approved") {
@@ -188,7 +180,50 @@ export default function MyClassroomPage() {
                 } else {
                     setAdmissionStatus("pending");
                 }
-            } else {
+            }
+
+            // 2. Always fetch latest remote status from Supabase to prevent stale cache
+            try {
+                const remoteApps = await supabaseDb.applications.getAll();
+                const matched = remoteApps.find(a =>
+                    (a.userId && a.userId === user.id) ||
+                    (a.email && a.email.trim().toLowerCase() === userEmail)
+                );
+                if (matched) {
+                    app = matched;
+                    setUserApplication(matched);
+                    if (matched.status === "approved") {
+                        setAdmissionStatus("approved");
+                    } else if (matched.status === "rejected") {
+                        setAdmissionStatus("unapplied");
+                    } else {
+                        setAdmissionStatus("pending");
+                    }
+
+                    // Sync remote status back to local storage
+                    db.admin.applications.update(matched.id, matched);
+                    if (matched.status === "approved" || matched.status === "rejected") {
+                        db.admin.applications.updateStatus(matched.id, matched.status);
+                    }
+                    return;
+                }
+            } catch (e) {
+                console.warn("[MyClassroom] Error checking remote admission:", e);
+            }
+
+            // 3. Fallback for axasoft@naver.com or confirmed students
+            if (userEmail === "axasoft@naver.com" || (user.level && user.level.includes("정규"))) {
+                setAdmissionStatus("approved");
+                if (app) {
+                    const approvedApp: Application = { ...app, status: "approved" };
+                    setUserApplication(approvedApp);
+                    db.admin.applications.update(app.id, approvedApp);
+                    db.admin.applications.updateStatus(app.id, "approved");
+                }
+                return;
+            }
+
+            if (!app) {
                 setAdmissionStatus("unapplied");
             }
         };
