@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Search, CheckCircle, XCircle, Clock, MoreHorizontal,
-    Filter, GraduationCap, Building2, User, ChevronDown, Check, X
+    Filter, GraduationCap, Building2, User, ChevronDown, Check, X,
+    Edit3, Trash2, RefreshCw
 } from "lucide-react";
 import { db, Application } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
@@ -25,12 +26,20 @@ export default function AdminAdmissionsPage() {
     const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected">("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Add Application Modal State
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [newApp, setNewApp] = useState({
         name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah" as "deborah" | "barak" | "jael", motivation: "관리자 수기 등록"
     });
 
+    // Edit Application Modal State
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingApp, setEditingApp] = useState<Application | null>(null);
+
     const loadApplications = async () => {
+        setIsLoading(true);
         try {
             const localApps = db.admin.applications.getAll();
             let remoteApps: Application[] = [];
@@ -77,6 +86,8 @@ export default function AdminAdmissionsPage() {
         } catch (e) {
             console.warn("Failed to load applications, fallback to local:", e);
             setApplications(db.admin.applications.getAll());
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -101,6 +112,77 @@ export default function AdminAdmissionsPage() {
         } catch (error) {
             console.error(error);
             alert("신청서 등록 중 오류가 발생했습니다.");
+        }
+    };
+
+    // Open Edit Modal
+    const handleOpenEdit = (app: Application) => {
+        setEditingApp({ ...app });
+        setIsEditModalOpen(true);
+    };
+
+    // Save Edited Application
+    const handleSaveEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingApp) return;
+
+        try {
+            // 1. Update Remote
+            try {
+                await supabaseDb.applications.update(editingApp.id, editingApp);
+            } catch (remoteErr) {
+                console.warn("[Admin] Remote update warning:", remoteErr);
+            }
+
+            // 2. Update Local
+            db.admin.applications.update(editingApp.id, editingApp);
+            if (editingApp.status === "approved" || editingApp.status === "rejected") {
+                db.admin.applications.updateStatus(editingApp.id, editingApp.status);
+            }
+
+            // 3. Update state
+            setApplications(prev => prev.map(a => a.id === editingApp.id ? { ...a, ...editingApp } : a));
+            if (selectedApp && selectedApp.id === editingApp.id) {
+                setSelectedApp({ ...selectedApp, ...editingApp });
+            }
+
+            setIsEditModalOpen(false);
+            alert("입학 신청서 정보가 성공적으로 수정되었습니다.");
+        } catch (err: any) {
+            console.error("[Admin] Edit error:", err);
+            alert("신청서 수정 중 오류가 발생했습니다: " + (err?.message || ""));
+        }
+    };
+
+    // Delete Application
+    const handleDeleteApplication = async (app: Application) => {
+        const confirmMsg = `[${app.name} (${app.email})] 입학 신청서를 영구 삭제하시겠습니까?\n\n이 작업은 데이터베이스와 로컬 스토리지 모두에서 되돌릴 수 없이 영구 삭제됩니다.`;
+        if (!confirm(confirmMsg)) return;
+
+        try {
+            // 1. Remote Delete
+            try {
+                await supabaseDb.applications.delete(app.id, app.email);
+            } catch (remoteErr) {
+                console.warn("[Admin] Remote delete warning:", remoteErr);
+            }
+
+            // 2. Local Delete
+            db.admin.applications.delete(app.id);
+            if (app.email) {
+                db.admin.applications.delete(app.email);
+            }
+
+            // 3. Update State
+            setApplications(prev => prev.filter(a => a.id !== app.id && a.email?.toLowerCase() !== app.email?.toLowerCase()));
+            if (selectedApp && (selectedApp.id === app.id || selectedApp.email?.toLowerCase() === app.email?.toLowerCase())) {
+                setSelectedApp(null);
+            }
+
+            alert(`"${app.name}" 님의 입학 신청서가 영구 삭제되었습니다.`);
+        } catch (err: any) {
+            console.error("[Admin] Delete error:", err);
+            alert("신청서 삭제 중 오류가 발생했습니다: " + (err?.message || ""));
         }
     };
 
@@ -191,13 +273,14 @@ export default function AdminAdmissionsPage() {
                                     <th className="px-6 py-4 font-medium text-slate-500">신청자</th>
                                     <th className="px-6 py-4 font-medium text-slate-500">트랙 / 소속</th>
                                     <th className="px-6 py-4 font-medium text-slate-500">상태</th>
-                                    <th className="px-6 py-4 font-medium text-right text-slate-500">접수일</th>
+                                    <th className="px-6 py-4 font-medium text-slate-500">접수일</th>
+                                    <th className="px-6 py-4 font-medium text-right text-slate-500">관리</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
                                 {filteredApps.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
+                                        <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
                                             검색 결과가 없습니다.
                                         </td>
                                     </tr>
@@ -245,8 +328,26 @@ export default function AdminAdmissionsPage() {
                                                     {app.status === 'pending' && <><Clock className="w-3 h-3" /> 대기중</>}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right text-xs text-slate-500">
+                                            <td className="px-6 py-4 text-xs text-slate-500">
                                                 {new Date(app.submittedAt).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                                                    <button
+                                                        onClick={() => handleOpenEdit(app)}
+                                                        className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        title="신청서 수정"
+                                                    >
+                                                        <Edit3 className="w-4 h-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteApplication(app)}
+                                                        className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        title="신청서 영구 삭제"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))
@@ -268,9 +369,27 @@ export default function AdminAdmissionsPage() {
                             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 sticky top-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="font-bold text-slate-900 text-lg">상세 정보</h3>
-                                    <button onClick={() => setSelectedApp(null)} className="text-slate-400 hover:text-slate-600">
-                                        <X className="w-5 h-5" />
-                                    </button>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={() => handleOpenEdit(selectedApp)}
+                                            className="px-2 py-1 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold border border-slate-200"
+                                            title="신청서 수정"
+                                        >
+                                            <Edit3 className="w-3.5 h-3.5" />
+                                            <span>수정</span>
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteApplication(selectedApp)}
+                                            className="px-2 py-1 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold border border-slate-200"
+                                            title="신청서 영구 삭제"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                            <span>삭제</span>
+                                        </button>
+                                        <button onClick={() => setSelectedApp(null)} className="p-1 text-slate-400 hover:text-slate-600 ml-1">
+                                            <X className="w-5 h-5" />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-col items-center mb-6">
@@ -461,6 +580,141 @@ export default function AdminAdmissionsPage() {
                                         className="px-4 py-2 bg-blue-900 text-white font-bold rounded-lg hover:bg-blue-800"
                                     >
                                         등록하기
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Edit Application Modal */}
+            <AnimatePresence>
+                {isEditModalOpen && editingApp && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => { setIsEditModalOpen(false); setEditingApp(null); }}
+                            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="bg-white rounded-xl shadow-xl w-full max-w-lg relative z-10 overflow-hidden max-h-[90vh] flex flex-col"
+                        >
+                            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                                <h3 className="text-xl font-bold text-slate-900">신청서 정보 수정</h3>
+                                <button onClick={() => { setIsEditModalOpen(false); setEditingApp(null); }} className="text-slate-400 hover:text-slate-600">
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
+                            <form onSubmit={handleSaveEdit} className="p-6 space-y-4 overflow-y-auto">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">이름</label>
+                                        <input
+                                            type="text" required
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                                            value={editingApp.name} onChange={(e) => setEditingApp({ ...editingApp, name: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">연락처</label>
+                                        <input
+                                            type="text" required
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                                            value={editingApp.phone} onChange={(e) => setEditingApp({ ...editingApp, phone: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-1">이메일</label>
+                                    <input
+                                        type="email" required
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                                        value={editingApp.email} onChange={(e) => setEditingApp({ ...editingApp, email: e.target.value })}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">교회명</label>
+                                        <input
+                                            type="text" required
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                                            value={editingApp.church} onChange={(e) => setEditingApp({ ...editingApp, church: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">직분</label>
+                                        <select
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                                            value={editingApp.position} onChange={(e) => setEditingApp({ ...editingApp, position: e.target.value as any })}
+                                        >
+                                            <option value="pastor">목회자</option>
+                                            <option value="theology_student">신학생</option>
+                                            <option value="missionary">선교사</option>
+                                            <option value="lay_leader">평신도 리더</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-1">소속 부서 (선택)</label>
+                                    <input
+                                        type="text"
+                                        placeholder="예: 청년부, 유초등부 등"
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                                        value={editingApp.department || ""} onChange={(e) => setEditingApp({ ...editingApp, department: e.target.value })}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">트랙</label>
+                                        <select
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm uppercase"
+                                            value={editingApp.track} onChange={(e) => setEditingApp({ ...editingApp, track: e.target.value as any })}
+                                        >
+                                            <option value="deborah">Deborah</option>
+                                            <option value="barak">Barak</option>
+                                            <option value="jael">Jael</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">심사 상태</label>
+                                        <select
+                                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm font-medium"
+                                            value={editingApp.status} onChange={(e) => setEditingApp({ ...editingApp, status: e.target.value as any })}
+                                        >
+                                            <option value="pending">대기중 (pending)</option>
+                                            <option value="approved">승인됨 (approved)</option>
+                                            <option value="rejected">거절됨 (rejected)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-1">지원 동기</label>
+                                    <textarea
+                                        rows={3}
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm resize-none"
+                                        value={editingApp.motivation || ""}
+                                        onChange={(e) => setEditingApp({ ...editingApp, motivation: e.target.value })}
+                                    />
+                                </div>
+                                <div className="pt-4 flex justify-end gap-2 border-t border-slate-100">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setIsEditModalOpen(false); setEditingApp(null); }}
+                                        className="px-4 py-2 text-slate-600 font-bold hover:bg-slate-100 rounded-lg text-sm"
+                                    >
+                                        취소
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 bg-blue-900 text-white font-bold rounded-lg hover:bg-blue-800 text-sm"
+                                    >
+                                        수정사항 저장
                                     </button>
                                 </div>
                             </form>

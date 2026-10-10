@@ -404,6 +404,59 @@ export const supabaseDb = {
             }));
         },
 
+        update: async (id: string, data: Partial<Application>) => {
+            // 1. Try server API route first
+            if (typeof window !== "undefined") {
+                try {
+                    const res = await fetch("/api/admin/applications", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id, ...data }),
+                    });
+                    if (res.ok) {
+                        const json = await res.json();
+                        return json.application;
+                    }
+                } catch (apiErr) {
+                    console.warn("[supabaseDb.applications.update] API route fallback:", apiErr);
+                }
+            }
+
+            // 2. Direct Supabase Client fallback
+            const supabase = createClient();
+            const { data: updated, error } = await supabase.from("applications").update(data).eq("id", id).select().single();
+            if (error) {
+                console.warn("[supabaseDb.applications.update] direct error:", error);
+            }
+            return updated;
+        },
+
+        delete: async (id: string, email?: string): Promise<boolean> => {
+            // 1. Try server API route first
+            if (typeof window !== "undefined") {
+                try {
+                    const res = await fetch(`/api/admin/applications?id=${encodeURIComponent(id)}${email ? `&email=${encodeURIComponent(email)}` : ""}`, {
+                        method: "DELETE",
+                    });
+                    if (res.ok) {
+                        return true;
+                    }
+                } catch (apiErr) {
+                    console.warn("[supabaseDb.applications.delete] API route fallback:", apiErr);
+                }
+            }
+
+            // 2. Direct Supabase Client fallback
+            const supabase = createClient();
+            const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+            if (isValidUUID) {
+                await supabase.from("applications").delete().eq("id", id);
+            } else if (email) {
+                await supabase.from("applications").delete().eq("email", email);
+            }
+            return true;
+        },
+
         updateStatus: async (id: string, status: "approved" | "rejected") => {
             // 1. Try server API route first (runs with service role for full RLS permission)
             if (typeof window !== "undefined") {

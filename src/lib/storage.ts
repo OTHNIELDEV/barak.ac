@@ -702,6 +702,21 @@ export const db = {
 
         applications: {
             getAll: (): Application[] => JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]"),
+            delete: (idOrEmail: string) => {
+                let list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                list = list.filter(a => a.id !== idOrEmail && a.email?.toLowerCase() !== idOrEmail.toLowerCase());
+                safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
+            },
+            update: (id: string, data: Partial<Application>) => {
+                const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                const idx = list.findIndex(a => a.id === id || (data.email && a.email?.toLowerCase() === data.email.toLowerCase()));
+                if (idx !== -1) {
+                    list[idx] = { ...list[idx], ...data };
+                    safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
+                    return list[idx];
+                }
+                return null;
+            },
             updateStatus: (id: string, status: "approved" | "rejected") => {
                 const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
                 const appIndex = list.findIndex(a => a.id === id);
