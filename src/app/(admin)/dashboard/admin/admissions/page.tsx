@@ -38,6 +38,20 @@ export default function AdminAdmissionsPage() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingApp, setEditingApp] = useState<Application | null>(null);
 
+    // Delete Confirmation Modal State (Custom modal to bypass browser confirm() blocking)
+    const [deleteTargetApp, setDeleteTargetApp] = useState<Application | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    // Toast notification state (Custom toast to bypass browser alert() blocking)
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    const showToast = (msg: string) => {
+        setToastMessage(msg);
+        setTimeout(() => {
+            setToastMessage(null);
+        }, 3000);
+    };
+
     const loadApplications = async () => {
         setIsLoading(true);
         try {
@@ -115,16 +129,27 @@ export default function AdminAdmissionsPage() {
             await loadApplications();
             setIsAddModalOpen(false);
             setNewApp({ name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah", motivation: "관리자 수기 등록" });
-            alert("신청서가 등록되었습니다.");
+            showToast("신청서가 성공적으로 등록되었습니다.");
         } catch (error) {
             console.error(error);
-            alert("신청서 등록 중 오류가 발생했습니다.");
+            showToast("신청서 등록 중 오류가 발생했습니다.");
         }
     };
 
-    // Open Edit Modal
+    // Open Edit Modal safely
     const handleOpenEdit = (app: Application) => {
-        setEditingApp({ ...app });
+        setEditingApp({
+            ...app,
+            name: app.name || "",
+            email: app.email || "",
+            phone: app.phone || "",
+            church: app.church || "",
+            position: app.position || "pastor",
+            department: app.department || "",
+            track: app.track || "deborah",
+            status: app.status || "pending",
+            motivation: app.motivation || "",
+        });
         setIsEditModalOpen(true);
     };
 
@@ -161,51 +186,58 @@ export default function AdminAdmissionsPage() {
             }
 
             setIsEditModalOpen(false);
-            alert("입학 신청서 정보가 성공적으로 수정되었습니다.");
+            showToast("입학 신청서 정보가 성공적으로 수정되었습니다.");
         } catch (err: any) {
             console.error("[Admin] Edit error:", err);
-            alert("신청서 수정 중 오류가 발생했습니다: " + (err?.message || ""));
+            showToast("신청서 수정 중 오류가 발생했습니다.");
         }
     };
 
-    // Delete Application Permanently
-    const handleDeleteApplication = async (app: Application) => {
-        const confirmMsg = `[${app.name} (${app.email})] 입학 신청서를 영구 삭제하시겠습니까?\n\n이 작업은 데이터베이스와 로컬 스토리지 모두에서 되돌릴 수 없이 영구 삭제됩니다.`;
-        if (!confirm(confirmMsg)) return;
+    // Open Delete Confirmation Modal
+    const handleDeleteApplication = (app: Application) => {
+        setDeleteTargetApp(app);
+    };
 
+    // Confirm and execute permanent deletion
+    const handleConfirmDelete = async () => {
+        if (!deleteTargetApp) return;
+        setIsDeleting(true);
+
+        const target = deleteTargetApp;
         try {
             // 1. Local Blacklist and Deletion
-            db.admin.applications.delete(app.id);
-            if (app.email) {
-                db.admin.applications.delete(app.email);
+            db.admin.applications.delete(target.id);
+            if (target.email) {
+                db.admin.applications.delete(target.email);
             }
 
             // 2. Remote Database Delete (Supabase)
             try {
-                await supabaseDb.applications.delete(app.id, app.email);
+                await supabaseDb.applications.delete(target.id, target.email);
             } catch (remoteErr) {
                 console.warn("[Admin] Remote delete warning:", remoteErr);
             }
 
             // 3. Update State immediately
             setApplications(prev => prev.filter(a => 
-                a.id !== app.id && 
-                (!app.email || a.email?.toLowerCase() !== app.email.toLowerCase())
+                a.id !== target.id && 
+                (!target.email || a.email?.toLowerCase() !== target.email.toLowerCase())
             ));
-            if (selectedApp && (selectedApp.id === app.id || (app.email && selectedApp.email?.toLowerCase() === app.email.toLowerCase()))) {
+            if (selectedApp && (selectedApp.id === target.id || (target.email && selectedApp.email?.toLowerCase() === target.email.toLowerCase()))) {
                 setSelectedApp(null);
             }
 
-            alert(`"${app.name}" 님의 입학 신청서가 영구 삭제되었습니다.`);
+            setDeleteTargetApp(null);
+            showToast(`"${target.name}" 님의 입학 신청서가 영구 삭제되었습니다.`);
         } catch (err: any) {
             console.error("[Admin] Delete error:", err);
-            alert("신청서 삭제 중 오류가 발생했습니다: " + (err?.message || ""));
+            showToast("신청서 삭제 중 오류가 발생했습니다.");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
     const handleStatusUpdate = async (id: string, status: "approved" | "rejected") => {
-        if (!confirm(`${status === 'approved' ? '승인' : '거절'} 처리하시겠습니까?`)) return;
-
         try {
             await supabaseDb.applications.updateStatus(id, status, selectedApp?.email);
         } catch (e) {
@@ -213,12 +245,12 @@ export default function AdminAdmissionsPage() {
         }
         db.admin.applications.updateStatus(id, status);
 
-        // Update local state
+        // Update local state immediately
         setApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a));
         if (selectedApp && selectedApp.id === id) {
             setSelectedApp(prev => prev ? { ...prev, status } : null);
         }
-        alert(`${status === 'approved' ? '승인' : '거절'} 처리가 완료되었습니다.`);
+        showToast(`${status === 'approved' ? '승인' : '거절'} 처리가 완료되었습니다.`);
     };
 
     const filteredApps = applications.filter(app => {
@@ -351,15 +383,23 @@ export default function AdminAdmissionsPage() {
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                                                     <button
-                                                        onClick={() => handleOpenEdit(app)}
-                                                        className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleOpenEdit(app);
+                                                        }}
+                                                        className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                                                         title="신청서 수정"
                                                     >
                                                         <Edit3 className="w-4 h-4" />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDeleteApplication(app)}
-                                                        className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteApplication(app);
+                                                        }}
+                                                        className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                                                         title="신청서 영구 삭제"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -386,24 +426,30 @@ export default function AdminAdmissionsPage() {
                             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 sticky top-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="font-bold text-slate-900 text-lg">상세 정보</h3>
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center gap-1.5">
                                         <button
+                                            type="button"
                                             onClick={() => handleOpenEdit(selectedApp)}
-                                            className="px-2 py-1 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold border border-slate-200"
+                                            className="px-2.5 py-1 text-slate-700 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-bold border border-slate-200 cursor-pointer"
                                             title="신청서 수정"
                                         >
-                                            <Edit3 className="w-3.5 h-3.5" />
+                                            <Edit3 className="w-3.5 h-3.5 text-blue-600" />
                                             <span>수정</span>
                                         </button>
                                         <button
+                                            type="button"
                                             onClick={() => handleDeleteApplication(selectedApp)}
-                                            className="px-2 py-1 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold border border-slate-200"
+                                            className="px-2.5 py-1 text-slate-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-bold border border-slate-200 cursor-pointer"
                                             title="신청서 영구 삭제"
                                         >
-                                            <Trash2 className="w-3.5 h-3.5" />
+                                            <Trash2 className="w-3.5 h-3.5 text-red-600" />
                                             <span>삭제</span>
                                         </button>
-                                        <button onClick={() => setSelectedApp(null)} className="p-1 text-slate-400 hover:text-slate-600 ml-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedApp(null)}
+                                            className="p-1 text-slate-400 hover:text-slate-600 ml-1 cursor-pointer"
+                                        >
                                             <X className="w-5 h-5" />
                                         </button>
                                     </div>
@@ -464,14 +510,16 @@ export default function AdminAdmissionsPage() {
                                 {selectedApp.status === 'pending' && (
                                     <div className="grid grid-cols-2 gap-3 mt-8 pt-6 border-t border-slate-100">
                                         <button
+                                            type="button"
                                             onClick={() => handleStatusUpdate(selectedApp.id, 'rejected')}
-                                            className="px-4 py-3 rounded-lg border border-red-200 text-red-600 font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                                            className="px-4 py-3 rounded-lg border border-red-200 text-red-600 font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                                         >
                                             <XCircle className="w-4 h-4" /> 거절
                                         </button>
                                         <button
+                                            type="button"
                                             onClick={() => handleStatusUpdate(selectedApp.id, 'approved')}
-                                            className="px-4 py-3 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                                            className="px-4 py-3 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                                         >
                                             <CheckCircle className="w-4 h-4" /> 승인
                                         </button>
@@ -771,6 +819,74 @@ export default function AdminAdmissionsPage() {
                             </form>
                         </motion.div>
                     </div>
+                )}
+            </AnimatePresence>
+
+            {/* Custom Delete Confirmation Modal (Guarantees execution without browser confirm() blocking) */}
+            <AnimatePresence>
+                {deleteTargetApp && (
+                    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => !isDeleting && setDeleteTargetApp(null)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden p-6 text-center"
+                        >
+                            <div className="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
+                                <Trash2 className="w-7 h-7" />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 mb-2">신청서 영구 삭제</h3>
+                            <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                                <span className="font-bold text-slate-900">{deleteTargetApp.name}</span>
+                                {deleteTargetApp.email ? ` (${deleteTargetApp.email})` : ""}
+                                님의 입학 신청서를 영구 삭제하시겠습니까?
+                                <br />
+                                <span className="text-red-500 font-semibold text-xs mt-1 block">
+                                    데이터베이스와 로컬 스토리지 모두에서 되돌릴 수 없이 영구 삭제됩니다.
+                                </span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    type="button"
+                                    disabled={isDeleting}
+                                    onClick={() => setDeleteTargetApp(null)}
+                                    className="py-2.5 px-4 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-colors text-sm disabled:opacity-50"
+                                >
+                                    취소
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={isDeleting}
+                                    onClick={handleConfirmDelete}
+                                    className="py-2.5 px-4 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-colors text-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
+                                >
+                                    {isDeleting ? "삭제 중..." : "영구 삭제하기"}
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Custom Floating Toast Notification */}
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                        className="fixed top-6 right-6 z-[150] bg-slate-900/95 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-md border border-slate-700 text-sm font-semibold"
+                    >
+                        <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
+                        <span>{toastMessage}</span>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </div>
