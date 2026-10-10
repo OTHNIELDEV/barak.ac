@@ -15,7 +15,10 @@ function getAdminClient() {
 const isValidUUID = (str: string) =>
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
 
-// GET: All Users from Profiles (+ Auth Users)
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+// GET: All Users from Profiles
 export async function GET() {
     try {
         const supabase = getAdminClient();
@@ -30,22 +33,6 @@ export async function GET() {
             console.warn("[/api/admin/users] Profiles fetch error:", profileErr.message);
         }
 
-        // 2. Try fetching auth users with service role (if available)
-        let authUsersMap: Record<string, any> = {};
-        if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
-            try {
-                const { data: authData } = await supabase.auth.admin.listUsers();
-                if (authData?.users) {
-                    authData.users.forEach(u => {
-                        authUsersMap[u.id] = u;
-                        if (u.email) authUsersMap[u.email.toLowerCase()] = u;
-                    });
-                }
-            } catch (authErr) {
-                console.warn("[/api/admin/users] Auth admin listUsers fallback:", authErr);
-            }
-        }
-
         const formatted = (profiles || []).map(p => ({
             id: p.id,
             email: p.email,
@@ -57,7 +44,13 @@ export async function GET() {
             createdAt: p.created_at
         }));
 
-        return NextResponse.json({ users: formatted });
+        return NextResponse.json({ users: formatted }, {
+            headers: {
+                "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0"
+            }
+        });
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }

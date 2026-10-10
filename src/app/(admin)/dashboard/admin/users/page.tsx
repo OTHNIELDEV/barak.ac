@@ -2,16 +2,26 @@
 
 import React, { useEffect, useState } from "react";
 import { Search, Filter, MoreHorizontal, UserPlus, Shield, Trash2, Mail, RefreshCw } from "lucide-react";
-import { User, STORAGE_KEYS, db } from "@/lib/storage";
+import { User, STORAGE_KEYS, db, safeStorage } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 import { useAuth } from "@/context/AuthContext";
 
 export default function UserManagementPage() {
     const { user: currentUser } = useAuth();
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>(() => {
+        if (typeof window !== "undefined") {
+            try {
+                const cached = db.admin.users.getAll() || [];
+                return cached.filter(u => u.email?.toLowerCase() !== "axasoft@naver.com" && u.id !== "user_1");
+            } catch {
+                return [];
+            }
+        }
+        return [];
+    });
     const [searchQuery, setSearchQuery] = useState("");
     const [roleFilter, setRoleFilter] = useState<string>("all");
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -76,6 +86,9 @@ export default function UserManagementPage() {
             }
 
             setUsers(sanitizedUsers);
+            try {
+                safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(sanitizedUsers));
+            } catch { }
         } catch (error) {
             console.error("[UserManagement] loadUsers error:", error);
         } finally {
@@ -164,8 +177,6 @@ export default function UserManagementPage() {
         return matchesSearch && matchesRole;
     });
 
-    if (isLoading) return <div className="p-8">사용자 목록 로딩 중...</div>;
-
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -233,7 +244,33 @@ export default function UserManagementPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {filteredUsers.length === 0 ? (
+                            {isLoading && filteredUsers.length === 0 ? (
+                                Array.from({ length: 5 }).map((_, idx) => (
+                                    <tr key={`skel-${idx}`} className="animate-pulse">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0" />
+                                                <div className="space-y-2">
+                                                    <div className="h-4 w-28 bg-slate-200 rounded" />
+                                                    <div className="h-3 w-40 bg-slate-100 rounded" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="h-6 w-16 bg-slate-200 rounded-md" />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="space-y-1.5">
+                                                <div className="h-4 w-20 bg-slate-200 rounded" />
+                                                <div className="h-3 w-28 bg-slate-100 rounded" />
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="h-8 w-8 bg-slate-100 rounded-lg ml-auto" />
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : filteredUsers.length === 0 ? (
                                 <tr>
                                     <td colSpan={4} className="px-6 py-8 text-center text-slate-500 italic">
                                         검색 조건에 맞는 사용자가 없습니다.

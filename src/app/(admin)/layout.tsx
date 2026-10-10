@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [isMobile, setIsMobile] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Initial Auth Check
     useEffect(() => {

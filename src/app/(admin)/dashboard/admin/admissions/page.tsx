@@ -22,7 +22,16 @@ const SectionHeader = ({ title, subtitle, action }: any) => (
 );
 
 export default function AdminAdmissionsPage() {
-    const [applications, setApplications] = useState<Application[]>([]);
+    const [applications, setApplications] = useState<Application[]>(() => {
+        if (typeof window !== "undefined") {
+            try {
+                return db.admin.applications.getAll() || [];
+            } catch {
+                return [];
+            }
+        }
+        return [];
+    });
     const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected">("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedApp, setSelectedApp] = useState<Application | null>(null);
@@ -381,7 +390,36 @@ export default function AdminAdmissionsPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                                {filteredApps.length === 0 ? (
+                                {isLoading && filteredApps.length === 0 ? (
+                                    Array.from({ length: 5 }).map((_, idx) => (
+                                        <tr key={`skel-app-${idx}`} className="animate-pulse">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0" />
+                                                    <div className="space-y-2">
+                                                        <div className="h-4 w-24 bg-slate-200 rounded" />
+                                                        <div className="h-3 w-36 bg-slate-100 rounded" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="space-y-1.5">
+                                                    <div className="h-4 w-24 bg-slate-200 rounded" />
+                                                    <div className="h-3 w-32 bg-slate-100 rounded" />
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="h-6 w-16 bg-slate-200 rounded-full" />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="h-4 w-20 bg-slate-100 rounded" />
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="h-8 w-16 bg-slate-100 rounded-lg ml-auto" />
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : filteredApps.length === 0 ? (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
                                             검색 결과가 없습니다.
