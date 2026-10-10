@@ -555,6 +555,32 @@ export const supabaseDb = {
                 }
                 return true;
             },
+            update: async (id: string, data: Partial<User>) => {
+                if (typeof window !== "undefined") {
+                    try {
+                        const res = await fetch("/api/admin/users", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id, ...data }),
+                        });
+                        if (res.ok) {
+                            const json = await res.json();
+                            return json.user;
+                        }
+                    } catch (apiErr) {
+                        console.warn("[supabaseDb.admin.users.update] API route fallback:", apiErr);
+                    }
+                }
+
+                const supabase = createClient();
+                const updatePayload: any = {};
+                if (data.name) updatePayload.name = data.name;
+                if (data.role) updatePayload.role = data.role;
+                if (data.level !== undefined) updatePayload.level = data.level;
+                if (data.church !== undefined) updatePayload.church = data.church;
+                const { data: updated } = await supabase.from("profiles").update(updatePayload).eq("id", id).select().maybeSingle();
+                return updated;
+            },
             updateRole: async (id: string, role: "student" | "pastor" | "admin", level?: string) => {
                 if (typeof window !== "undefined") {
                     try {

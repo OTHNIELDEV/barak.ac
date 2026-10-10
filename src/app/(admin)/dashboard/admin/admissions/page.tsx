@@ -7,7 +7,7 @@ import {
     Filter, GraduationCap, Building2, User, ChevronDown, Check, X,
     Edit3, Trash2, RefreshCw
 } from "lucide-react";
-import { db, Application, safeStorage, STORAGE_KEYS } from "@/lib/storage";
+import { db, Application, safeStorage, STORAGE_KEYS, formatPositionLabel } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 
 // Reusable Section Header
@@ -172,6 +172,22 @@ export default function AdminAdmissionsPage() {
     const handleCreateApplication = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const isPastor = newApp.position === 'pastor' || (newApp.position || "").includes('목사');
+            const initialRole: "student" | "pastor" = isPastor ? "pastor" : "student";
+
+            // Also create/sync user account in localStorage
+            try {
+                db.auth.signup({
+                    name: newApp.name,
+                    email: newApp.email,
+                    password: "password123!",
+                    role: initialRole,
+                    church: newApp.church,
+                    level: newApp.position,
+                    profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(newApp.name)}`
+                });
+            } catch { }
+
             db.applications.create({ ...newApp });
             try {
                 await supabaseDb.applications.create({ ...newApp });
@@ -181,7 +197,7 @@ export default function AdminAdmissionsPage() {
             await loadApplications();
             setIsAddModalOpen(false);
             setNewApp({ name: "", email: "", phone: "", church: "", position: "pastor", department: "", track: "deborah", motivation: "관리자 수기 등록" });
-            showToast("신청서가 성공적으로 등록되었습니다.");
+            showToast("신청서 및 사용자 계정이 성공적으로 등록 및 연동되었습니다.");
         } catch (error) {
             console.error(error);
             showToast("신청서 등록 중 오류가 발생했습니다.");
@@ -453,7 +469,7 @@ export default function AdminAdmissionsPage() {
                                                         {app.track} Track
                                                     </span>
                                                     <span className="text-xs text-slate-500">
-                                                        {app.church} ({app.position})
+                                                        {app.church} ({formatPositionLabel(app.position)})
                                                     </span>
                                                 </div>
                                             </td>
@@ -579,7 +595,7 @@ export default function AdminAdmissionsPage() {
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <span className="text-slate-500">직분 / 구분</span>
-                                                <span className="font-bold text-blue-900">{selectedApp.position}</span>
+                                                <span className="font-bold text-blue-900">{formatPositionLabel(selectedApp.position)}</span>
                                             </div>
                                             {selectedApp.department && (
                                                 <div className="flex justify-between items-center">

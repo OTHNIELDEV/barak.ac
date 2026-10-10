@@ -82,6 +82,29 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
+        // Two-way sync with profiles if user exists or email matches
+        if (body.email) {
+            try {
+                const targetEmail = body.email.toLowerCase().trim();
+                const pos = body.position || "";
+                const isPastor = pos.includes("목사") || pos.toLowerCase().includes("pastor");
+                const defaultRole = isPastor ? "pastor" : "student";
+
+                // Check existing profile
+                const { data: existingProfile } = await supabase.from("profiles").select("*").ilike("email", targetEmail).maybeSingle();
+                if (existingProfile) {
+                    await supabase.from("profiles").update({
+                        church: body.church || existingProfile.church,
+                        level: body.position || existingProfile.level,
+                        name: body.name || existingProfile.name,
+                        role: existingProfile.role === "admin" ? "admin" : (isPastor ? "pastor" : existingProfile.role)
+                    }).eq("id", existingProfile.id);
+                }
+            } catch (pErr) {
+                console.warn("[POST /api/admin/applications] Profile sync warning:", pErr);
+            }
+        }
+
         return NextResponse.json({ application: data }, { status: 201 });
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
@@ -165,6 +188,52 @@ export async function PATCH(request: Request) {
                 return NextResponse.json({ error: error.message }, { status: 500 });
             }
             resultData = data;
+        }
+
+        // 2. Synchronize with profiles table (Two-Way Sync)
+        const targetEmail = resultData?.email || updates.email || existingRecord?.email;
+        const targetUserId = resultData?.user_id || existingRecord?.user_id;
+
+        if (targetEmail || targetUserId) {
+            try {
+                const profileUpdate: any = {};
+                if (updates.name) profileUpdate.name = updates.name;
+                if (updates.church) profileUpdate.church = updates.church;
+                if (updates.position) profileUpdate.level = updates.position;
+
+                // Sync role based on position if not already admin
+                const currentPos = updates.position || resultData?.position || "";
+                const isPastorRole = currentPos.includes("목사") || currentPos.toLowerCase().includes("pastor");
+                
+                // Check if user is already an admin before overriding role
+                let isCurrentAdmin = false;
+                if (targetEmail?.toLowerCase() === "a@a.com") isCurrentAdmin = true;
+                else {
+                    const { data: pData } = await supabase.from("profiles").select("role").ilike("email", targetEmail).maybeSingle();
+                    if (pData?.role === "admin") isCurrentAdmin = true;
+                }
+
+                if (!isCurrentAdmin) {
+                    if (isPastorRole) {
+                        profileUpdate.role = "pastor";
+                    } else if (updates.status === "approved" || updates.position) {
+                        profileUpdate.role = "student";
+                    }
+                }
+
+                if (Object.keys(profileUpdate).length > 0) {
+                    profileUpdate.updated_at = new Date().toISOString();
+
+                    let query = supabase.from("profiles").update(profileUpdate);
+                    if (targetUserId && isValidUUID(targetUserId)) {
+                        await query.eq("id", targetUserId);
+                    } else if (targetEmail) {
+                        await query.ilike("email", targetEmail);
+                    }
+                }
+            } catch (profileSyncErr) {
+                console.warn("[API PATCH Applications] Profile sync warning:", profileSyncErr);
+            }
         }
 
         return NextResponse.json({ application: resultData });

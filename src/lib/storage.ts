@@ -79,6 +79,22 @@ export interface Application {
     submittedAt: string;
 }
 
+export const formatPositionLabel = (pos?: string): string => {
+    if (!pos) return "-";
+    const trimmed = pos.trim();
+    if (trimmed === "pastor") return "목회자";
+    if (trimmed === "theology_student") return "신학생";
+    if (trimmed === "missionary") return "선교사";
+    if (trimmed === "lay_leader") return "평신도 리더";
+    if (trimmed === "pastor_wife") return "목사 사모";
+    if (trimmed === "retired_pastor") return "은퇴/원로 목사";
+    if (trimmed === "women_minister") return "여성 사역자";
+
+    // Clean up trailing codes e.g. "은퇴/원로 목사 (retired_pastor)" -> "은퇴/원로 목사"
+    const cleaned = trimmed.replace(/\s*\([a-zA-Z_]+\)/g, "").trim();
+    return cleaned || trimmed;
+};
+
 export interface User {
     id: string;
     email: string;
@@ -699,6 +715,36 @@ export const db = {
                     safeStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
                 }
             },
+            update: (idOrEmail: string, data: Partial<User>) => {
+                const users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                const index = users.findIndex((u: User) => u.id === idOrEmail || (u.email && u.email.toLowerCase() === idOrEmail.toLowerCase()));
+                if (index !== -1) {
+                    users[index] = { ...users[index], ...data };
+                    safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+
+                    // Two-way sync to applications
+                    try {
+                        const targetEmail = users[index].email?.toLowerCase();
+                        const targetId = users[index].id;
+                        const apps: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                        let appChanged = false;
+                        apps.forEach(a => {
+                            if ((a.userId && a.userId === targetId) || (targetEmail && a.email?.toLowerCase() === targetEmail)) {
+                                if (data.church) a.church = data.church;
+                                if (data.name) a.name = data.name;
+                                if (data.level) a.position = data.level;
+                                appChanged = true;
+                            }
+                        });
+                        if (appChanged) {
+                            safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(apps));
+                        }
+                    } catch { }
+
+                    return users[index];
+                }
+                return null;
+            },
             updateRole: (id: string, role: "student" | "pastor" | "admin", level?: string) => {
                 const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
                 const index = users.findIndex((u: User) => u.id === id);
@@ -706,6 +752,25 @@ export const db = {
                     users[index].role = role;
                     if (level) users[index].level = level;
                     safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+
+                    // Two-way sync to applications
+                    try {
+                        const targetEmail = users[index].email?.toLowerCase();
+                        const apps: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                        let appChanged = false;
+                        apps.forEach(a => {
+                            if ((a.userId && a.userId === id) || (targetEmail && a.email?.toLowerCase() === targetEmail)) {
+                                if (level) a.position = level;
+                                else if (role === "pastor" && (!a.position || a.position.includes("학생"))) {
+                                    a.position = "목회자 (pastor)";
+                                }
+                                appChanged = true;
+                            }
+                        });
+                        if (appChanged) {
+                            safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(apps));
+                        }
+                    } catch { }
                 }
             }
         },
@@ -797,10 +862,11 @@ export const db = {
             update: (id: string, data: Partial<Application>) => {
                 const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
                 const idx = list.findIndex(a => a.id === id || (data.email && a.email?.toLowerCase() === data.email.toLowerCase()));
+                let updatedRecord: Application;
                 if (idx !== -1) {
                     list[idx] = { ...list[idx], ...data };
                     safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
-                    return list[idx];
+                    updatedRecord = list[idx];
                 } else {
                     // New record inserted locally
                     const newRecord: Application = {
@@ -819,8 +885,31 @@ export const db = {
                     };
                     list.unshift(newRecord);
                     safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
-                    return newRecord;
+                    updatedRecord = newRecord;
                 }
+
+                // Two-way sync to users table
+                try {
+                    const users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+                    const uIdx = users.findIndex(u => 
+                        (updatedRecord.userId && u.id === updatedRecord.userId) || 
+                        (updatedRecord.email && u.email?.toLowerCase() === updatedRecord.email.toLowerCase())
+                    );
+                    if (uIdx !== -1) {
+                        if (data.church) users[uIdx].church = data.church;
+                        if (data.name) users[uIdx].name = data.name;
+                        if (data.position) {
+                            users[uIdx].level = data.position;
+                            const isPastor = data.position.includes("목사") || data.position.toLowerCase().includes("pastor");
+                            if (users[uIdx].role !== "admin") {
+                                users[uIdx].role = isPastor ? "pastor" : "student";
+                            }
+                        }
+                        safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                    }
+                } catch { }
+
+                return updatedRecord;
             },
             updateStatus: (id: string, status: "approved" | "rejected") => {
                 const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
@@ -842,9 +931,13 @@ export const db = {
                     );
 
                     if (userIndex >= 0) {
-                        users[userIndex].role = 'student';
-                        users[userIndex].level = '정규 학생 (Student)';
+                        const isPastor = (app.position || "").includes("목사") || (app.position || "").toLowerCase().includes("pastor");
+                        if (users[userIndex].role !== 'admin') {
+                            users[userIndex].role = isPastor ? 'pastor' : 'student';
+                        }
+                        users[userIndex].level = app.position || '정규 학생';
                         if (app.church) users[userIndex].church = app.church;
+                        if (app.name) users[userIndex].name = app.name;
                         safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 
                         // If current session is this user, update session as well

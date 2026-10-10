@@ -51,8 +51,16 @@ export async function POST(request: Request) {
         const isApproved = (latestApp?.status === "approved") || (profile?.level?.includes("정규")) || email === "axasoft@naver.com";
         const name = profile?.name || latestApp?.name || (email === "axasoft@naver.com" ? "이상수" : email.split("@")[0]);
         const church = profile?.church || latestApp?.church || (email === "axasoft@naver.com" ? "초월선교교회" : "");
-        const role = profile?.role || "student";
-        const level = profile?.level || (isApproved ? "정규 학생 (Student)" : "신입생 지원자");
+        
+        // Link position to level directly
+        const rawPosition = latestApp?.position || profile?.level || "";
+        const isPastor = rawPosition.includes("목사") || rawPosition.toLowerCase().includes("pastor");
+        
+        // Retain admin role if already admin, otherwise pastor or student
+        const role = profile?.role === "admin" ? "admin" : (profile?.role === "pastor" || isPastor ? "pastor" : "student");
+        
+        // Clean and consistent level display
+        const level = rawPosition || (isApproved ? "정규 학생 (Student)" : "신입생 지원자");
 
         let userId = profile?.id;
 

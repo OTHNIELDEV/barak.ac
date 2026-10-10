@@ -103,14 +103,14 @@ export async function DELETE(request: Request) {
     }
 }
 
-// PATCH: Update user role / level
+// PATCH: Update user role / level / church / name
 export async function PATCH(request: Request) {
     try {
         const body = await request.json();
-        const { id, role, level, church } = body;
+        const { id, role, level, church, name, email } = body;
 
-        if (!id) {
-            return NextResponse.json({ error: "Missing user id" }, { status: 400 });
+        if (!id && !email) {
+            return NextResponse.json({ error: "Missing user id or email" }, { status: 400 });
         }
 
         const supabase = getAdminClient();
@@ -118,19 +118,53 @@ export async function PATCH(request: Request) {
         if (role) updateData.role = role;
         if (level !== undefined) updateData.level = level;
         if (church !== undefined) updateData.church = church;
+        if (name !== undefined) updateData.name = name;
+        updateData.updated_at = new Date().toISOString();
 
-        const { data, error } = await supabase
-            .from("profiles")
-            .update(updateData)
-            .eq("id", id)
-            .select()
-            .single();
-
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
+        // 1. Update profiles table
+        let profileQuery = supabase.from("profiles").update(updateData);
+        if (id && isValidUUID(id)) {
+            profileQuery = profileQuery.eq("id", id);
+        } else if (email || id) {
+            profileQuery = profileQuery.ilike("email", (email || id).toLowerCase().trim());
         }
 
-        return NextResponse.json({ user: data });
+        const { data: updatedProfile, error: profileErr } = await profileQuery.select().maybeSingle();
+
+        if (profileErr) {
+            console.error("[/api/admin/users PATCH] Profile error:", profileErr);
+            return NextResponse.json({ error: profileErr.message }, { status: 500 });
+        }
+
+        // 2. Synchronize with applications table (Two-Way Sync)
+        const targetEmail = updatedProfile?.email || email || (id && id.includes("@") ? id : null);
+        const targetUserId = updatedProfile?.id || (id && isValidUUID(id) ? id : null);
+
+        if (targetEmail || targetUserId) {
+            try {
+                const appUpdate: any = {};
+                if (church !== undefined) appUpdate.church = church;
+                if (name !== undefined) appUpdate.name = name;
+                if (level !== undefined) {
+                    appUpdate.position = level;
+                } else if (role === "pastor" && (!updatedProfile?.level || updatedProfile.level.includes("학생"))) {
+                    appUpdate.position = "목회자 (pastor)";
+                }
+
+                if (Object.keys(appUpdate).length > 0) {
+                    let appQuery = supabase.from("applications").update(appUpdate);
+                    if (targetUserId && isValidUUID(targetUserId)) {
+                        await appQuery.eq("user_id", targetUserId);
+                    } else if (targetEmail) {
+                        await appQuery.ilike("email", targetEmail.toLowerCase().trim());
+                    }
+                }
+            } catch (appSyncErr) {
+                console.warn("[/api/admin/users PATCH] Application sync warning:", appSyncErr);
+            }
+        }
+
+        return NextResponse.json({ user: updatedProfile || { id, ...updateData } });
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }

@@ -155,15 +155,19 @@ function AdmissionApplyForm() {
                     throw new Error("비밀번호 확인이 일치하지 않습니다.");
                 }
 
+                const fullPosition = `${formData.position.trim()} (${formData.applicantType})`;
+                const isPastor = formData.applicantType === 'retired_pastor' || formData.position.includes('목사') || formData.position.includes('pastor');
+                const initialRole: "student" | "pastor" = isPastor ? "pastor" : "student";
+
                 try {
                     const newUser = db.auth.signup({
                         email: formData.email.trim(),
                         name: formData.name.trim(),
                         password: formData.password,
-                        role: "student",
+                        role: initialRole,
                         church: formData.church.trim(),
                         profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(formData.name)}`,
-                        level: "신입생 지원자"
+                        level: fullPosition
                     });
                     activeUserId = newUser.id;
 
