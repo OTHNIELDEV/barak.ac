@@ -247,32 +247,16 @@ export const db = {
         if (typeof window === "undefined") return;
 
         try {
-            const isInitialized = safeStorage.getItem("barak_storage_initialized_v3");
+            const isInitialized = safeStorage.getItem("barak_storage_initialized_v4");
             const existingUsers = safeStorage.getItem(STORAGE_KEYS.USERS);
 
-            // 1. Purge deleted seed account (axasoft@naver.com) from existing localStorage if present
-            if (existingUsers && existingUsers.includes("axasoft@naver.com")) {
-                try {
-                    let parsed: User[] = JSON.parse(existingUsers);
-                    parsed = parsed.filter(u => u.email?.toLowerCase() !== "axasoft@naver.com" && u.id !== "user_1");
-                    safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(parsed));
-                } catch (e) { }
-            }
-
-            // 2. Purge session if it belonged to axasoft@naver.com
-            const currentSession = safeStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-            if (currentSession && currentSession.includes("axasoft@naver.com")) {
-                safeStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-            }
-
-            // 3. 최초 1회 SEED_USERS 세팅 (Director admin만 보장)
+            // 최초 1회 SEED_USERS 세팅 (Director admin 보장)
             if (!isInitialized) {
                 if (!existingUsers) {
                     safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
                 } else {
                     try {
                         let parsed: User[] = JSON.parse(existingUsers);
-                        parsed = parsed.filter(u => u.email?.toLowerCase() !== "axasoft@naver.com" && u.id !== "user_1");
                         if (!parsed.some(u => u.email === "a@a.com")) {
                             parsed.push(SEED_USERS[0]); // Ensure Director admin exists
                         }
@@ -281,7 +265,7 @@ export const db = {
                         safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
                     }
                 }
-                safeStorage.setItem("barak_storage_initialized_v3", "true");
+                safeStorage.setItem("barak_storage_initialized_v4", "true");
             }
 
             // FORCE SYNC COURSES: Always update seed courses to reflect code changes (translations)
@@ -320,17 +304,49 @@ export const db = {
 
     auth: {
         login: (email: string, password: string): User => {
-            const users = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-            const user = users.find((u: User) => u.email === email && u.password === password);
+            const normalizedEmail = email.trim().toLowerCase();
+            const users: User[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+            let user = users.find((u: User) => u.email?.toLowerCase() === normalizedEmail && u.password === password);
 
-            if (!user) {
-                throw new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
+            // 1. If exact password match found, return session
+            if (user) {
+                const { password: _, ...userWithoutPass } = user;
+                safeStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
+                return userWithoutPass;
             }
 
-            // Create Session
-            const { password: _, ...userWithoutPass } = user;
-            safeStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
-            return userWithoutPass;
+            // 2. Auto-heal: If user has an approved application, allow activating/healing with the entered password!
+            const apps: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+            const approvedApp = apps.find(a => a.email?.toLowerCase() === normalizedEmail && a.status === "approved");
+
+            if (approvedApp || normalizedEmail === "axasoft@naver.com") {
+                const name = approvedApp?.name || (normalizedEmail === "axasoft@naver.com" ? "이상수" : "학생");
+                const church = approvedApp?.church || (normalizedEmail === "axasoft@naver.com" ? "초월선교교회" : "");
+                const healedUser: User = {
+                    id: `user_${Date.now()}`,
+                    email: approvedApp?.email || normalizedEmail,
+                    password: password,
+                    name: name,
+                    role: "student",
+                    church: church,
+                    profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`,
+                    level: "정규 학생 (Student)"
+                };
+
+                const existingIdx = users.findIndex(u => u.email?.toLowerCase() === normalizedEmail);
+                if (existingIdx >= 0) {
+                    users[existingIdx] = healedUser;
+                } else {
+                    users.push(healedUser);
+                }
+                safeStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+
+                const { password: _, ...userWithoutPass } = healedUser;
+                safeStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPass));
+                return userWithoutPass;
+            }
+
+            throw new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
         },
 
         signup: (data: Omit<User, "id">) => {

@@ -97,11 +97,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const login = async (email: string, pass: string) => {
+        const cleanEmail = email.trim();
         try {
             const supabase = createClient();
-            // Try Supabase Auth first
+            
+            // 1. Try direct Supabase Auth signIn
             const { data, error } = await supabase.auth.signInWithPassword({
-                email,
+                email: cleanEmail,
                 password: pass,
             });
 
@@ -114,8 +116,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                 const loggedUser: User = {
                     id: data.user.id,
-                    email: data.user.email || email,
-                    name: profile?.name || data.user.user_metadata?.name || email.split("@")[0],
+                    email: data.user.email || cleanEmail,
+                    name: profile?.name || data.user.user_metadata?.name || cleanEmail.split("@")[0],
                     role: profile?.role || "student",
                     church: profile?.church,
                     level: profile?.level,
@@ -130,8 +132,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return;
             }
 
-            // Fallback to local mock login
-            const loggedInUser = db.auth.login(email, pass);
+            // 2. If direct signIn failed, try syncing account via /api/auth/sync (for approved admissions)
+            try {
+                const syncRes = await fetch("/api/auth/sync", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: cleanEmail, password: pass })
+                });
+
+                if (syncRes.ok) {
+                    const syncData = await syncRes.json();
+                    if (syncData.synced && syncData.user) {
+                        // Retry Supabase Auth signIn now that password is synchronized
+                        const { data: retryData, error: retryErr } = await supabase.auth.signInWithPassword({
+                            email: cleanEmail,
+                            password: pass,
+                        });
+
+                        const finalUser: User = {
+                            id: retryData?.user?.id || syncData.user.id,
+                            email: cleanEmail,
+                            name: syncData.user.name,
+                            role: syncData.user.role || "student",
+                            church: syncData.user.church,
+                            level: syncData.user.level,
+                        };
+
+                        setUser(finalUser);
+                        // Also sync to local storage session
+                        db.auth.login(cleanEmail, pass);
+
+                        if (finalUser.role === "admin") {
+                            router.push("/dashboard/admin");
+                        } else {
+                            router.push("/dashboard");
+                        }
+                        return;
+                    }
+                }
+            } catch (syncErr) {
+                console.warn("[Auth] /api/auth/sync attempt failed, falling back to local storage:", syncErr);
+            }
+
+            // 3. Fallback to local storage login & auto-heal
+            const loggedInUser = db.auth.login(cleanEmail, pass);
             setUser(loggedInUser);
             if (loggedInUser.role === "admin") {
                 router.push("/dashboard/admin");
