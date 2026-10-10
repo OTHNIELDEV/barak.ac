@@ -280,12 +280,16 @@ export const db = {
             if (!safeStorage.getItem(STORAGE_KEYS.BANNERS)) safeStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(SEED_BANNERS));
             if (!safeStorage.getItem(STORAGE_KEYS.FACULTY)) safeStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(SEED_FACULTY));
             if (!safeStorage.getItem(STORAGE_KEYS.AI_LOGS)) safeStorage.setItem(STORAGE_KEYS.AI_LOGS, JSON.stringify(SEED_AI_LOGS));
-            // Applications Seed & Purge Deleted
-            const deletedApps: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+            // Applications Seed & Purge Deleted (Emails must NEVER be in deleted blacklist)
+            const rawDeletedApps: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+            const deletedApps = rawDeletedApps.filter(item => typeof item === "string" && !item.includes("@"));
+            if (deletedApps.length !== rawDeletedApps.length) {
+                safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(deletedApps));
+            }
             const deletedSet = new Set(deletedApps.map(d => d.toLowerCase()));
 
             if (!safeStorage.getItem(STORAGE_KEYS.APPLICATIONS)) {
-                const filteredSeed = SEED_APPLICATIONS.filter(a => !deletedSet.has(a.id.toLowerCase()) && !deletedSet.has(a.email.toLowerCase()));
+                const filteredSeed = SEED_APPLICATIONS.filter(a => !deletedSet.has(a.id.toLowerCase()));
                 safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(filteredSeed));
             } else if (deletedSet.size > 0) {
                 // Clean up any deleted applications from existing storage
@@ -642,6 +646,14 @@ export const db = {
     // User-facing Applications
     applications: {
         create: (data: Omit<Application, "id" | "status" | "submittedAt">) => {
+            // Un-blacklist email if it was previously deleted
+            if (data.email) {
+                try {
+                    const deleted: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    const cleaned = deleted.filter(d => d.toLowerCase() !== data.email.toLowerCase());
+                    safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(cleaned));
+                } catch { }
+            }
             const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
             const newApp: Application = {
                 ...data,
@@ -736,7 +748,12 @@ export const db = {
         applications: {
             getDeleted: (): string[] => {
                 try {
-                    return JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    const raw: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    const cleaned = raw.filter(item => typeof item === "string" && !item.includes("@"));
+                    if (cleaned.length !== raw.length) {
+                        safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(cleaned));
+                    }
+                    return cleaned;
                 } catch {
                     return [];
                 }
@@ -744,29 +761,37 @@ export const db = {
             getAll: (): Application[] => {
                 try {
                     const list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
-                    const deleted: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
-                    const deletedLower = new Set(deleted.map(d => d.toLowerCase()));
-                    return list.filter(a => !deletedLower.has(a.id.toLowerCase()) && (!a.email || !deletedLower.has(a.email.toLowerCase())));
+                    const rawDeleted: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    const deletedLower = new Set(rawDeleted.filter(d => !d.includes("@")).map(d => d.toLowerCase()));
+                    return list.filter(a => !deletedLower.has(a.id.toLowerCase()));
                 } catch {
                     return [];
                 }
             },
             delete: (idOrEmail: string) => {
                 if (!idOrEmail) return;
+                // If it is an email, remove from active list only; NEVER blacklist email!
+                if (idOrEmail.includes("@")) {
+                    let list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
+                    list = list.filter(a => a.email?.toLowerCase() !== idOrEmail.toLowerCase());
+                    safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
+                    return;
+                }
                 const normalized = idOrEmail.toLowerCase();
                 
-                // 1. Add to permanent deleted blacklist
+                // 1. Add ID only to permanent deleted blacklist
                 try {
-                    const deleted: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
-                    if (!deleted.map(d => d.toLowerCase()).includes(normalized)) {
-                        deleted.push(idOrEmail);
-                        safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(deleted));
+                    const raw: string[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.DELETED_APPLICATIONS) || "[]");
+                    const cleaned = raw.filter(item => !item.includes("@"));
+                    if (!cleaned.map(d => d.toLowerCase()).includes(normalized)) {
+                        cleaned.push(idOrEmail);
+                        safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(cleaned));
                     }
                 } catch (e) { }
 
                 // 2. Remove from active local applications
                 let list: Application[] = JSON.parse(safeStorage.getItem(STORAGE_KEYS.APPLICATIONS) || "[]");
-                list = list.filter(a => a.id.toLowerCase() !== normalized && (!a.email || a.email.toLowerCase() !== normalized));
+                list = list.filter(a => a.id.toLowerCase() !== normalized);
                 safeStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(list));
             },
             update: (id: string, data: Partial<Application>) => {

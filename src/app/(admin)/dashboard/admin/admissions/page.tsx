@@ -85,25 +85,25 @@ export default function AdminAdmissionsPage() {
                 console.warn("[Admin Admissions] Local storage fetch failed:", localErr);
             }
 
-            // 3. Get deleted blacklist safely
+            // 3. Remote applications from Supabase are the primary source of truth
+            const filteredRemote = remoteApps;
+
+            // Clean up any stale blacklist entries for applications that actually exist in remote
             let deletedSet = new Set<string>();
             try {
                 const deletedList = db.admin.applications.getDeleted() || [];
-                deletedSet = new Set(deletedList.map(d => (d || "").toLowerCase()));
+                const remoteIds = new Set(remoteApps.map(r => (r.id || "").toLowerCase()));
+                const cleanDeleted = deletedList.filter(d => typeof d === "string" && !d.includes("@") && !remoteIds.has(d.toLowerCase()));
+                safeStorage.setItem(STORAGE_KEYS.DELETED_APPLICATIONS, JSON.stringify(cleanDeleted));
+                deletedSet = new Set(cleanDeleted.map(d => d.toLowerCase()));
             } catch (delErr) { }
 
-            // Safe filter against null/undefined
-            const safeFilter = (a: Application) => {
+            // Safe filter for local-only fallback applications
+            const filteredLocal = localApps.filter(a => {
                 if (!a) return false;
                 const idLower = (a.id || "").toLowerCase();
-                const emailLower = (a.email || "").toLowerCase();
-                if (idLower && deletedSet.has(idLower)) return false;
-                if (emailLower && deletedSet.has(emailLower)) return false;
-                return true;
-            };
-
-            const filteredLocal = localApps.filter(safeFilter);
-            const filteredRemote = remoteApps.filter(safeFilter);
+                return !deletedSet.has(idLower);
+            });
 
             // 4. Smart Merge (Remote is priority, with local fallback)
             const mergedMap = new Map<string, Application>();
@@ -248,11 +248,8 @@ export default function AdminAdmissionsPage() {
 
         const target = deleteTargetApp;
         try {
-            // 1. Local Blacklist and Deletion
+            // 1. Local Blacklist and Deletion (By ID only)
             db.admin.applications.delete(target.id);
-            if (target.email) {
-                db.admin.applications.delete(target.email);
-            }
 
             // 2. Remote Database Delete (Supabase)
             try {
