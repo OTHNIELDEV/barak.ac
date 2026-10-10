@@ -206,6 +206,23 @@ function AdmissionApplyForm() {
             }
 
             db.applications.create(applicationData);
+
+            // 4. Provision / sync Supabase Auth account immediately if password provided
+            if (formData.password) {
+                try {
+                    await fetch("/api/auth/sync", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: formData.email.trim(),
+                            password: formData.password
+                        })
+                    });
+                } catch (syncErr) {
+                    console.warn("[Admission] Auth sync background notice:", syncErr);
+                }
+            }
+
             setIsCompleted(true);
         } catch (err: any) {
             console.error("[Admission] Submit Error:", err);

@@ -24,34 +24,35 @@ export async function POST(request: Request) {
 
         const supabase = getAdminClient();
 
-        // 1. Check if application is approved or if profile exists
-        const { data: approvedApps, error: appErr } = await supabase
+        // 1. Check if application exists (pending or approved) or if profile exists
+        const { data: userApps, error: appErr } = await supabase
             .from("applications")
             .select("*")
             .ilike("email", email)
-            .eq("status", "approved");
+            .order("submitted_at", { ascending: false });
 
         const { data: existingProfiles } = await supabase
             .from("profiles")
             .select("*")
             .ilike("email", email);
 
-        const approvedApp = approvedApps && approvedApps.length > 0 ? approvedApps[0] : null;
+        const latestApp = userApps && userApps.length > 0 ? userApps[0] : null;
         const profile = existingProfiles && existingProfiles.length > 0 ? existingProfiles[0] : null;
 
-        // If not approved and no profile exists
-        if (!approvedApp && !profile && email !== "axasoft@naver.com") {
+        // If no application and no profile exists
+        if (!latestApp && !profile && email !== "axasoft@naver.com") {
             return NextResponse.json({
                 synced: false,
-                reason: "not_approved_or_registered",
-                message: "승인된 입학 신청서 또는 등록된 회원 정보를 찾을 수 없습니다."
+                reason: "not_registered",
+                message: "등록된 입학 신청서 또는 회원 정보를 찾을 수 없습니다."
             }, { status: 404 });
         }
 
-        const name = profile?.name || approvedApp?.name || (email === "axasoft@naver.com" ? "이상수" : email.split("@")[0]);
-        const church = profile?.church || approvedApp?.church || (email === "axasoft@naver.com" ? "초월선교교회" : "");
+        const isApproved = (latestApp?.status === "approved") || (profile?.level?.includes("정규")) || email === "axasoft@naver.com";
+        const name = profile?.name || latestApp?.name || (email === "axasoft@naver.com" ? "이상수" : email.split("@")[0]);
+        const church = profile?.church || latestApp?.church || (email === "axasoft@naver.com" ? "초월선교교회" : "");
         const role = profile?.role || "student";
-        const level = profile?.level || "정규 학생 (Student)";
+        const level = profile?.level || (isApproved ? "정규 학생 (Student)" : "신입생 지원자");
 
         let userId = profile?.id;
 
@@ -100,10 +101,10 @@ export async function POST(request: Request) {
             });
 
             // Connect to applications table
-            if (approvedApp && approvedApp.id) {
+            if (latestApp && latestApp.id) {
                 await supabase.from("applications").update({
                     user_id: userId
-                }).eq("id", approvedApp.id);
+                }).eq("id", latestApp.id);
             }
         }
 
