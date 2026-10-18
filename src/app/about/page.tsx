@@ -143,7 +143,7 @@ export default function AboutPage() {
                                         현역 목사 및 사모님들께
                                     </h4>
                                     <p className="text-sm text-slate-300 leading-relaxed">
-                                        성령 세례로 각양 은사를 받았음에도 제도적 직임 자격이 주어지지 않은 분들에게 거룩한 사역의 문을 활짝 열어드립니다.
+                                        성령의 은사와 사모함이 있음에도 말씀과 사역 훈련의 기회를 찾지 못하셨던 분들에게 배움과 동역의 길을 활짝 열어드립니다.
                                     </p>
                                 </div>
 
@@ -200,14 +200,14 @@ export default function AboutPage() {
                                     마지막 거룩한 사명입니다.”
                                 </h2>
                                 <p className="text-slate-200 text-sm md:text-base leading-relaxed font-light">
-                                    바라크아카데미는 성령 세례를 받고도 사역의 길을 찾지 못하던 분들을 위해 예비된 신학 전문기관입니다. 지식의 신학을 넘어 영성과 실력이 겸비된 참된 리더십의 길에 동참하시길 바랍니다.
+                                    바라크아카데미는 산해원교회 산하 온라인 신학 아카데미로서, 사역의 현장에서 쓰임 받기를 소망하는 분들을 위해 예비된 성경 중심 교육기관입니다. 지식의 신학을 넘어 영성과 실력이 겸비된 참된 리더십의 길에 동참하시길 바랍니다.
                                 </p>
                                 <div className="pt-4 flex gap-4">
                                     <Link
                                         href="/apply"
                                         className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-sm hover:from-amber-400 hover:to-orange-400 transition-all shadow-lg"
                                     >
-                                        입학 원서 접수 <ArrowRight className="w-4 h-4" />
+                                        수강 신청하기 <ArrowRight className="w-4 h-4" />
                                     </Link>
                                     <Link
                                         href="/curriculum"

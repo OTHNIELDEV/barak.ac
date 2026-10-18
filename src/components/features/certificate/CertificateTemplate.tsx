@@ -35,7 +35,7 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplat
                             Certificate of Completion
                         </h1>
                         <p className="text-sm font-bold text-yellow-600 uppercase tracking-[0.5em] mt-2">
-                            Official Certification
+                            Course Completion Certificate
                         </p>
                     </div>
 
@@ -46,14 +46,17 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplat
                             {userName}
                         </h2>
                         <p className="text-lg text-slate-600 italic">
-                            has successfully completed the customized curriculum for
+                            has completed the curriculum for
                         </p>
                         <h3 className="text-3xl font-bold text-slate-800 uppercase tracking-wide">
                             {courseTitle}
                         </h3>
                         <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed mt-4">
-                            위 사람은 바라크아카데미 정규 교육과정(120강) 및 과목별 소감문 작성을 성실히 이수하였으며,
-                            성령의 기름부으심 안에서 배운 바를 사역 현장에 적용할 준비가 되었음을 증명합니다.
+                            위 사람은 산해원교회 산하 바라크아카데미 교육과정(2년 4학기 120강)과 과목별 소감문을 성실히 이수하였으므로 이 증서를 드립니다.
+                            <br />
+                            <span className="text-xs text-slate-400">
+                                (본 수료증은 교육과정 이수 사실을 증명하며 국가·민간 자격 또는 학위가 아닙니다.)
+                            </span>
                         </p>
                     </div>
 
@@ -68,18 +71,17 @@ export const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplat
 
                         <div className="text-center">
                             <div className="font-bold text-xl text-blue-900 mb-1" style={{ fontFamily: 'serif' }}>
-                                이윤주 목사 (Ph.D)
+                                산해원교회 바라크아카데미 학장 이윤주
                             </div>
-                            <div className="text-base font-bold text-slate-800">바라크아카데미 학장</div>
                             <div className="text-[11px] text-slate-400 uppercase tracking-wider border-t border-slate-300 pt-1 mt-1 w-48 mx-auto">
                                 Barak Academy Dean
                             </div>
                         </div>
                     </div>
 
-                    {/* License Number */}
+                    {/* Completion Number */}
                     <div className="absolute bottom-4 right-8 text-[10px] text-slate-400 font-mono tracking-widest">
-                        LICENSE NO: {licenseNumber}
+                        COMPLETION NO: {licenseNumber}
                     </div>
                 </div>
             </div>

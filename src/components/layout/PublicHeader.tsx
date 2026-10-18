@@ -14,7 +14,7 @@ export function PublicHeader() {
         { name: "아카데미소개", href: "/about" },
         { name: "교수진소개", href: "/faculty" },
         { name: "교육과정", href: "/curriculum" },
-        { name: "모집요강", href: "/apply" },
+        { name: "과정 안내·신청", href: "/apply" },
         { name: "산해원채플", href: "/chapel" },
         { name: "갈렙AI", href: "/ai-system" },
     ];
@@ -57,7 +57,7 @@ export function PublicHeader() {
                             로그인
                         </Link>
                         <Link href="/apply" className="px-5 py-2.5 bg-blue-900 text-white text-sm font-bold rounded-full hover:bg-blue-800 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
-                            신입생 입학 신청
+                            수강 신청
                         </Link>
                     </div>
 
@@ -91,7 +91,7 @@ export function PublicHeader() {
                         <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
                             <Link href="/login" className="text-center font-bold text-slate-600 py-2 hover:bg-slate-50 rounded-lg">로그인</Link>
                             <Link href="/apply" className="block w-full px-5 py-3 bg-blue-900 text-white text-center font-bold rounded-lg hover:bg-blue-800">
-                                신입생 입학 신청
+                                수강 신청
                             </Link>
                         </div>
                     </div>

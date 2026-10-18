@@ -110,9 +110,9 @@ export function PreOpenNoticeModal() {
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div className="text-xs">
-                  <p className="font-semibold text-white mb-0.5">2027학년도 1기 사전 접수 진행 중</p>
+                  <p className="font-semibold text-white mb-0.5">2027년 1기 사전 수강 신청 진행 중</p>
                   <p className="text-slate-400 leading-normal">
-                    1기 등록 장학금 30% 및 사모 장학 혜택이 적용되는 사전 원서 접수는 지금도 가능합니다.
+                    1기 교육후원금 30% 감면 및 목사 사모 50% 감면이 적용되는 사전 수강 신청은 지금도 가능합니다.
                   </p>
                 </div>
               </div>
@@ -124,7 +124,7 @@ export function PreOpenNoticeModal() {
                   onClick={handleClose}
                   className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md transition-all"
                 >
-                  사전 입학 원서 접수하기 <ArrowRight className="w-3.5 h-3.5" />
+                  사전 수강 신청하기 <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>

@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
-import { Shield, CheckCircle, ArrowRight, User, GraduationCap, Building2, BookOpen, Gift, Heart, Sparkles, AlertCircle, FileText, CheckCircle2, Flame, Droplet, Clock, Lock, KeyRound } from "lucide-react";
+import { CheckCircle, ArrowRight, User, GraduationCap, Building2, Gift, Sparkles, AlertCircle, FileText, CheckCircle2, Flame, Droplet, Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { db } from "@/lib/storage";
 import { supabaseDb } from "@/lib/supabase/db";
 import { PublicFooter } from "@/components/layout/PublicFooter";
@@ -12,7 +12,6 @@ import Link from "next/link";
 
 function AdmissionApplyForm() {
     const { user, isLoading: authLoading } = useAuth();
-    const router = useRouter();
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,8 +27,10 @@ function AdmissionApplyForm() {
         phone: "",
         password: "",
         passwordConfirm: "",
-        waterBaptism: "yes", // yes, no (물세례/침례)
-        holySpiritBaptism: "experienced", // experienced, seeking (불과 성령 세례)
+        waterBaptism: "none", // yes, no, none (선택 안 함)
+        holySpiritBaptism: "none", // experienced, seeking, none (선택 안 함)
+        privacyConsent: false, // [필수] 개인정보 수집·이용 동의
+        faithConsent: false,   // [선택] 신앙 정보 수집·이용 동의
         
         // Step 2: Ministry & Target
         applicantType: "pastor_wife", // pastor_wife, women_minister, retired_pastor, seeker
@@ -37,9 +38,8 @@ function AdmissionApplyForm() {
         position: "목사 사모",
         department: "",
         
-        // Step 3: Track & Certificate Target & Scholarship
+        // Step 3: Track & Sponsorship Reduction
         track: "barak" as "deborah" | "barak" | "jael",
-        certificateTarget: "pastor_cert", // pastor_cert (목사 자격증), missionary_cert (선교사 자격증), evangelist_cert (전도사 자격증)
         scholarshipType: "first_batch_30", // first_batch_30, pastor_wife_50, none
         motivation: "",
     });
@@ -98,7 +98,7 @@ function AdmissionApplyForm() {
         setStepError("");
         if (step === 1) {
             if (!formData.name.trim()) {
-                setStepError("지원자 성명(본명)을 입력해 주세요.");
+                setStepError("신청자 성명(본명)을 입력해 주세요.");
                 return;
             }
             if (!formData.phone.trim()) {
@@ -109,16 +109,20 @@ function AdmissionApplyForm() {
                 setStepError("이메일 주소를 입력해 주세요.");
                 return;
             }
-            // Check password if not logged in
+            // Check password if not logged in (8자 이상 - R7)
             if (!user) {
-                if (!formData.password || formData.password.length < 4) {
-                    setStepError("학사 계정 접속을 위해 비밀번호(최소 4자 이상)를 입력해 주세요.");
+                if (!formData.password || formData.password.length < 8) {
+                    setStepError("수강 계정 접속을 위해 비밀번호(8자 이상)를 입력해 주세요.");
                     return;
                 }
                 if (formData.password !== formData.passwordConfirm) {
                     setStepError("비밀번호 확인이 일치하지 않습니다. 다시 확인해 주세요.");
                     return;
                 }
+            }
+            if (!formData.privacyConsent) {
+                setStepError("[필수] 개인정보 수집·이용에 동의해 주세요.");
+                return;
             }
         } else if (step === 2) {
             if (!formData.church.trim()) {
@@ -148,8 +152,8 @@ function AdmissionApplyForm() {
 
             // 1. If not logged in, auto-create user account & log in
             if (!user) {
-                if (formData.password.length < 4) {
-                    throw new Error("비밀번호는 최소 4자 이상이어야 합니다.");
+                if (formData.password.length < 8) {
+                    throw new Error("비밀번호는 8자 이상이어야 합니다.");
                 }
                 if (formData.password !== formData.passwordConfirm) {
                     throw new Error("비밀번호 확인이 일치하지 않습니다.");
@@ -184,11 +188,14 @@ function AdmissionApplyForm() {
                 }
             }
 
-            // 2. Format detailed motivation
-            const baptismNote = `[세례문답: 물세례=${formData.waterBaptism === 'yes' ? '완료' : '예정'}, 성령세례=${formData.holySpiritBaptism === 'experienced' ? '체험' : '사모'}]`;
-            const certTargetNote = `[희망자격증: ${formData.certificateTarget === 'pastor_cert' ? '목사' : formData.certificateTarget === 'missionary_cert' ? '선교사' : '전도사'}]`;
-            const scholarshipNote = `[장학희망: ${formData.scholarshipType === 'pastor_wife_50' ? '사모 50% 할인' : formData.scholarshipType === 'first_batch_30' ? '1기 등록 장학금 30%' : '일반'}]`;
-            const fullMotivation = `${baptismNote} ${certTargetNote} ${scholarshipNote}\n\n${formData.motivation}`.trim();
+            // 2. Format detailed motivation (only store faith info if consented - R7)
+            const waterLabel = formData.waterBaptism === 'yes' ? '기세례' : formData.waterBaptism === 'no' ? '예정' : '미선택';
+            const spiritLabel = formData.holySpiritBaptism === 'experienced' ? '체험' : formData.holySpiritBaptism === 'seeking' ? '사모' : '미선택';
+            const baptismNote = formData.faithConsent && (formData.waterBaptism !== 'none' || formData.holySpiritBaptism !== 'none')
+                ? `[신앙문답(동의): 물세례=${waterLabel}, 성령체험=${spiritLabel}] `
+                : "";
+            const sponsorshipNote = `[후원금감면: ${formData.scholarshipType === 'pastor_wife_50' ? '목사 사모 50% 감면' : formData.scholarshipType === 'first_batch_30' ? '1기 후원금 30% 감면' : '권장 후원금 일반'}]`;
+            const fullMotivation = `${baptismNote}${sponsorshipNote}\n\n${formData.motivation}`.trim();
 
             const applicationData = {
                 userId: activeUserId,
@@ -230,7 +237,7 @@ function AdmissionApplyForm() {
             setIsCompleted(true);
         } catch (err: any) {
             console.error("[Admission] Submit Error:", err);
-            setSubmitError(err.message || "원서 접수 중 오류가 발생했습니다. 입력 정보를 확인해 주세요.");
+            setSubmitError(err.message || "수강 신청서 접수 중 오류가 발생했습니다. 입력 정보를 확인해 주세요.");
         } finally {
             setIsSubmitting(false);
         }
@@ -250,17 +257,17 @@ function AdmissionApplyForm() {
                         <CheckCircle className="w-10 h-10" />
                     </div>
                     <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full mb-3 border border-emerald-200">
-                        원스톱 접수 및 계정 생성 완료
+                        원스톱 수강 신청 및 계정 생성 완료
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">입학 지원서가 접수되었습니다</h2>
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">수강 신청서가 접수되었습니다</h2>
                     <p className="text-slate-600 mb-6 text-xs md:text-sm leading-relaxed">
-                        바라크아카데미 2027학년도 1기 신입생 지원이 성공적으로 완료되었습니다.<br />
-                        학사 계정이 함께 생성되어 관리자 심사 중에도 강의실 시스템을 미리 둘러보실 수 있습니다.
+                        바라크아카데미 2027년 1기 수강 신청이 완료되었습니다.<br />
+                        수강 계정이 함께 생성되어 운영팀 확인 중에도 강의실 시스템을 미리 둘러보실 수 있습니다.
                     </p>
 
                     <div className="p-5 bg-slate-50 rounded-2xl mb-8 text-left space-y-2.5 border border-slate-200/80 text-xs md:text-sm">
                         <div className="flex justify-between items-center">
-                            <span className="text-slate-500">지원자 / 계정</span>
+                            <span className="text-slate-500">신청자 / 계정</span>
                             <span className="font-bold text-slate-800">{formData.name} ({formData.email})</span>
                         </div>
                         <div className="flex justify-between items-center">
@@ -272,17 +279,17 @@ function AdmissionApplyForm() {
                             <span className="font-medium text-slate-700">{formData.church} ({formData.position})</span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-slate-500">지망 트랙</span>
+                            <span className="text-slate-500">신청 과정</span>
                             <span className="font-bold text-blue-900">
-                                {formData.track === 'barak' ? '바라크 트랙 (충성된 전문 부목사)' :
-                                    formData.track === 'deborah' ? '드보라 트랙 (말씀과 영적 통찰 여목)' : '야엘 트랙 (결행하는 평신도 전도인)'}
+                                {formData.track === 'barak' ? '바락 부목사 과정' :
+                                    formData.track === 'deborah' ? '드보라 담임목회 과정' : '야엘 은사사역 과정'}
                             </span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-slate-500">적용 장학 혜택</span>
+                            <span className="text-slate-500">후원금 감면 구분</span>
                             <span className="font-bold text-amber-600">
-                                {formData.scholarshipType === 'pastor_wife_50' ? '사모 특별 장학 (50% 감면 / 50만원)' :
-                                    formData.scholarshipType === 'first_batch_30' ? '1기 등록 장학금 (30% 지급 / 70만원)' : '일반 등록 (100만원)'}
+                                {formData.scholarshipType === 'pastor_wife_50' ? '목사 사모 감면 (50% 감면 / 50만원)' :
+                                    formData.scholarshipType === 'first_batch_30' ? '1기 교육후원금 감면 (30% 감면 / 70만원)' : '권장 교육후원금 (100만원)'}
                             </span>
                         </div>
                     </div>
@@ -314,50 +321,49 @@ function AdmissionApplyForm() {
             <section className="bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white py-20 px-4">
                 <div className="max-w-5xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase mb-6 border border-amber-400/30">
-                        <Sparkles className="w-4 h-4" /> 2027학년도 1기 신입생 모집
+                        <Sparkles className="w-4 h-4" /> 2027년 1기 수강생 모집
                     </div>
                     <h1 className="text-3xl md:text-5xl font-black mb-4">
-                        입학 요건 및 학생 모집 요강
+                        1기 과정 안내 및 수강 신청
                     </h1>
                 </div>
             </section>
 
-            {/* 2. Detailed Admission & Certification Criteria Cards (첨부자료 1, 2 정밀 반영) */}
+            {/* 2. Course Guide & Completion Criteria Cards */}
             <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 mb-16 space-y-8">
-                {/* 2-1. 입학 요건 & 자격증서 수령 조건 (신학적 핵심) */}
+                {/* 2-1. 수강 안내 & 과정 수료 기준 */}
                 <div className="bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-slate-200">
                     <div className="flex items-center gap-2.5 text-blue-900 font-bold text-xs md:text-sm tracking-wider uppercase mb-2">
                         <Flame className="w-5 h-5 text-amber-500" />
-                        Biblical Admission & Certification Requirements
+                        Biblical Course Guide & Completion Criteria
                     </div>
                     <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-6">
-                        바라크아카데미 입학 요건 및 자격증서 수여 기준
+                        바라크아카데미 수강 안내 및 과정 수료 기준
                     </h2>
 
-                    {/* 열린 입학 안내 & 자격증서 수령 조항 */}
                     <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 text-xs md:text-sm text-slate-700 space-y-3">
                         <div className="font-bold flex items-center gap-2 text-blue-900 text-base">
                             <CheckCircle2 className="w-5 h-5 text-amber-500" />
-                            누구나 제약 없이 입학 및 수강 가능 (열린 신학교육)
+                            열린 성경·신학 아카데미 교육과정
                         </div>
                         <p className="leading-relaxed">
-                            누구나 제약 없이 입학하여 전 과목을 수강하고 수료할 수 있습니다.
+                            말씀과 사역을 사모하는 분이라면 누구나 수강 신청하여 전 과목(2년 4학기 120강)과 과목별 소감문을 이수할 수 있습니다.
                         </p>
-                        <p className="leading-relaxed pt-2 border-t border-slate-200">
-                            단, <strong>자격증서</strong>의 정식 수령은 재학 중이거나 수료 후 성령을 받은 자에게 수여됩니다.
+                        <p className="leading-relaxed pt-2 border-t border-slate-200 text-slate-600">
+                            본 과정은 교육부 인가 학위·자격 과정이 아닌 산해원교회 산하 신학 아카데미의 교회 교육 과정입니다. 수료 시 과정별 수료증을 드리며, 이는 국가·민간 자격이나 학위가 아닙니다. 사역 배치와 임명은 각 교회·교단의 절차를 따릅니다.
                         </p>
                     </div>
                 </div>
 
-                {/* 2-2. 3대 핵심 요약 카드 (모집 대상, 장학 혜택, 학사 운영) */}
+                {/* 2-2. 3대 핵심 요약 카드 (수강 대상, 교육후원금 감면, 과정 운영) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* 카드 1: 모집 대상 */}
+                    {/* 카드 1: 수강 대상 */}
                     <div className="bg-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-100 flex flex-col justify-between">
                         <div>
                             <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-900 flex items-center justify-center mb-4">
                                 <GraduationCap className="w-6 h-6" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">모집 요강</h3>
+                            <h3 className="text-xl font-bold text-slate-900 mb-3">수강 대상</h3>
                             <ul className="space-y-2.5 text-xs md:text-sm text-slate-600">
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -369,7 +375,7 @@ function AdmissionApplyForm() {
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                                    <span><strong>은퇴·원로 목회자</strong> 중 '바락'과 같은 부목자로 헌신할 분</span>
+                                    <span><strong>은퇴·원로 목회자</strong> 중 &lsquo;바락&rsquo;과 같은 부목사로 헌신할 분</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -379,41 +385,41 @@ function AdmissionApplyForm() {
                         </div>
                     </div>
 
-                    {/* 카드 2: 수강료 및 장학 혜택 */}
+                    {/* 카드 2: 교육후원금 및 감면 */}
                     <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-3xl p-6 md:p-8 shadow-xl flex flex-col justify-between">
                         <div>
                             <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center mb-4">
                                 <Gift className="w-6 h-6" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-3">수강료 및 장학 혜택</h3>
+                            <h3 className="text-xl font-bold text-white mb-3">교육후원금 및 감면</h3>
                             <div className="space-y-3 text-xs md:text-sm text-amber-50">
                                 <div className="flex justify-between items-center bg-black/10 p-2.5 rounded-xl">
-                                    <span>정규 등록금 (총 4학기)</span>
+                                    <span>권장 후원금 (2년 4학기)</span>
                                     <span className="font-bold text-white text-base">100만원</span>
                                 </div>
                                 <div className="flex justify-between items-center bg-white/20 p-2.5 rounded-xl">
-                                    <span className="font-semibold">💖 목사 사모 특별 장학</span>
-                                    <span className="font-bold text-yellow-200 text-base">50% 할인 (50만원)</span>
+                                    <span className="font-semibold">💖 목사 사모 감면</span>
+                                    <span className="font-bold text-yellow-200 text-base">50% 감면 (50만원)</span>
                                 </div>
                                 <div className="flex justify-between items-center bg-white/10 p-2.5 rounded-xl">
-                                    <span className="font-semibold">🌟 1기 등록 장학금</span>
-                                    <span className="font-bold text-white text-base">30% 혜택 (70만원)</span>
+                                    <span className="font-semibold">🌟 1기 교육후원금 감면</span>
+                                    <span className="font-bold text-white text-base">30% 감면 (70만원)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* 카드 3: 학사 및 자격증 기준 */}
+                    {/* 카드 3: 과정 운영 및 수료 기준 */}
                     <div className="bg-white rounded-3xl p-6 md:p-8 shadow-xl border border-slate-100 flex flex-col justify-between">
                         <div>
                             <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center mb-4">
                                 <FileText className="w-6 h-6" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">학사 & 자격증 기준</h3>
+                            <h3 className="text-xl font-bold text-slate-900 mb-3">과정 운영 & 수료 기준</h3>
                             <ul className="space-y-2 text-xs md:text-sm text-slate-600">
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
-                                    <span><strong>총 4학기 (120강)</strong>: 학기당 30강 자율 수강</span>
+                                    <span><strong>2년 4학기 (120강)</strong>: 학기당 30강 자율 수강</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
@@ -421,15 +427,20 @@ function AdmissionApplyForm() {
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
-                                    <span><strong>각 강의당 A4 소감문</strong>: 배운 내용을 삶에 적용</span>
+                                    <span><strong>과목별 A4 소감문</strong>: 배운 내용을 삶에 적용</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <span className="text-purple-600 font-bold">•</span>
-                                    <span><strong>졸업 기한 제한 없음</strong>: 자율 이수</span>
+                                    <span><strong>수료 기한 제한 없음</strong>: 자율 이수</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
+                </div>
+
+                {/* 2-3. 교육후원금 안내문 (R5) */}
+                <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm text-xs md:text-sm text-slate-600 leading-relaxed">
+                    <strong className="text-slate-900 font-bold">💡 교육후원금 안내:</strong> 바라크아카데미는 산해원교회의 교육 사역으로 운영되며, 수강생의 교육후원금으로 강의 제작과 운영비를 충당합니다. 권장 후원금은 2년 과정 100만원이며, 2027년 1기 수강생은 30%, 목사 사모는 50%를 감면합니다. 형편이 어려운 분은 운영팀과 상의할 수 있습니다. (<Link href="/terms" className="text-blue-900 font-semibold underline underline-offset-2">환불·중단 기준은 이용약관 제8조 참조</Link>)
                 </div>
             </section>
 
@@ -437,12 +448,12 @@ function AdmissionApplyForm() {
             <section className="py-12 px-4 pb-28">
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-10">
-                        <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Online Application</span>
+                        <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Online Enrollment</span>
                         <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 mt-1 mb-2">
-                            2027학년도 1기 입학 원서 접수
+                            2027년 1기 온라인 수강 신청
                         </h2>
                         <p className="text-sm md:text-base text-slate-600">
-                            아래 양식을 작성해 주시면 담당자가 확인 후 등록 절차 및 장학 혜택을 안내해 드립니다.
+                            아래 양식을 작성해 주시면 운영팀이 확인 후 수강 절차 및 교육후원금 감면 안내를 드립니다.
                         </p>
                     </div>
 
@@ -463,7 +474,7 @@ function AdmissionApplyForm() {
                                     {num}
                                 </div>
                                 <span className={`text-xs font-semibold ${step >= num ? "text-blue-900" : "text-slate-400"}`}>
-                                    {num === 1 ? "기본 정보" : num === 2 ? "지원 대상 및 소속" : "트랙 & 장학 선택"}
+                                    {num === 1 ? "기본 정보" : num === 2 ? "수강 대상 및 소속" : "과정 & 후원금 감면"}
                                 </span>
                             </div>
                         ))}
@@ -490,7 +501,7 @@ function AdmissionApplyForm() {
                                                 <span className="text-[11px] font-semibold px-2 py-0.5 bg-blue-200/70 text-blue-800 rounded-full">인증 완료</span>
                                             </div>
                                             <div className="text-xs text-blue-700 mt-0.5">
-                                                회원 계정({user.email}) 정보가 입학 지원서에 자동으로 연동됩니다.
+                                                회원 계정({user.email}) 정보가 수강 신청서에 자동으로 연동됩니다.
                                             </div>
                                         </div>
                                     </div>
@@ -503,11 +514,11 @@ function AdmissionApplyForm() {
                                         </div>
                                         <div>
                                             <div className="text-sm font-bold text-amber-950 flex items-center gap-1.5">
-                                                <span>원스톱 간편 입학 신청</span>
-                                                <span className="text-[11px] font-bold px-2 py-0.2 bg-amber-200/80 text-amber-900 rounded-full">회원가입 자동</span>
+                                                <span>원스톱 간편 수강 신청</span>
+                                                <span className="text-[11px] font-bold px-2 py-0.2 bg-amber-200/80 text-amber-900 rounded-full">계정 자동 생성</span>
                                             </div>
                                             <div className="text-xs text-amber-800 leading-relaxed mt-0.5">
-                                                별도의 회원가입 없이 아래 원서를 작성하시면 <strong>학사 계정이 자동 생성</strong>되어 합격 확인 및 내 강의실 이용이 즉시 가능합니다.
+                                                별도의 회원가입 없이 아래 신청서를 작성하시면 <strong>수강 계정이 자동 생성</strong>되어 승인 확인 및 내 강의실 이용이 즉시 가능합니다.
                                             </div>
                                         </div>
                                     </div>
@@ -542,7 +553,7 @@ function AdmissionApplyForm() {
                                     <div className="space-y-4">
                                         <h3 className="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
                                             <User className="w-5 h-5 text-blue-900" />
-                                            지원자 기본 정보 및 계정 설정
+                                            신청자 기본 정보 및 수강 계정 설정
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                                             <div>
@@ -563,7 +574,7 @@ function AdmissionApplyForm() {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-semibold text-slate-700 mb-2">이메일 주소 (학사 로그인 ID) *</label>
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">이메일 주소 (수강 로그인 ID) *</label>
                                             <input
                                                 type="email" name="email" required value={formData.email} onChange={handleInputChange} readOnly={!!user?.email}
                                                 className={`w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none text-sm ${user?.email ? 'cursor-not-allowed opacity-80' : ''}`}
@@ -571,28 +582,29 @@ function AdmissionApplyForm() {
                                             />
                                             {!user && (
                                                 <p className="text-[11px] text-slate-400 mt-1">
-                                                    ※ 이메일은 수강 안내문 수신 및 내 강의실 로그인 아이디로 사용됩니다.
+                                                    ※ 이메일은 수강 안내 수신 및 내 강의실 로그인 아이디로 사용됩니다.
                                                 </p>
                                             )}
                                         </div>
 
-                                        {/* Password Field for New Guests (One-stop Sign Up) */}
+                                        {/* Password Field for New Guests (8자 이상 - R7) */}
                                         {!user && (
                                             <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200 space-y-3 pt-4">
                                                 <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                                                     <Lock className="w-4 h-4 text-amber-600" />
-                                                    학사 계정 비밀번호 설정 (합격 확인 및 강의실 접속용) *
+                                                    수강 계정 비밀번호 설정 (승인 확인 및 강의실 접속용) *
                                                 </div>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div>
-                                                        <label className="block text-xs font-semibold text-slate-600 mb-1.5">비밀번호 (4자 이상)</label>
+                                                        <label className="block text-xs font-semibold text-slate-600 mb-1.5">비밀번호 (8자 이상)</label>
                                                         <input
                                                             type="password"
                                                             name="password"
                                                             required
+                                                            minLength={8}
                                                             value={formData.password}
                                                             onChange={handleInputChange}
-                                                            placeholder="비밀번호 입력"
+                                                            placeholder="8자 이상 비밀번호 입력"
                                                             className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-blue-900 outline-none"
                                                         />
                                                     </div>
@@ -602,6 +614,7 @@ function AdmissionApplyForm() {
                                                             type="password"
                                                             name="passwordConfirm"
                                                             required
+                                                            minLength={8}
                                                             value={formData.passwordConfirm}
                                                             onChange={handleInputChange}
                                                             placeholder="비밀번호 재입력"
@@ -612,53 +625,92 @@ function AdmissionApplyForm() {
                                             </div>
                                         )}
 
-                                        {/* Faith & Baptism Questionnaire */}
+                                        {/* Faith & Baptism Questionnaire (Optional - R7) */}
                                         <div className="pt-2">
-                                            <div className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-1.5">
+                                            <div className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1.5">
                                                 <Droplet className="w-4 h-4 text-blue-600" />
-                                                신앙 및 세례 문답 (자격증서 수여 기준 반영)
+                                                신앙 및 세례 문답 <span className="text-xs font-normal text-slate-500">(선택 사항)</span>
                                             </div>
+                                            <p className="text-xs text-slate-500 mb-3">
+                                                아래 문답은 목회적 참고를 위한 선택 입력 사항이며, 응답하지 않아도 수강 신청 및 수료에 불이익이 없습니다.
+                                            </p>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                                 <div className="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200">
-                                                    <div className="text-xs font-bold text-slate-700 mb-2">물세례(침례) 여부 *</div>
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setFormData(p => ({ ...p, waterBaptism: 'yes' }))}
-                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.waterBaptism === 'yes' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
-                                                        >
-                                                            받음 (기세례자)
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setFormData(p => ({ ...p, waterBaptism: 'no' }))}
-                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.waterBaptism === 'no' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
-                                                        >
-                                                            미세례 (학기 중 예정)
-                                                        </button>
+                                                    <div className="text-xs font-bold text-slate-700 mb-2">물세례(침례) 여부 (선택)</div>
+                                                    <div className="grid grid-cols-3 gap-1.5">
+                                                        {[
+                                                            { id: "yes", label: "기세례자" },
+                                                            { id: "no", label: "미세례(예정)" },
+                                                            { id: "none", label: "선택 안 함" },
+                                                        ].map(opt => (
+                                                            <button
+                                                                key={opt.id}
+                                                                type="button"
+                                                                onClick={() => setFormData(p => ({ ...p, waterBaptism: opt.id }))}
+                                                                className={`py-2 rounded-lg text-xs font-bold border transition-all ${formData.waterBaptism === opt.id ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                                            >
+                                                                {opt.label}
+                                                            </button>
+                                                        ))}
                                                     </div>
                                                 </div>
 
                                                 <div className="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200">
-                                                    <div className="text-xs font-bold text-slate-700 mb-2">성령 세례(은사/기름부으심) *</div>
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setFormData(p => ({ ...p, holySpiritBaptism: 'experienced' }))}
-                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.holySpiritBaptism === 'experienced' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
-                                                        >
-                                                            체험함
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setFormData(p => ({ ...p, holySpiritBaptism: 'seeking' }))}
-                                                            className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${formData.holySpiritBaptism === 'seeking' ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
-                                                        >
-                                                            체험 사모함
-                                                        </button>
+                                                    <div className="text-xs font-bold text-slate-700 mb-2">성령 체험 여부 (선택)</div>
+                                                    <div className="grid grid-cols-3 gap-1.5">
+                                                        {[
+                                                            { id: "experienced", label: "체험함" },
+                                                            { id: "seeking", label: "사모함" },
+                                                            { id: "none", label: "선택 안 함" },
+                                                        ].map(opt => (
+                                                            <button
+                                                                key={opt.id}
+                                                                type="button"
+                                                                onClick={() => setFormData(p => ({ ...p, holySpiritBaptism: opt.id }))}
+                                                                className={`py-2 rounded-lg text-xs font-bold border transition-all ${formData.holySpiritBaptism === opt.id ? 'bg-blue-900 text-white border-blue-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                                            >
+                                                                {opt.label}
+                                                            </button>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        {/* Privacy & Sensitive Info Consent Checkboxes (Separated - R7) */}
+                                        <div className="pt-3 space-y-3 border-t border-slate-100">
+                                            <label className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100/70 transition-colors">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.privacyConsent}
+                                                    onChange={(e) => {
+                                                        setStepError("");
+                                                        setFormData(p => ({ ...p, privacyConsent: e.target.checked }));
+                                                    }}
+                                                    className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-900 focus:ring-blue-900"
+                                                />
+                                                <span className="text-xs text-slate-700 leading-relaxed">
+                                                    <strong className="text-blue-900">[필수]</strong> 개인정보 수집·이용 및 이용약관에 동의합니다.
+                                                    <span className="block text-[11px] text-slate-500 mt-0.5">
+                                                        (수집항목: 성명·연락처·이메일·소속·직분 / 목적: 수강 안내·과정 운영·수료증 발급 / 보유기간: 수료 후 5년 보관 / 처리 위탁: Supabase Inc. · <Link href="/privacy" target="_blank" className="underline text-blue-800">개인정보처리방침</Link> · <Link href="/terms" target="_blank" className="underline text-blue-800">이용약관</Link>)
+                                                    </span>
+                                                </span>
+                                            </label>
+
+                                            <label className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50/60 border border-slate-200/80 cursor-pointer hover:bg-slate-100/60 transition-colors">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.faithConsent}
+                                                    onChange={(e) => setFormData(p => ({ ...p, faithConsent: e.target.checked }))}
+                                                    className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-900 focus:ring-blue-900"
+                                                />
+                                                <span className="text-xs text-slate-700 leading-relaxed">
+                                                    <strong className="text-slate-600">[선택]</strong> 신앙 정보(세례·성령 체험 여부) 수집·이용에 동의합니다.
+                                                    <span className="block text-[11px] text-slate-500 mt-0.5">
+                                                        동의하지 않아도 수강 신청 및 수료에 아무런 불이익이 없습니다.
+                                                    </span>
+                                                </span>
+                                            </label>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -669,14 +721,14 @@ function AdmissionApplyForm() {
                                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                                     <h3 className="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
                                         <Building2 className="w-5 h-5 text-blue-900" />
-                                        지원 대상 구분 및 사역 정보
+                                        수강 대상 구분 및 사역 정보
                                     </h3>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-2">지원 대상 구분 (요강) *</label>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-2">수강 대상 구분 *</label>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                             {[
-                                                { id: "pastor_wife", title: "목사 사모", desc: "사역 동역 (50% 할인)" },
+                                                { id: "pastor_wife", title: "목사 사모", desc: "사역 동역 (50% 감면)" },
                                                 { id: "women_minister", title: "여성 사역자", desc: "현장 사역 / 전도인" },
                                                 { id: "retired_pastor", title: "은퇴/원로 목회자", desc: "바락 부목 헌신 (65세 이상)" },
                                                 { id: "seeker", title: "성경/신학 탐구자", desc: "부목사 / 평신도 리더" },
@@ -728,22 +780,22 @@ function AdmissionApplyForm() {
                                 </motion.div>
                             )}
 
-                            {/* Step 3: Track & Scholarship */}
+                            {/* Step 3: Course Track & Sponsorship Reduction */}
                             {step === 3 && (
                                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                                     <h3 className="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
                                         <GraduationCap className="w-5 h-5 text-blue-900" />
-                                        트랙 및 장학 혜택 선택
+                                        교육과정 및 교육후원금 감면 선택
                                     </h3>
 
-                                    {/* Scholarship Selection */}
+                                    {/* Sponsorship Reduction Selection */}
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-3">희망 장학 혜택 선택 *</label>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-3">교육후원금 감면 구분 선택 *</label>
                                         <div className="space-y-2.5">
                                             {[
-                                                { id: "first_batch_30", title: "1기 등록 장학금 (30% 혜택)", desc: "1기 신입생 전원 혜택 (수강료 70만원 적용)" },
-                                                { id: "pastor_wife_50", title: "목사 사모 특별 장학 (50% 감면)", desc: "목회자 사모 대상 특별 장학 (수강료 50만원 적용)" },
-                                                { id: "none", title: "일반 등록 (정규 100만원)", desc: "기관 또는 교회 후원 등록" },
+                                                { id: "first_batch_30", title: "1기 교육후원금 감면 (30% 감면)", desc: "2027년 1기 수강생 전원 감면 (권장 후원금 70만원 적용)" },
+                                                { id: "pastor_wife_50", title: "목사 사모 특별 감면 (50% 감면)", desc: "목회자 사모 대상 특별 감면 (권장 후원금 50만원 적용)" },
+                                                { id: "none", title: "권장 교육후원금 (2년 과정 100만원)", desc: "일반 또는 소속 교회 후원 참여" },
                                             ].map((sch) => (
                                                 <label
                                                     key={sch.id}
@@ -768,19 +820,18 @@ function AdmissionApplyForm() {
 
                                     {/* Track Selection */}
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-3">희망 전공 사역 트랙 *</label>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-3">희망 교육과정 선택 *</label>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                             {[
-                                                { id: 'barak', title: 'Barak (바라크)', subtitle: '충성된 전문 부목사', desc: '더 나은 존귀를 얻는 동역' },
-                                                { id: 'deborah', title: 'Deborah (드보라)', subtitle: '말씀과 영적 통찰 여목', desc: '시대를 이끄는 영적 리더' },
-                                                { id: 'jael', title: 'Jael (야엘)', subtitle: '결행하는 평신도 전도인', desc: '삶의 현장 속 결정적 승리' },
+                                                { id: 'barak', title: '바락 부목사 과정', subtitle: '충성된 부목사 사역', desc: '더 나은 존귀를 얻는 동역' },
+                                                { id: 'deborah', title: '드보라 담임목회 과정', subtitle: '말씀과 영적 통찰 리더십', desc: '시대를 이끄는 영적 리더' },
+                                                { id: 'jael', title: '야엘 은사사역 과정', subtitle: '결행하는 평신도 사역', desc: '삶의 현장 속 복음 실천' },
                                             ].map(track => (
                                                 <div
                                                     key={track.id}
                                                     onClick={() => setFormData(prev => ({
                                                         ...prev,
                                                         track: track.id as any,
-                                                        certificateTarget: track.id === 'barak' ? 'pastor_cert' : track.id === 'deborah' ? 'pastor_cert' : 'evangelist_cert'
                                                     }))}
                                                     className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${formData.track === track.id ? "border-blue-900 bg-blue-50/70 shadow-sm" : "border-slate-200 hover:border-slate-300"}`}
                                                 >
@@ -792,51 +843,19 @@ function AdmissionApplyForm() {
                                         </div>
                                     </div>
 
-                                    {/* Certificate Target Selection (첨부자료 2, 3 반영) */}
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-2">희망 취득 사역자 자격증 (3종 중 택1) *</label>
-                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                                            {[
-                                                { id: "pastor_cert", title: "목사 자격증", desc: "전문 부목사 / 담임목사" },
-                                                { id: "missionary_cert", title: "선교사 자격증", desc: "국내외 선교 사역자" },
-                                                { id: "evangelist_cert", title: "전도사 자격증", desc: "평신도 전도인" },
-                                            ].map(cert => (
-                                                <label
-                                                    key={cert.id}
-                                                    className={`p-3 rounded-xl border cursor-pointer flex items-center gap-2 transition-all ${
-                                                        formData.certificateTarget === cert.id ? "border-blue-900 bg-blue-50 font-bold" : "border-slate-200 text-slate-600"
-                                                    }`}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="certificateTarget"
-                                                        value={cert.id}
-                                                        checked={formData.certificateTarget === cert.id}
-                                                        onChange={handleInputChange}
-                                                        className="text-blue-900"
-                                                    />
-                                                    <div>
-                                                        <div>{cert.title}</div>
-                                                        <div className="text-[10px] text-slate-400 font-normal">{cert.desc}</div>
-                                                    </div>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-
                                     {/* Motivation */}
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-2">지원 동기 및 기대하는 바</label>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-2">지원 동기 및 사명 선언문 *</label>
                                         <textarea
                                             name="motivation" required value={formData.motivation} onChange={handleInputChange}
-                                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition-all h-24 resize-none text-sm"
-                                            placeholder="바라크아카데미에 지원하게 된 계기와 사역 현장에서 기대하는 영적 권능과 변화를 자유롭게 적어주세요."
+                                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition-all h-28 resize-none text-sm"
+                                            placeholder="바라크아카데미 교육과정을 수강하게 된 동기와 사역 현장에서의 소망을 자유롭게 적어주세요."
                                         />
                                     </div>
 
-                                    {/* Legal Disclaimer in Form */}
-                                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-500 leading-relaxed">
-                                        ℹ️ <strong>학사 안내 및 공지:</strong> 본 과정은 교육부 인가 학위 과정이 아니며, 산해원교회 산하 신학교에서 2년제(4학기 120강 녹화 영상 강의) 과정 이수자에게 수여하는 교회 임직 및 사역자 공인 자격 과정입니다.
+                                    {/* Common Legal Disclaimer in Form (R6) */}
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600 leading-relaxed">
+                                        ℹ️ <strong>과정 성격 안내 및 고지:</strong> 본 과정은 교육부 인가 학위·자격 과정이 아닌 산해원교회 산하 신학 아카데미의 교회 교육 과정입니다. 수료 시 과정별 수료증을 드리며, 이는 국가·민간 자격이나 학위가 아닙니다. 사역 배치와 임명은 각 교회·교단의 절차를 따릅니다.
                                     </div>
                                 </motion.div>
                             )}
@@ -881,7 +900,7 @@ function AdmissionApplyForm() {
                                         type="submit" disabled={isSubmitting}
                                         className="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold hover:shadow-lg hover:from-amber-400 hover:to-orange-400 transition-all flex items-center gap-2 disabled:opacity-50 text-sm"
                                     >
-                                        {isSubmitting ? '접수 처리 중...' : '입학 원서 최종 제출'}
+                                        {isSubmitting ? '접수 처리 중...' : '수강 신청서 최종 제출'}
                                     </button>
                                 )}
                             </div>

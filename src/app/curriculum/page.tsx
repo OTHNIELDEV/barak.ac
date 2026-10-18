@@ -143,7 +143,7 @@ export default function CurriculumPage() {
                         <span className="text-xs md:text-sm font-bold tracking-widest uppercase">Barak Academy Curriculum</span>
                     </div>
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight drop-shadow-sm">
-                        4학기 120강 정규 교육과정
+                        2년 4학기(120강) 교육과정
                     </h1>
                     <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
                         한 학기 30강, 총 120강으로 완성되는 성경 중심의 실전 신학.<br />
@@ -152,13 +152,13 @@ export default function CurriculumPage() {
                 </div>
             </section>
 
-            {/* 2. Key Academic Principles & Certificate Criteria (Brochure Section 4 & Attachment 1,2) */}
+            {/* 2. Key Curriculum Principles & Completion Criteria */}
             <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 mb-16">
                 <div className="bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-slate-200">
                     <div className="text-center max-w-3xl mx-auto mb-8">
-                        <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Academic System & Certification</span>
+                        <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Curriculum & Completion Criteria</span>
                         <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">
-                            자격증 발급 및 학사 운영 기준
+                            과정 수료 및 운영 기준
                         </h2>
                     </div>
 
@@ -167,8 +167,8 @@ export default function CurriculumPage() {
                             <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-900 flex items-center justify-center mb-3">
                                 <BookOpen className="w-6 h-6" />
                             </div>
-                            <h4 className="font-bold text-slate-900 text-base mb-1">총 4학기 (120강)</h4>
-                            <p className="text-xs text-slate-600">한 학기당 30강, 졸업 전까지 총 120강 필수 과목 수강</p>
+                            <h4 className="font-bold text-slate-900 text-base mb-1">2년 4학기 (120강)</h4>
+                            <p className="text-xs text-slate-600">한 학기당 30강, 수료 전까지 총 120강 과목 수강</p>
                         </div>
 
                         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center text-center">
@@ -183,34 +183,34 @@ export default function CurriculumPage() {
                             <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-900 flex items-center justify-center mb-3">
                                 <FileText className="w-6 h-6" />
                             </div>
-                            <h4 className="font-bold text-slate-900 text-base mb-1">A4용지 소감문</h4>
-                            <p className="text-xs text-slate-600">각 강의당 A4 1장 소감문 작성을 통해 배운 내용을 삶에 적용</p>
+                            <h4 className="font-bold text-slate-900 text-base mb-1">A4 소감문</h4>
+                            <p className="text-xs text-slate-600">과목별 소감문(설교문·묵상문) 작성을 통해 배운 내용을 삶에 적용</p>
                         </div>
 
                         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center text-center">
                             <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center mb-3">
                                 <Clock className="w-6 h-6" />
                             </div>
-                            <h4 className="font-bold text-slate-900 text-base mb-1">졸업 기한 제한 없음</h4>
+                            <h4 className="font-bold text-slate-900 text-base mb-1">수료 기한 제한 없음</h4>
                             <p className="text-xs text-slate-600">사역과 일상의 일정에 맞춰 언제든 자율 수강 가능</p>
                         </div>
                     </div>
 
-                    {/* Certification & Holy Spirit Requirement Note */}
+                    {/* Completion Certificate Note */}
                     <div className="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 leading-relaxed">
-                        <strong className="text-blue-900">📌 자격증서 수여 안내:</strong> 누구나 제약 없이 수강하고 수료할 수 있으며, 자격증서의 정식 수령은 재학 중이거나 수료 후 성령을 받은 자에게 수여됩니다.
+                        <strong className="text-blue-900">📌 과정 수료증 발급 안내:</strong> 누구나 수강 신청하여 전 과정(2년 4학기 120강) 및 과목별 소감문을 이수할 수 있으며, 수료 요건 충족 시 산해원교회 산하 바라크아카데미 과정별 수료증을 발급합니다.
                     </div>
                 </div>
             </section>
 
-            {/* 2-2. Academic Operations & Administration Details (첨부자료 3 완벽 반영) */}
+            {/* 2-2. Course Operations & Completion Certificate Details */}
             <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
                 <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 rounded-3xl p-8 md:p-10 text-white shadow-xl">
                     <div className="flex items-center gap-2 text-amber-400 font-bold text-xs md:text-sm uppercase tracking-wider mb-2">
-                        <Sparkles className="w-4 h-4" /> Academic Operations & Administration
+                        <Sparkles className="w-4 h-4" /> Course Operations & Completion
                     </div>
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
-                        학사행정 운영 안내 및 수여 자격증
+                        교육과정 운영 안내 및 과정별 수료증
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs md:text-sm text-slate-200">
@@ -228,30 +228,30 @@ export default function CurriculumPage() {
                             </p>
                         </div>
 
-                        {/* 2. 발급 자격증 3종 */}
+                        {/* 2. 과정별 수료증 3과정 */}
                         <div className="p-5 bg-white/10 rounded-2xl border border-white/15 space-y-2">
                             <h4 className="font-bold text-amber-300 text-base flex items-center gap-2">
                                 <Award className="w-5 h-5 text-amber-400" />
-                                발급 자격증 (3종)
+                                과정별 수료증 (3과정)
                             </h4>
                             <ul className="space-y-1.5 text-slate-200 text-xs">
-                                <li>• <strong>목사 자격증:</strong> 부목사 / 담임목사</li>
-                                <li>• <strong>선교사 자격증</strong></li>
-                                <li>• <strong>전도사 자격증</strong></li>
+                                <li>• <strong>바락 부목사 과정 수료증</strong></li>
+                                <li>• <strong>드보라 담임목회 과정 수료증</strong></li>
+                                <li>• <strong>야엘 은사사역 과정 수료증</strong></li>
                             </ul>
                         </div>
 
-                        {/* 3. 소속 및 비학위 고지 */}
+                        {/* 3. 소속 및 공통 고지문 (R6) */}
                         <div className="p-5 bg-white/10 rounded-2xl border border-white/15 space-y-2">
                             <h4 className="font-bold text-amber-300 text-base flex items-center gap-2">
                                 <Shield className="w-5 h-5 text-amber-400" />
-                                소속 및 공식 공지사항
+                                소속 및 과정 성격 고지
                             </h4>
                             <p className="leading-relaxed text-slate-300">
-                                • <strong>소속:</strong> 산해원교회 산하 신학교 (2년제 총 4학기 과정)
+                                • <strong>소속:</strong> 산해원교회 산하 신학 아카데미 (2년 4학기 과정)
                             </p>
-                            <div className="p-2.5 bg-black/30 rounded-xl text-[11px] text-amber-200 border border-amber-400/30">
-                                ⚠️ <strong>공지:</strong> 본 과정은 교육부 인가 학위 과정이 아니며, 산해원교회 산하 신학교에서 수여하는 목회자 자격 과정입니다.
+                            <div className="p-2.5 bg-black/30 rounded-xl text-[11px] text-amber-200 border border-amber-400/30 leading-relaxed">
+                                ⚠️ <strong>고지:</strong> 본 과정은 교육부 인가 학위·자격 과정이 아닌 산해원교회 산하 신학 아카데미의 교회 교육 과정입니다. 수료 시 과정별 수료증을 드리며, 이는 국가·민간 자격이나 학위가 아닙니다. 사역 배치와 임명은 각 교회·교단의 절차를 따릅니다.
                             </div>
                         </div>
                     </div>
@@ -381,7 +381,7 @@ export default function CurriculumPage() {
                             href="/apply"
                             className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-900 text-white rounded-xl font-bold text-sm hover:bg-blue-800 transition-all shadow-md flex-shrink-0"
                         >
-                            1학기 입학 및 수강 신청 <ChevronRight className="w-4 h-4" />
+                            1학기 수강 신청하기 <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
                 </div>
@@ -394,7 +394,7 @@ export default function CurriculumPage() {
                             차기 학기 순차 개설 로드맵 (2 · 3 · 4학기)
                         </h3>
                         <p className="text-xs md:text-sm text-slate-400 mt-1">
-                            1학기 학사 일정 및 수료 진행에 맞추어 순차적으로 개설됩니다.
+                            1학기 과정 진행 및 수료 일정에 맞추어 순차적으로 개설됩니다.
                         </p>
                     </div>
 
@@ -441,19 +441,19 @@ export default function CurriculumPage() {
             <section className="py-20 bg-white border-t border-slate-200">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto mb-14">
-                        <span className="text-amber-600 font-bold text-sm tracking-widest uppercase">Regular Course</span>
+                        <span className="text-amber-600 font-bold text-sm tracking-widest uppercase">Barak Course</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
-                            바라크 정규 과정
+                            바락 부목사 과정
                         </h2>
                     </div>
 
                     <div className="space-y-8">
-                        {/* Barak Regular Course Hero Card */}
+                        {/* Barak Course Hero Card */}
                         <div className="relative rounded-3xl overflow-hidden shadow-2xl group border border-slate-200/80">
                             <div className="absolute inset-0 z-0">
                                 <Image
                                     src="/images/track-barak-biblical.png"
-                                    alt="바라크 정규 과정"
+                                    alt="바락 부목사 과정"
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
@@ -466,7 +466,7 @@ export default function CurriculumPage() {
                                         <Shield className="w-8 h-8 md:w-10 md:h-10 text-amber-400" />
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl md:text-4xl font-black text-white">바라크 수강 신청</h3>
+                                        <h3 className="text-2xl md:text-4xl font-black text-white">바락 과정 수강 신청</h3>
                                     </div>
                                 </div>
 
@@ -475,7 +475,7 @@ export default function CurriculumPage() {
                                         href="/apply?track=barak"
                                         className="inline-flex items-center gap-2 px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-extrabold text-sm transition-all shadow-lg hover:scale-105"
                                     >
-                                        바라크 수강 신청하기 <ChevronRight className="w-4 h-4" />
+                                        바락 과정 수강 신청하기 <ChevronRight className="w-4 h-4" />
                                     </Link>
                                 </div>
                             </div>
@@ -488,16 +488,16 @@ export default function CurriculumPage() {
             <section className="py-20 bg-slate-900 text-white text-center">
                 <div className="max-w-4xl mx-auto px-4">
                     <h2 className="text-3xl md:text-4xl font-black mb-4">
-                        지금, 2027학년도 1기 신입생에 도전하세요
+                        지금, 2027년 1기 수강생으로 함께하세요
                     </h2>
                     <p className="text-slate-300 text-base md:text-lg mb-8 max-w-2xl mx-auto font-light">
-                        1기 등록 장학금 30% 지급, 사모 특별 장학금 50% 할인 혜택과 함께 신학과 영성을 겸비한 사역자 과정을 시작하세요.
+                        1기 교육후원금 30% 감면, 목사 사모 50% 감면과 함께 성경과 영성을 겸비한 사역자 과정을 시작하세요.
                     </p>
                     <Link
                         href="/apply"
                         className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full font-bold text-base hover:from-amber-400 hover:to-orange-400 transition-all shadow-xl hover:scale-105"
                     >
-                        입학 신청서 작성하기 <ArrowRight className="w-5 h-5" />
+                        수강 신청서 작성하기 <ArrowRight className="w-5 h-5" />
                     </Link>
                 </div>
             </section>

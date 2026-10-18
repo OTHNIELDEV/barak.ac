@@ -25,10 +25,10 @@ import { Logo } from "@/components/ui/Logo";
 const ADMIN_NAV_ITEMS = [
     { name: "대시보드 개요", href: "/dashboard/admin", icon: LayoutDashboard },
     { name: "사용자 관리", href: "/dashboard/admin/users", icon: Users },
-    { name: "입학 관리", href: "/dashboard/admin/admissions", icon: GraduationCap },
+    { name: "수강 신청 관리", href: "/dashboard/admin/admissions", icon: GraduationCap },
     { name: "커리큘럼 관리", href: "/dashboard/admin/curriculum", icon: BookOpen },
     { name: "콘텐츠 관리 (CMS)", href: "/dashboard/admin/cms", icon: Mic2 }, // Faculty & Homepage CMS
-    { name: "자격증 관리", href: "/dashboard/admin/certificates", icon: Award },
+    { name: "수료증 관리", href: "/dashboard/admin/certificates", icon: Award },
     { name: "AI 로그 분석", href: "/dashboard/admin/ai-logs", icon: MessageSquare },
     { name: "설정", href: "/dashboard/admin/settings", icon: Settings },
 ];

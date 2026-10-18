@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { Download, Loader2, Award, CheckCircle2, Shield, Stamp, QrCode, Sparkles } from "lucide-react";
+import { Download, Loader2, CheckCircle2, Shield, Sparkles } from "lucide-react";
 
 interface CertificateGeneratorProps {
     userName: string;
@@ -14,6 +14,12 @@ interface CertificateGeneratorProps {
     licenseKey?: string;
     isAutoIssued?: boolean;
 }
+
+const COURSE_LABELS: Record<"barak" | "jael" | "deborah", string> = {
+    barak: "바락 부목사 과정",
+    jael: "야엘 은사사역 과정",
+    deborah: "드보라 담임목회 과정",
+};
 
 export function CertificateGenerator({
     userName = "홍길동",
@@ -26,10 +32,13 @@ export function CertificateGenerator({
     const certificateRef = useRef<HTMLDivElement>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [selectedRole, setSelectedRole] = useState<"barak" | "jael" | "deborah">(initialRole);
-    const [customBirthDate, setCustomBirthDate] = useState(birthDate);
+    const [customBirthDate] = useState(birthDate);
 
-    // 고유 발급번호가 없으면 역할 기반 생성
+    const isSample = !isAutoIssued || userName === "홍길동";
+
+    // 고유 수료번호가 없으면 과정 기반 생성
     const activeLicenseKey = licenseKey || `BA-${new Date().getFullYear()}-${selectedRole.toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    const activeCourseName = COURSE_LABELS[selectedRole];
 
     const handleDownload = async () => {
         if (!certificateRef.current) return;
@@ -54,10 +63,10 @@ export function CertificateGenerator({
             const pdfHeight = pdf.internal.pageSize.getHeight();
 
             pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.save(`바라크아카데미_자격증서_${userName}_${activeLicenseKey}.pdf`);
+            pdf.save(`바라크아카데미_수료증_${userName}_${activeLicenseKey}.pdf`);
         } catch (error) {
             console.error("Certificate generation failed:", error);
-            alert("자격증서 생성 중 오류가 발생했습니다.");
+            alert("수료증 생성 중 오류가 발생했습니다.");
         } finally {
             setIsGenerating(false);
         }
@@ -65,24 +74,28 @@ export function CertificateGenerator({
 
     return (
         <div className="flex flex-col items-center gap-8 w-full max-w-4xl mx-auto">
-            {/* Control Bar: Role Selection & Auto-issue Status */}
+            {/* Control Bar: Course Selection & Status */}
             <div className="w-full bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1.5">
                         <span className="text-xs font-bold text-blue-900 uppercase tracking-wider">
-                            자격증서 직무 트랙 선택
+                            수료증 교육과정 선택
                         </span>
-                        {isAutoIssued && (
+                        {isAutoIssued ? (
                             <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold flex items-center gap-1">
-                                <Sparkles className="w-3 h-3 text-emerald-600" /> 시스템 자동 승인됨
+                                <Sparkles className="w-3 h-3 text-emerald-600" /> 수료 요건 확인됨
+                            </span>
+                        ) : (
+                            <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
+                                양식 미리보기 (SAMPLE)
                             </span>
                         )}
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {[
-                            { id: "barak", title: "바락 역 (전문 부목사)", badge: "목사 자격" },
-                            { id: "jael", title: "야엘 역 (평신도전도인)", badge: "전도사 자격" },
-                            { id: "deborah", title: "드보라 역 (담임목사/선교사)", badge: "목사/선교사 자격" },
+                            { id: "barak", title: "바락 부목사 과정" },
+                            { id: "jael", title: "야엘 은사사역 과정" },
+                            { id: "deborah", title: "드보라 담임목회 과정" },
                         ].map((role) => (
                             <button
                                 key={role.id}
@@ -114,28 +127,42 @@ export function CertificateGenerator({
                         ) : (
                             <>
                                 <Download className="w-4 h-4" />
-                                공식 자격증서 PDF 발급 및 다운로드
+                                과정 수료증 PDF 다운로드
                             </>
                         )}
                     </button>
                 </div>
             </div>
 
-            {/* Official Certificate Paper Preview (A4 Ratio Portrait) */}
+            {/* Certificate Paper Preview (A4 Ratio Portrait) */}
             <div className="w-full flex justify-center overflow-x-auto pb-6">
                 <div
                     ref={certificateRef}
-                    className="w-[660px] min-h-[940px] bg-[#fffdf9] p-12 sm:p-14 text-slate-900 relative shadow-2xl rounded-sm flex flex-col justify-between"
+                    className="w-[660px] min-h-[940px] bg-[#fffdf9] p-12 sm:p-14 text-slate-900 relative shadow-2xl rounded-sm flex flex-col justify-between overflow-hidden"
                     style={{
                         fontFamily: "'Nanum Myeongjo', 'Batang', serif",
                         border: "12px double #1e3a8a",
                         boxSizing: "border-box"
                     }}
                 >
-                    {/* Background Subtle Watermark */}
+                    {/* Background Subtle Emblem */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
                         <Shield className="w-[450px] h-[450px] text-blue-950" />
                     </div>
+
+                    {/* SAMPLE Watermark when not auto-issued / viewing sample (R10) */}
+                    {isSample && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 select-none">
+                            <div className="transform -rotate-30 border-4 border-slate-400/25 px-10 py-4 rounded-xl text-center">
+                                <span className="block text-6xl font-black tracking-[0.25em] text-slate-400/25 font-sans">
+                                    SAMPLE
+                                </span>
+                                <span className="block text-sm font-bold tracking-[0.4em] text-slate-400/30 font-sans mt-1">
+                                    수 료 증 견 본
+                                </span>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Corner Ornaments */}
                     <div className="absolute top-3 left-3 w-10 h-10 border-t-2 border-l-2 border-amber-600" />
@@ -146,14 +173,14 @@ export function CertificateGenerator({
                     {/* 1. Header & Serial Number */}
                     <div>
                         <div className="flex justify-between items-center text-[11px] text-slate-500 pb-2 border-b border-slate-200">
-                            <span className="font-mono font-bold text-slate-700">발급 등록번호 : {activeLicenseKey}</span>
+                            <span className="font-mono font-bold text-slate-700">수료번호 : {activeLicenseKey}</span>
                             <span className="text-amber-700 font-bold">산해원교회 산하 • 바라크아카데미</span>
                         </div>
 
                         {/* Certificate Title */}
                         <div className="text-center pt-6 pb-2">
                             <h1 className="text-4xl sm:text-5xl font-extrabold tracking-[0.6em] text-slate-900 border-b-2 border-slate-900/20 pb-4 inline-block px-8">
-                                자 격 증 서
+                                수 료 증
                             </h1>
                         </div>
                     </div>
@@ -168,81 +195,83 @@ export function CertificateGenerator({
                             <span className="tracking-[0.15em]">생년월일:</span>
                             <span className="min-w-[120px] text-left text-slate-700">{customBirthDate}</span>
                         </div>
+                        <div className="flex justify-end gap-6">
+                            <span className="tracking-[0.15em]">이수과정:</span>
+                            <span className="min-w-[120px] text-left font-bold text-blue-950">{activeCourseName}</span>
+                        </div>
                     </div>
 
-                    {/* 3. Certificate Main Body Statement (원문 100% 반영) */}
-                    <div className="my-4 px-4 sm:px-8 space-y-6 text-center">
+                    {/* 3. Certificate Main Body Statement (R2 수정안 반영) */}
+                    <div className="my-4 px-4 sm:px-8 space-y-6 text-center relative z-10">
                         <p className="text-base sm:text-lg leading-[2.2] text-slate-800 text-justify break-keep">
-                            하나님께서 당신의 종 삼으시려 진작 성령으로 기름 부으신 바 된 귀하가 그 직무 수행을 위한 본원 제공의 필수 학과목 및 덕목 전 과정을 이수하였기로 날인된
+                            위 사람은 산해원교회 산하 바라크아카데미 「{activeCourseName}」(2년 4학기 120강)과 과목별 소감문을 성실히 이수하였으므로 이 증서를 드립니다.
                         </p>
 
-                        {/* 3대 직무 자격 날인 테이블 */}
+                        {/* 3대 교육과정 이수 확인 테이블 */}
                         <div className="my-4 w-full border-2 border-slate-800 rounded-sm overflow-hidden bg-white shadow-inner">
                             <div className="grid grid-cols-3 divide-x-2 divide-slate-800 text-center font-bold">
-                                {/* 바락 역 */}
+                                {/* 바락 부목사 과정 */}
                                 <div className={`p-4 transition-all relative ${selectedRole === 'barak' ? 'bg-amber-50' : 'bg-white'}`}>
-                                    <div className="text-xs text-slate-500 mb-1">바락 역</div>
-                                    <div className="text-base sm:text-lg text-slate-900">전문 부목사</div>
+                                    <div className="text-xs text-slate-500 mb-1">바락 과정</div>
+                                    <div className="text-sm sm:text-base text-slate-900">바락 부목사 과정</div>
                                     {selectedRole === 'barak' && (
-                                        <div className="mt-2 inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xs">
-                                            날인
+                                        <div className="mt-2 inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xs">
+                                            이수
                                         </div>
                                     )}
                                 </div>
 
-                                {/* 야엘 역 */}
+                                {/* 야엘 은사사역 과정 */}
                                 <div className={`p-4 transition-all relative ${selectedRole === 'jael' ? 'bg-amber-50' : 'bg-white'}`}>
-                                    <div className="text-xs text-slate-500 mb-1">야엘 역</div>
-                                    <div className="text-base sm:text-lg text-slate-900">평신도전도인</div>
+                                    <div className="text-xs text-slate-500 mb-1">야엘 과정</div>
+                                    <div className="text-sm sm:text-base text-slate-900">야엘 은사사역 과정</div>
                                     {selectedRole === 'jael' && (
-                                        <div className="mt-2 inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xs">
-                                            날인
+                                        <div className="mt-2 inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xs">
+                                            이수
                                         </div>
                                     )}
                                 </div>
 
-                                {/* 드보라 역 */}
+                                {/* 드보라 담임목회 과정 */}
                                 <div className={`p-4 transition-all relative ${selectedRole === 'deborah' ? 'bg-amber-50' : 'bg-white'}`}>
-                                    <div className="text-xs text-slate-500 mb-1">드보라 역</div>
-                                    <div className="text-base sm:text-lg text-slate-900">담임목사/선교사</div>
+                                    <div className="text-xs text-slate-500 mb-1">드보라 과정</div>
+                                    <div className="text-sm sm:text-base text-slate-900">드보라 담임목회 과정</div>
                                     {selectedRole === 'deborah' && (
-                                        <div className="mt-2 inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xs">
-                                            날인
+                                        <div className="mt-2 inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xs">
+                                            이수
                                         </div>
                                     )}
                                 </div>
                             </div>
                         </div>
-
-                        <p className="text-base sm:text-lg font-bold text-slate-900 pt-1 tracking-wide">
-                            직무 자격이 있음을 증서 하여 드립니다.
-                        </p>
                     </div>
 
-                    {/* 4. Date & Official Signature / Seal */}
-                    <div className="text-center pb-4 space-y-3">
+                    {/* 4. Date & Signature / Seal */}
+                    <div className="text-center pb-2 space-y-3 relative z-10">
                         <div className="text-base text-slate-700 tracking-widest font-medium">
                             {completionDate}
                         </div>
 
                         <div className="pt-1 relative flex flex-col items-center justify-center">
-                            <div className="text-2xl sm:text-3xl font-extrabold tracking-widest text-slate-900">
-                                바라크 아카데미
-                            </div>
-                            <div className="text-xl sm:text-2xl font-bold text-slate-900 mt-2 flex items-center justify-center gap-3">
-                                <span>학장 Dr. 이윤주 (목사)</span>
-                                {/* Red Official Seal Impression */}
-                                <div className="w-14 h-14 rounded-full border-4 border-red-700 text-red-700 flex items-center justify-center text-[10px] font-extrabold leading-tight shadow-sm transform rotate-6 bg-red-50/20">
-                                    바라크<br />학장인
+                            <div className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 flex items-center justify-center gap-3">
+                                <span>산해원교회 바라크아카데미 학장 이윤주</span>
+                                {/* Red Seal Impression */}
+                                <div className="w-12 h-12 rounded-sm border-2 border-red-700 text-red-700 flex items-center justify-center text-xs font-extrabold leading-tight shadow-sm bg-red-50/30">
+                                    직인
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Bottom Verification & Legal Notice */}
-                    <div className="text-[10px] text-slate-400 text-center border-t border-slate-200 pt-2.5 flex justify-between items-center px-2">
-                        <span>* 산해원교회 산하 신학교 공인 사역자 자격증</span>
-                        <span className="font-mono">온라인 진위 확인: https://barak.ac/certificate</span>
+                    {/* Bottom Fixed Disclaimer & Verification Notice (R2, R6) */}
+                    <div className="space-y-1.5 pt-2.5 border-t border-slate-200">
+                        <p className="text-[11px] text-slate-600 text-center font-sans font-medium">
+                            본 수료증은 교육과정 이수 사실을 증명하며 국가·민간 자격 또는 학위가 아닙니다.
+                        </p>
+                        <div className="text-[10px] text-slate-400 text-center flex justify-between items-center px-2 font-sans">
+                            <span>* 산해원교회 산하 신학 아카데미 과정 수료증</span>
+                            <span className="font-mono">수료 확인: https://barak.ac/certificate</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -12,7 +12,7 @@ export default function CertificateManagementPage() {
 
     // Issue Modal
     const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
-    const [newCert, setNewCert] = useState({ studentName: "", trackTitle: "바라크 트랙 (전문 부목사)", trackRole: "barak" });
+    const [newCert, setNewCert] = useState({ studentName: "", trackTitle: "바락 부목사 과정", trackRole: "barak" });
 
     useEffect(() => {
         loadData();
@@ -38,7 +38,7 @@ export default function CertificateManagementPage() {
     };
 
     const handleRevoke = async (id: string) => {
-        if (confirm("정말로 이 자격증을 취소하시겠습니까? 등록번호가 비활성화됩니다.")) {
+        if (confirm("정말로 이 수료증을 취소하시겠습니까? 수료번호가 비활성화됩니다.")) {
             try {
                 await supabaseDb.admin.certificates.revoke(id);
             } catch (e) {
@@ -73,8 +73,8 @@ export default function CertificateManagementPage() {
 
         await loadData();
         setIsIssueModalOpen(false);
-        setNewCert({ studentName: "", trackTitle: "바라크 트랙 (전문 부목사)", trackRole: "barak" });
-        alert(`공식 자격증서가 성공적으로 발급되었습니다.\n발급번호: ${licenseKey}`);
+        setNewCert({ studentName: "", trackTitle: "바락 부목사 과정", trackRole: "barak" });
+        alert(`과정 수료증이 성공적으로 발급되었습니다.\n수료번호: ${licenseKey}`);
     };
 
     const filteredCerts = certificates.filter(c =>
@@ -88,10 +88,10 @@ export default function CertificateManagementPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                        <Award className="w-6 h-6 text-amber-500" /> 자격증 발급 및 공인 관리 (Supabase 동기화)
+                        <Award className="w-6 h-6 text-amber-500" /> 과정 수료증 발급 및 관리 (Supabase 동기화)
                     </h1>
                     <p className="text-slate-500 text-sm">
-                        산해원교회 산하 바라크아카데미에서 자동 및 수동 발급된 공식 자격증서를 실시간 조회/관리합니다.
+                        산해원교회 산하 바라크아카데미에서 자동 및 수동 발급된 과정 수료증을 실시간 조회/관리합니다.
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -117,7 +117,7 @@ export default function CertificateManagementPage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
                         type="text"
-                        placeholder="성명, 발급 등록번호(BA-2026-...), 과정명 검색..."
+                        placeholder="성명, 수료번호(BA-2026-...), 과정명 검색..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm"
@@ -131,17 +131,17 @@ export default function CertificateManagementPage() {
                     <thead className="bg-slate-50 border-b border-slate-100 text-xs uppercase text-slate-500">
                         <tr>
                             <th className="px-6 py-4 font-medium">수료자 성명</th>
-                            <th className="px-6 py-4 font-medium">이수 과정 (트랙)</th>
+                            <th className="px-6 py-4 font-medium">이수 과정</th>
                             <th className="px-6 py-4 font-medium">발급일시</th>
-                            <th className="px-6 py-4 font-medium">공인 등록번호 / 상태</th>
+                            <th className="px-6 py-4 font-medium">수료번호 / 상태</th>
                             <th className="px-6 py-4 font-medium text-right">관리</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {isLoading ? (
-                            <tr><td colSpan={5} className="p-8 text-center text-slate-400"><Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-900" />자격증 데이터를 불러오는 중...</td></tr>
+                            <tr><td colSpan={5} className="p-8 text-center text-slate-400"><Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-900" />수료증 데이터를 불러오는 중...</td></tr>
                         ) : filteredCerts.length === 0 ? (
-                            <tr><td colSpan={5} className="p-8 text-center text-slate-400 italic">발급된 자격증 내역이 없습니다.</td></tr>
+                            <tr><td colSpan={5} className="p-8 text-center text-slate-400 italic">발급된 수료증 내역이 없습니다.</td></tr>
                         ) : (
                             filteredCerts.map(cert => (
                                 <tr key={cert.id} className="hover:bg-slate-50 transition-colors">
@@ -153,7 +153,7 @@ export default function CertificateManagementPage() {
                                             <code className="text-xs bg-slate-100 px-2 py-0.5 rounded text-blue-900 font-mono font-bold">{cert.licenseKey}</code>
                                             {cert.status === 'active' ? (
                                                 <span className="flex items-center text-[11px] text-emerald-600 font-bold">
-                                                    <CheckCircle className="w-3 h-3 mr-1" /> 정식 유효 (Active)
+                                                    <CheckCircle className="w-3 h-3 mr-1" /> 유효 (Active)
                                                 </span>
                                             ) : (
                                                 <span className="flex items-center text-[11px] text-rose-600 font-bold">
@@ -185,7 +185,7 @@ export default function CertificateManagementPage() {
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
                         <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                             <h3 className="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                                <Award className="w-4 h-4 text-blue-900" /> 공식 사역자 자격증 수동 발급
+                                <Award className="w-4 h-4 text-blue-900" /> 과정 수료증 수동 발급
                             </h3>
                             <button onClick={() => setIsIssueModalOpen(false)} className="text-slate-400 hover:text-slate-600">
                                 <X className="w-5 h-5" />
@@ -204,19 +204,19 @@ export default function CertificateManagementPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block font-bold text-slate-700 mb-1.5">직무 자격 트랙 선택 *</label>
+                                <label className="block font-bold text-slate-700 mb-1.5">이수 과정 선택 *</label>
                                 <select
                                     value={newCert.trackRole}
                                     onChange={(e) => setNewCert({
                                         ...newCert,
                                         trackRole: e.target.value,
-                                        trackTitle: e.target.value === 'barak' ? "바라크 트랙 (전문 부목사)" : e.target.value === 'deborah' ? "드보라 트랙 (담임목사/선교사)" : "야엘 트랙 (평신도전도인)"
+                                        trackTitle: e.target.value === 'barak' ? "바락 부목사 과정" : e.target.value === 'deborah' ? "드보라 담임목회 과정" : "야엘 은사사역 과정"
                                     })}
                                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm bg-white"
                                 >
-                                    <option value="barak">바락 역 (전문 부목사) - 목사 자격</option>
-                                    <option value="deborah">드보라 역 (담임목사/선교사) - 목사/선교사 자격</option>
-                                    <option value="jael">야엘 역 (평신도전도인) - 전도사 자격</option>
+                                    <option value="barak">바락 부목사 과정 (실무·협력 사역 심화)</option>
+                                    <option value="deborah">드보라 담임목회 과정 (말씀·영적 리더십 심화)</option>
+                                    <option value="jael">야엘 은사사역 과정 (치유·중보·복음전도 사역)</option>
                                 </select>
                             </div>
                             <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
@@ -231,7 +231,7 @@ export default function CertificateManagementPage() {
                                     type="submit"
                                     className="px-5 py-2.5 rounded-xl bg-blue-900 text-white font-bold hover:bg-blue-800 shadow-md"
                                 >
-                                    자격증 발급 실행
+                                    수료증 발급 실행
                                 </button>
                             </div>
                         </form>

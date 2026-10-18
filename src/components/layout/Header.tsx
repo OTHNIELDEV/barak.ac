@@ -30,7 +30,7 @@ export function Header() {
         { name: "아카데미소개", href: "/about" },
         { name: "교수진소개", href: "/faculty" },
         { name: "교육과정", href: "/curriculum" },
-        { name: "모집요강", href: "/apply" },
+        { name: "과정 안내·신청", href: "/apply" },
         { name: "산해원채플", href: "/chapel" },
         { name: "갈렙AI", href: "/ai-system" },
     ];
@@ -83,7 +83,7 @@ export function Header() {
                                 href="/apply"
                                 className="px-5 py-2.5 rounded-full bg-amber-500 text-white text-sm font-bold hover:bg-amber-400 transition-all flex items-center gap-2 shadow-sm hover:shadow-md"
                             >
-                                <GraduationCap className="w-4 h-4" /> 입학 신청
+                                <GraduationCap className="w-4 h-4" /> 수강 신청
                             </Link>
                             <Link
                                 href="/dashboard"
@@ -107,7 +107,7 @@ export function Header() {
                                 href="/apply"
                                 className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-bold hover:shadow-lg hover:from-amber-400 hover:to-orange-500 transition-all active:scale-95 flex items-center gap-1.5"
                             >
-                                <GraduationCap className="w-4 h-4" /> 입학 신청
+                                <GraduationCap className="w-4 h-4" /> 수강 신청
                             </Link>
                         </>
                     )}
@@ -185,7 +185,7 @@ export function Header() {
                                             onClick={() => setIsMobileMenuOpen(false)}
                                             className="flex items-center justify-center p-3 rounded-xl bg-blue-900 text-white font-bold hover:bg-blue-800 transition-colors"
                                         >
-                                            입학 신청
+                                            수강 신청
                                         </Link>
                                     </>
                                 )}

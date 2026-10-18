@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "바라크아카데미 | 성경 중심의 온라인 신학교 (Barak Academy)",
-  description: "사사기 바락의 겸손(ברך)과 드보라의 비전, 야엘의 결행. 산해원교회 산하 2년제 실전 신학 및 사역자(목사·선교사·전도사) 공인 자격 과정.",
+  title: "바라크아카데미 | 성경 중심의 온라인 신학 아카데미 (Barak Academy)",
+  description: "사사기 바락의 겸손(ברך)과 드보라의 비전, 야엘의 결행. 산해원교회 산하 신학 아카데미의 2년 4학기 교회 교육 과정.",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },

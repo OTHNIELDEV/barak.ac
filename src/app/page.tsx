@@ -116,7 +116,7 @@ export default function LandingPage() {
             {/* Top Tag */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-400/30 bg-amber-500/10 backdrop-blur-md text-amber-300 text-xs md:text-sm font-bold uppercase tracking-widest mb-6 shadow-2xl">
               <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-              새 시대에 요구되는 성경 중심의 온라인 신학교
+              새 시대에 요구되는 성경 중심의 온라인 신학 아카데미
             </div>
 
             {/* Main Headline */}
@@ -135,19 +135,19 @@ export default function LandingPage() {
               마지막 때 <span className="text-white font-bold">부목사, 선교사, 전도사, 특히 여성 사역자</span>를 온누리의 영적 리더로 세웁니다.
             </p>
 
-            {/* Scholarship & Accreditation Badge in Hero */}
+            {/* Sponsorship & Course Badges in Hero */}
             <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10 text-xs md:text-sm">
               <span className="px-3.5 py-1.5 rounded-full bg-amber-500 text-slate-950 font-bold shadow-lg">
-                🌟 1기 등록 장학금 30% 혜택
+                🌟 1기 교육후원금 30% 감면
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-blue-600/90 text-white font-bold border border-blue-400/40 backdrop-blur-sm">
-                💖 목사 사모 특별 장학금 50% 할인
+                💖 목사 사모 50% 감면
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-purple-600/80 text-white font-bold border border-purple-400/40 backdrop-blur-sm">
-                📜 목사,선교사,전도사 자격증 발급
+                📜 과정 수료증 발급
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-white/10 text-slate-200 border border-white/20">
-                🏛️ 2년제(120강) 영상강의
+                🏛️ 2년 과정(120강) 영상강의
               </span>
             </div>
 
@@ -157,7 +157,7 @@ export default function LandingPage() {
                 href="/apply"
                 className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-base sm:text-lg font-bold shadow-[0_15px_40px_rgba(245,158,11,0.35)] hover:shadow-orange-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
-                2027학년도 1기 입학 신청 <ArrowRight className="w-5 h-5" />
+                2027년 1기 수강 신청 <ArrowRight className="w-5 h-5" />
               </Link>
               <button
                 type="button"
@@ -349,7 +349,7 @@ export default function LandingPage() {
                 3. 온누리에 말씀 전파 사명
               </h3>
               <p className="text-slate-300 text-sm leading-relaxed">
-                드보라, 바락, 야엘과 같은 자격을 갖춘 사역자를 산과 바다와 들, 곧 온누리에 파송하여 하나님의 진리를 전파합니다.
+                드보라, 바락, 야엘과 같이 말씀으로 훈련된 사역자를 산과 바다와 들, 곧 온누리에 세워 하나님의 진리를 전파합니다.
               </p>
             </div>
           </div>
@@ -372,30 +372,30 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <div className="text-xs font-bold uppercase tracking-widest text-amber-300 mb-1">Barak Academic Standards</div>
-                  <div className="text-2xl font-bold">총 4학기 120강 자율 이수제</div>
+                  <div className="text-xs font-bold uppercase tracking-widest text-amber-300 mb-1">Barak Curriculum Standards</div>
+                  <div className="text-2xl font-bold">2년 4학기 120강 자율 이수제</div>
                 </div>
               </div>
             </div>
 
             {/* Right Academic Principles */}
             <div className="lg:col-span-7 space-y-6">
-              <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Academic Revolution</span>
+              <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Curriculum Principles</span>
               <h2 className="text-3xl lg:text-4xl font-black text-slate-900 leading-tight">
                 암기식 시험은 없습니다.<br />
                 <span className="text-blue-900">삶과 사역의 변화</span>에 집중합니다.
               </h2>
               <p className="text-slate-600 text-base md:text-lg leading-relaxed font-light">
-                바라크아카데미는 시험 점수로 사역자를 평가하지 않습니다. 각 강의당 A4 1장 소감문을 통해 말씀을 삶에 적용하며, 바쁜 목회와 일상 속에서도 자율적으로 수강할 수 있습니다.
+                바라크아카데미는 시험 점수로 사역자를 평가하지 않습니다. 과목별 소감문을 통해 말씀을 삶에 적용하며, 바쁜 목회와 일상 속에서도 자율적으로 수강할 수 있습니다.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
                   <div className="flex items-center gap-3 font-bold text-slate-900 mb-1">
                     <CheckCircle2 className="w-5 h-5 text-amber-500" />
-                    총 4학기 • 120강
+                    2년 4학기 • 120강
                   </div>
-                  <p className="text-xs text-slate-500">한 학기당 30강, 총 120강 정규 커리큘럼</p>
+                  <p className="text-xs text-slate-500">한 학기당 15주(30강), 총 120강 교육과정</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
@@ -409,15 +409,15 @@ export default function LandingPage() {
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
                   <div className="flex items-center gap-3 font-bold text-slate-900 mb-1">
                     <CheckCircle2 className="w-5 h-5 text-amber-500" />
-                    A4용지 소감문 작성
+                    A4 소감문 작성
                   </div>
-                  <p className="text-xs text-slate-500">각 강의별 A4 1장 소감문으로 삶에 내재화</p>
+                  <p className="text-xs text-slate-500">과목별 소감문(설교문·묵상문) 작성으로 삶에 내재화</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
                   <div className="flex items-center gap-3 font-bold text-slate-900 mb-1">
                     <CheckCircle2 className="w-5 h-5 text-amber-500" />
-                    졸업 기한 제한 없음
+                    수료 기한 제한 없음
                   </div>
                   <p className="text-xs text-slate-500">시간에 쫓기지 않고 자율 이수 및 복습 가능</p>
                 </div>
@@ -430,15 +430,15 @@ export default function LandingPage() {
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-base text-white">완전 자동화 자격증 발급 시스템 가동</h4>
-                    <p className="text-xs text-blue-200">강의 100% 수강 + A4 소감문 제출 시 Supabase DB에서 즉시 자동 발급</p>
+                    <h4 className="font-bold text-base text-white">과정 수료증 자동 발급 시스템</h4>
+                    <p className="text-xs text-blue-200">전 강의 수강 + 소감문 제출 시 수료 요건을 자동 확인하여 과정 수료증 발급</p>
                   </div>
                 </div>
                 <Link
                   href="/ai-system#automation-demo"
                   className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-1.5 flex-shrink-0"
                 >
-                  실시간 구동 목업 체험하기 <ArrowRight className="w-4 h-4" />
+                  수료증 발급 흐름 보기 <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -446,26 +446,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5. 2026 Admissions & Tuition/Scholarship (Brochure Section 2 & 5 & Attachments) */}
+      {/* 5. 2027 Course Guide & Education Sponsorship */}
       <section className="py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">2027 Admissions & Tuition</span>
+            <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">2027 Course Guide & Sponsorship</span>
             <h2 className="text-3xl md:text-5xl font-black text-white mt-2">
-              입학 요건 · 학생모집 요강 · 장학 혜택
+              수강 대상 · 과정 안내 · 교육후원금 감면
             </h2>
             <p className="text-slate-300 mt-4 text-base md:text-lg font-light">
-              누구나 제약 없이 입학 가능하며, 성령을 받은 자에 한해 졸업시 자격증서를 수여받습니다.
+              말씀과 사역을 사모하는 분이라면 누구나 수강 신청이 가능하며, 전 과정 이수 시 과정별 수료증을 드립니다.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Admissions Criteria (5 cols) */}
+            {/* Enrollment Criteria (5 cols) */}
             <div className="lg:col-span-5 bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 flex flex-col justify-between">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                   <GraduationCap className="w-7 h-7 text-amber-400" />
-                  학생 모집 대상 & 추천
+                  수강 대상 & 추천
                 </h3>
                 <ul className="space-y-3.5 text-xs md:text-sm text-slate-200">
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
@@ -474,11 +474,11 @@ export default function LandingPage() {
                   </li>
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
                     <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">2</span>
-                    <span><strong>목사 사모로서 교회 사역에 동역하기를 희망하는 자</strong> (50% 장학)</span>
+                    <span><strong>목사 사모로서 교회 사역에 동역하기를 희망하는 자</strong> (후원금 50% 감면)</span>
                   </li>
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
                     <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">3</span>
-                    <span><strong>은퇴·원로 목회자(65세 이상)</strong> 중 '바락'과 같은 충성된 전문 부목자로 헌신할 분</span>
+                    <span><strong>은퇴·원로 목회자(65세 이상)</strong> 중 &lsquo;바락&rsquo;과 같은 충성된 부목사로 헌신할 분</span>
                   </li>
                   <li className="flex items-start gap-3 p-3 bg-black/20 rounded-xl">
                     <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">4</span>
@@ -488,50 +488,58 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10 text-xs text-amber-200 leading-relaxed">
-                * 누구나 제약 없이 입학/수강 가능하며, 졸업시 공식 자격증서를 수여합니다.
+                * 누구나 수강 신청 가능하며, 전 과정(120강) 및 소감문 이수 시 과정별 수료증을 발급합니다.
               </div>
             </div>
 
-            {/* Tuition & Scholarship Cards (7 cols) */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Regular & Batch 1 Scholarship */}
-              <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between">
-                <div>
-                  <div className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold mb-4">
-                    1기 장학 혜택
+            {/* Education Sponsorship Cards (7 cols) */}
+            <div className="lg:col-span-7 flex flex-col justify-between gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1">
+                {/* Batch 1 Sponsorship Reduction */}
+                <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold mb-4">
+                      1기 후원금 감면
+                    </div>
+                    <h4 className="text-xl font-bold mb-2">1기 교육후원금 감면</h4>
+                    <div className="text-3xl font-black mb-4">30% 감면 (70만원)</div>
+                    <p className="text-amber-100 text-xs leading-relaxed mb-6">
+                      권장 후원금(2년 과정) 100만원 중 1기 수강생 전원에게 30% 감면을 적용하여 <strong>70만원</strong>으로 수강 가능합니다.
+                    </p>
                   </div>
-                  <h4 className="text-xl font-bold mb-2">1기 등록 장학금</h4>
-                  <div className="text-3xl font-black mb-4">30% 혜택 (70만원)</div>
-                  <p className="text-amber-100 text-xs leading-relaxed mb-6">
-                    정규 수강료 100만원 중 1기 신입생 전원에게 30% 장학금을 지원하여 <strong>70만원</strong>으로 등록 가능합니다.
-                  </p>
+                  <Link
+                    href="/apply?scholarship=first_batch_30"
+                    className="w-full py-3 bg-white text-slate-900 font-bold rounded-xl text-center text-sm hover:bg-amber-50 transition-colors"
+                  >
+                    1기 수강 신청하기
+                  </Link>
                 </div>
-                <Link
-                  href="/apply?scholarship=first_batch_30"
-                  className="w-full py-3 bg-white text-slate-900 font-bold rounded-xl text-center text-sm hover:bg-amber-50 transition-colors"
-                >
-                  1기 장학 신청하기
-                </Link>
+
+                {/* Pastor Wife 50% Reduction */}
+                <div className="bg-gradient-to-br from-blue-700 to-indigo-900 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-blue-400/30">
+                  <div>
+                    <div className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold mb-4 text-yellow-300">
+                      목사 사모 특별 감면
+                    </div>
+                    <h4 className="text-xl font-bold mb-2">목사 사모 후원금 감면</h4>
+                    <div className="text-3xl font-black mb-4 text-yellow-300">50% 감면 (50만원)</div>
+                    <p className="text-blue-100 text-xs leading-relaxed mb-6">
+                      목회 현장에서 묵묵히 헌신하는 목사 사모님들의 동역을 위해 권장 후원금의 50% 감면을 적용합니다 (<strong>50만원</strong>).
+                    </p>
+                  </div>
+                  <Link
+                    href="/apply?applicantType=pastor_wife"
+                    className="w-full py-3 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-bold rounded-xl text-center text-sm hover:from-amber-300 hover:to-yellow-300 transition-colors shadow-md"
+                  >
+                    사모 감면 신청하기
+                  </Link>
+                </div>
               </div>
 
-              {/* Pastor Wife 50% Scholarship */}
-              <div className="bg-gradient-to-br from-blue-700 to-indigo-900 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-blue-400/30">
-                <div>
-                  <div className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold mb-4 text-yellow-300">
-                    목사 사모 특별 지원
-                  </div>
-                  <h4 className="text-xl font-bold mb-2">목사 사모 장학 혜택</h4>
-                  <div className="text-3xl font-black mb-4 text-yellow-300">50% 특별 할인</div>
-                  <p className="text-blue-100 text-xs leading-relaxed mb-6">
-                    목회 현장에서 묵묵히 헌신하는 목사 사모님들의 동역을 위해 50% 감면 혜택을 제공합니다 (<strong>50만원</strong>).
-                  </p>
-                </div>
-                <Link
-                  href="/apply?applicantType=pastor_wife"
-                  className="w-full py-3 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-bold rounded-xl text-center text-sm hover:from-amber-300 hover:to-yellow-300 transition-colors shadow-md"
-                >
-                  사모 장학 신청하기
-                </Link>
+              {/* Sponsorship Notice Box (R5) */}
+              <div className="p-5 rounded-2xl bg-white/5 border border-white/15 text-xs text-slate-300 leading-relaxed">
+                <strong className="text-amber-300 font-bold block mb-1">💡 교육후원금 운영 안내</strong>
+                바라크아카데미는 산해원교회의 교육 사역으로 운영되며, 수강생의 교육후원금으로 강의 제작과 운영비를 충당합니다. 권장 후원금은 2년 과정 100만원이며, 2027년 1기 수강생은 30%, 목사 사모는 50%를 감면합니다. 형편이 어려운 분은 운영팀과 상의할 수 있습니다. (<Link href="/terms" className="underline text-amber-200 hover:text-white">환불·중단 기준은 이용약관 제8조 참조</Link>)
               </div>
             </div>
           </div>
@@ -583,9 +591,9 @@ export default function LandingPage() {
       <section className="py-24 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl lg:text-4xl font-black text-slate-900 mb-3">Triple Anointing Tracks</h2>
+            <h2 className="text-3xl lg:text-4xl font-black text-slate-900 mb-3">3대 사역 교육과정</h2>
             <p className="text-slate-500 text-base md:text-lg">
-              드보라, 바라크, 야엘 3대 영적 모델을 통해 사역자별 맞춤 역량을 완성합니다.
+              드보라, 바락, 야엘 3대 성경적 모델을 통해 사역자별 맞춤 역량을 훈련합니다.
             </p>
           </div>
 
@@ -615,7 +623,7 @@ export default function LandingPage() {
                             href="/apply?track=barak"
                             className="inline-flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200"
                           >
-                            이 트랙으로 지원하기 <ChevronRight className="w-3.5 h-3.5" />
+                            이 과정으로 수강 신청하기 <ChevronRight className="w-3.5 h-3.5" />
                           </Link>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-200 bg-white/20 px-3 py-1 rounded-full backdrop-blur-md">
@@ -636,7 +644,7 @@ export default function LandingPage() {
       <section className="py-24 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 text-white text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase mb-6">
-            <Sparkles className="w-4 h-4" /> 2027년 1기 등록 시 30% 장학금 혜택
+            <Sparkles className="w-4 h-4" /> 2027년 1기 수강 시 교육후원금 30% 감면
           </div>
           <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
             하나님의 손에 붙들려 쓰임 받는<br />
@@ -650,7 +658,7 @@ export default function LandingPage() {
               href="/apply"
               className="w-full sm:w-auto px-10 py-5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg font-bold shadow-2xl hover:from-amber-400 hover:to-orange-400 hover:scale-105 transition-all flex items-center justify-center gap-2"
             >
-              2027학년도 1기 입학 원서 접수
+              2027년 1기 수강 신청하기
             </Link>
             <button
               type="button"

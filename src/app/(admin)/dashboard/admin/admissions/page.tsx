@@ -254,7 +254,7 @@ export default function AdminAdmissionsPage() {
             }
 
             setIsEditModalOpen(false);
-            showToast("입학 신청서 정보가 성공적으로 수정되었습니다.");
+            showToast("수강 신청서 정보가 성공적으로 수정되었습니다.");
         } catch (err: any) {
             console.error("[Admin] Edit error:", err);
             showToast("신청서 수정 중 오류가 발생했습니다.");
@@ -293,7 +293,7 @@ export default function AdminAdmissionsPage() {
             }
 
             setDeleteTargetApp(null);
-            showToast(`"${target.name}" 님의 입학 신청서가 영구 삭제되었습니다.`);
+            showToast(`"${target.name}" 님의 수강 신청서가 영구 삭제되었습니다.`);
         } catch (err: any) {
             console.error("[Admin] Delete error:", err);
             showToast("신청서 삭제 중 오류가 발생했습니다.");
@@ -333,8 +333,8 @@ export default function AdminAdmissionsPage() {
     return (
         <div>
             <SectionHeader
-                title="입학 신청 관리"
-                subtitle="신청서를 검토하고 입학 승인 여부를 결정합니다."
+                title="수강 신청 관리"
+                subtitle="신청서를 검토하고 수강 승인 여부를 결정합니다."
                 action={
                     <div className="flex items-center gap-2">
                         <button

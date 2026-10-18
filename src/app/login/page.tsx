@@ -166,10 +166,11 @@ export default function LoginPage() {
                                     name="password"
                                     type="password"
                                     required
+                                    minLength={isLogin ? undefined : 8}
                                     value={formData.password}
                                     onChange={handleChange}
                                     className="block w-full rounded-xl border-slate-200 bg-slate-50 py-3.5 px-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all outline-none"
-                                    placeholder="••••••••"
+                                    placeholder={isLogin ? "••••••••" : "8자 이상 입력해주세요"}
                                 />
                             </div>
 
@@ -230,16 +231,16 @@ export default function LoginPage() {
                                 <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-left space-y-1.5 shadow-sm">
                                     <div className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
                                         <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                                        2027학년도 1기 신입생 입학 원서 접수
+                                        2027년 1기 수강 신청 안내
                                     </div>
                                     <p className="text-[11px] text-amber-800 leading-relaxed">
-                                        별도 회원가입 없이 입학 원서를 작성하시면 학사 계정이 원스톱으로 자동 생성됩니다.
+                                        별도 회원가입 없이 수강 신청서를 작성하시면 학습 계정이 원스톱으로 자동 생성됩니다.
                                     </p>
                                     <Link
                                         href="/apply"
                                         className="inline-flex items-center gap-1 text-xs font-bold text-amber-950 hover:text-amber-700 hover:underline pt-1"
                                     >
-                                        입학 원서 바로 작성하기 &rarr;
+                                        수강 신청서 바로 작성하기 &rarr;
                                     </Link>
                                 </div>
                             </div>

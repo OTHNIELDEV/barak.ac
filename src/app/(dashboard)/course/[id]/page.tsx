@@ -17,72 +17,72 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 
-// 검증된 5대 핵심 실제 한국인 신학 교수 유튜브 공식 강의 (100% 임베드 보장)
+// 바라크아카데미 1학기 핵심 강의 및 특강 데이터 (바라크아카데미 공식 영상)
 const YOUTUBE_PLAYLIST = [
     {
         id: "d-1",
         lectureNo: 1,
-        title: "제1강: 신학입문 - 신학이란 어떤 학문인가?",
-        instructor: "김진혁 교수 (연세대/횃불트리니티)",
-        instructorRole: "조직신학 교수 / 옥스퍼드대 Ph.D",
+        title: "제1강: 이갈렙 목사의 성경해석학 — 사사기 바락의 영성과 구속사",
+        instructor: "이윤주 학장 (산해원교회 담임목사)",
+        instructorRole: "바라크아카데미 학장 / 구약학 박사(Ph.D)",
         duration: "25:00",
-        youtubeId: "paVjQbkMg8I",
-        category: "조직신학 & 신학서론",
-        bibleVerse: "딤후 3:16~17 / 롬 12:2",
-        summary: "신학의 정의와 본질, 신앙과 학문의 관계를 탐구하며 성경적 진리를 현대의 삶 속에서 바르게 이해하고 해석하는 신학의 기초를 정립합니다.",
-        handout: "신학이란_어떤_학문인가_강의안.pdf"
+        youtubeId: "T-kY9XBB8io",
+        category: "성경해석학 & 구속사",
+        bibleVerse: "삿 4:6~14 / 히 11:32~35",
+        summary: "사사기 4~5장에 나타난 바락(Barak)의 히브리어 원어적 의미(무릎 꿇다·축복하다)와 구속사적 성경 해석의 핵심 원리를 배웁니다.",
+        handout: "제1강_이갈렙목사의_성경해석학_강의노트.pdf"
     },
     {
         id: "d-2",
         lectureNo: 2,
-        title: "제2강: 구약학의 5가지 핵심 연구분야와 언약신학",
-        instructor: "하경택 교수 (장로회신학대학교)",
-        instructorRole: "장신대 구약학 교수 / 튀빙겐대 Dr.theol.",
-        duration: "18:00",
-        youtubeId: "JAUyMe63r28",
-        category: "구약 신학",
+        title: "제2강: 구약의 언약과 '바라크(ברך)' 영성의 실제",
+        instructor: "이윤주 학장 (산해원교회 담임목사)",
+        instructorRole: "바라크아카데미 학장 / 구약학 박사(Ph.D)",
+        duration: "22:00",
+        youtubeId: "bftZuUKSfM8",
+        category: "구약 신학 & 언약",
         bibleVerse: "창 12:1~3 / 시 103:1~5",
-        summary: "오경, 역사서, 시가서, 예언서에 이르는 구약 성경의 광대한 흐름과 히브리어 '바라크(축복)'의 구속사적 언약 신학을 배웁니다.",
-        handout: "구약학의_5가지_연구분야_교안.pdf"
+        summary: "구약 성경 전체를 관통하는 하나님의 언약과 무릎 꿇는 예배자에게 임하는 성경적 복(Barak)의 의미를 심층 강해합니다.",
+        handout: "제2강_구약의_언약과_바라크_영성_강의노트.pdf"
     },
     {
         id: "d-3",
         lectureNo: 3,
-        title: "제3강: 신약성서학이란 무엇인가? 원문과 해석학",
-        instructor: "김철홍 교수 (장로회신학대학교)",
-        instructorRole: "장신대 신약학 교수 / 풀러신학교 Ph.D",
-        duration: "20:00",
-        youtubeId: "GfXyT_L3m8Q",
-        category: "신약 신학 & 성경해석학",
+        title: "제3강: 복음서 강해와 예수 그리스도의 사역 원리",
+        instructor: "이갈렙 목사 (바라크아카데미 설립자)",
+        instructorRole: "산해원교회 설립목사 / 성경강해",
+        duration: "24:00",
+        youtubeId: "OP79-8l715c",
+        category: "신약 신학 & 복음서",
         bibleVerse: "요 5:39 / 롬 1:16~17",
-        summary: "복음서와 바울서신의 신약 텍스트 비평, 구속사적 성경 해석의 원리 및 초기 기독교 공동체의 복음 선포를 심층 강해합니다.",
-        handout: "신약성서학이란_무엇인가_교안.pdf"
+        summary: "복음서에 나타난 예수 그리스도의 말씀 사역과 십자가 복음의 능력을 목회 및 사역 현장에 적용하는 원리를 다룹니다.",
+        handout: "제3강_복음서_강해와_사역원리_강의노트.pdf"
     },
     {
         id: "d-4",
         lectureNo: 4,
-        title: "제4강: 슬기로운 교회사와 역사신학 공부하기",
-        instructor: "이상조 교수 (장로회신학대학교)",
-        instructorRole: "장신대 역사신학/교회사 교수 / 캠브리지대 Ph.D",
-        duration: "16:00",
-        youtubeId: "twaX7pEQSCs",
-        category: "역사 신학 & 교회사",
-        bibleVerse: "히 12:1~2 / 딤후 4:7~8",
-        summary: "초대교회부터 종교개혁, 한국 교회사에 이르기까지 교회의 거룩한 전통과 신앙의 선진들이 남긴 사역적 영적 유산을 조명합니다.",
-        handout: "슬기로운_교회사_공부하기_교안.pdf"
+        title: "제4강: 영혼 돌봄과 성경적 목회상담의 실제",
+        instructor: "이윤주 학장 (산해원교회 담임목사)",
+        instructorRole: "바라크아카데미 학장 / 실천목회",
+        duration: "20:00",
+        youtubeId: "ZbAzIGAuywg",
+        category: "목회상담 & 영혼돌봄",
+        bibleVerse: "살전 5:14 / 갈 6:1~2",
+        summary: "교회 공동체와 가정 안에서 상처 입은 영혼을 말씀과 기도로 돌보며 회복시키는 성경적 상담 사역을 학습합니다.",
+        handout: "제4강_영혼돌봄과_목회상담_강의노트.pdf"
     },
     {
         id: "d-5",
         lectureNo: 5,
-        title: "제5강: 실천신학과 기독교 영성신학 입문",
-        instructor: "오방식 교수 (장로회신학대학교)",
-        instructorRole: "장신대 실천/영성신학 교수 / 오순절 및 영성신학",
+        title: "제5강: 기도의 영성과 시대적 사역자의 길",
+        instructor: "이갈렙 목사 (바라크아카데미 설립자)",
+        instructorRole: "산해원교회 설립목사 / 영성신학",
         duration: "22:00",
-        youtubeId: "743UBBa6q0c",
-        category: "실천 신학 & 영성신학",
+        youtubeId: "tvWiKoF_MI8",
+        category: "실천 신학 & 영성",
         bibleVerse: "행 1:8 / 요 7:38~39 / 엡 6:18",
-        summary: "신학적 지식을 넘어 성령의 기름부으심, 기도의 영성, 목회 현장과 사역에서의 실천적 권능을 회복하는 영성 형성을 다룹니다.",
-        handout: "실천신학과_영성신학_입문_교안.pdf"
+        summary: "말씀과 기도의 자리에서 성령의 인도하심을 따라 교회와 다음 세대를 섬기는 사역자의 영적 자세를 정립합니다.",
+        handout: "제5강_기도의_영성과_사역자의_길_강의노트.pdf"
     }
 ];
 
@@ -119,7 +119,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
     const [aiMessages, setAiMessages] = useState<Array<{ sender: "user" | "caleb"; text: string }>>([
         {
             sender: "caleb",
-            text: "할렐루야! 갈렙 AI 영적 튜터입니다. 강의를 들으시며 궁금한 신학적 질문이나 성경 구절이 있으시면 무엇이든 편하게 물어보세요."
+            text: "할렐루야! 갈렙 AI 학습 보조 튜터입니다. 강의를 들으시며 궁금한 신학적 질문이나 성경 구절이 있으시면 무엇이든 편하게 물어보세요."
         }
     ]);
     const [isAiLoading, setIsAiLoading] = useState(false);
@@ -215,7 +215,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
             });
 
             setHasSubmittedReflection(true);
-            alert("A4 과목 실천 소감문이 성공적으로 접수 및 승인되었습니다!");
+            alert("과목별 A4 소감문이 성공적으로 제출되었습니다!");
 
             if (completedLessonIds.length === totalCount) {
                 await triggerCertificateIssuance();
@@ -272,7 +272,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     messages: [
-                        { role: "system", content: `당신은 바라크아카데미 영적 튜터 '갈렙 AI'입니다. 현재 학생은 [${activeModule.title} - 강사: ${activeModule.instructor}]를 수강 중입니다. 성경적이며 은혜롭고 신학적으로 깊이 있게 3~4문장으로 답변해 주세요.` },
+                        { role: "system", content: `당신은 바라크아카데미 학습 보조 튜터 '갈렙 AI'입니다. 현재 수강생은 [${activeModule.title} - 강사: ${activeModule.instructor}]를 수강 중입니다. 성경적이며 은혜롭고 신학적으로 깊이 있게 3~4문장으로 답변해 주세요.` },
                         { role: "user", content: query }
                     ]
                 })
@@ -322,7 +322,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                         href="/certificate"
                         className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-xs font-extrabold shadow-md hover:scale-105 transition-all"
                     >
-                        <Award className="w-4 h-4" /> 공식 자격증서 센터
+                        <Award className="w-4 h-4" /> 과정 수료증 센터
                     </Link>
                     <Link
                         href="/dashboard"
@@ -434,7 +434,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                     activeTab === "reflection" ? "text-amber-400 border-b-2 border-amber-400 font-black" : "text-slate-400 hover:text-slate-200"
                                 }`}
                             >
-                                <Award className="w-4 h-4" /> A4 과목 소감문 (자격증 필수)
+                                <Award className="w-4 h-4" /> A4 과목 소감문 (수료 필수)
                                 {hasSubmittedReflection && <Check className="w-3.5 h-3.5 text-emerald-400" />}
                             </button>
                             <button
@@ -443,7 +443,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                     activeTab === "materials" ? "text-amber-400 border-b-2 border-amber-400 font-black" : "text-slate-400 hover:text-slate-200"
                                 }`}
                             >
-                                <FileText className="w-4 h-4" /> 공식 강의 교안 (PDF)
+                                <FileText className="w-4 h-4" /> 강의 요약 노트 (PDF)
                             </button>
                         </div>
 
@@ -480,7 +480,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                         {activeTab === "reflection" && (
                             <div className="space-y-4">
                                 <div className="p-4 bg-amber-950/40 rounded-2xl border border-amber-700/40 text-xs text-amber-200 leading-relaxed">
-                                    <strong>📜 자격증 발급 필수 덕목:</strong> 본 아카데미는 시험 대신 배운 진리를 삶과 사역에 어떻게 적용할 것인지 작성하는 <strong>A4 1장 내외의 실천 소감문</strong>을 평가 기준으로 삼습니다.
+                                    <strong>📜 과정 수료 기준 안내:</strong> 본 아카데미는 필기시험 대신 배운 진리를 삶과 사역에 어떻게 적용할 것인지 작성하는 <strong>과목별 A4 1장 내외의 소감문 제출</strong>을 이수 요건으로 합니다.
                                 </div>
 
                                 <form onSubmit={handleReflectionSubmit} className="space-y-4">
@@ -493,7 +493,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                     />
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs text-slate-400">
-                                            {hasSubmittedReflection ? "✓ 제출 및 승인 완료됨" : "미제출 상태"}
+                                            {hasSubmittedReflection ? "✓ 소감문 제출 완료됨" : "미제출 상태"}
                                         </span>
                                         <button
                                             type="submit"
@@ -501,7 +501,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                             className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold rounded-xl text-xs hover:scale-105 transition-all shadow-md flex items-center gap-1.5"
                                         >
                                             {isSubmittingReflection ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-                                            <span>소감문 제출 및 즉시 승인</span>
+                                            <span>소감문 제출하기</span>
                                         </button>
                                     </div>
                                 </form>
@@ -517,14 +517,14 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-white text-sm">{activeModule.handout}</h4>
-                                        <p className="text-xs text-slate-400">산해원교회 산하 바라크아카데미 정규 교재 • 2.4 MB</p>
+                                        <p className="text-xs text-slate-400">1학기 강의 요약 노트 및 소감문 작성 가이드</p>
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => alert("교안 다운로드가 시작되었습니다.")}
+                                    onClick={() => alert("강의 요약 노트 다운로드 안내가 준비되었습니다.")}
                                     className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
                                 >
-                                    <Download className="w-3.5 h-3.5" /> 교안 받기
+                                    <Download className="w-3.5 h-3.5" /> 요약 노트 받기
                                 </button>
                             </div>
                         )}
@@ -559,9 +559,9 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                 </strong>
                             </div>
                             <div className="flex justify-between">
-                                <span>A4 실천 소감문:</span>
+                                <span>과목별 A4 소감문:</span>
                                 <strong className={hasSubmittedReflection ? "text-emerald-400" : "text-amber-400"}>
-                                    {hasSubmittedReflection ? "✓ 승인 완료" : "작성 필요"}
+                                    {hasSubmittedReflection ? "✓ 제출 완료" : "작성 필요"}
                                 </strong>
                             </div>
                         </div>
@@ -570,7 +570,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                     {/* 2-4. 5-Lectures Interactive Playlist */}
                     <div className="bg-slate-950 rounded-3xl p-6 shadow-xl border border-slate-800">
                         <h3 className="font-bold text-white text-sm mb-4 flex items-center justify-between">
-                            <span>📚 5대 핵심 강좌 목록</span>
+                            <span>📚 바라크아카데미 핵심 강좌 목록</span>
                             <span className="text-[11px] text-slate-400 font-normal">클릭 시 바로 재생</span>
                         </h3>
 
@@ -633,8 +633,8 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                         AI
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-sm text-white">갈렙 AI 실시간 튜터</h4>
-                                        <p className="text-[10px] text-amber-300">24시간 신학 질의응답</p>
+                                        <h4 className="font-bold text-sm text-white">갈렙 AI 학습 보조 튜터</h4>
+                                        <p className="text-[10px] text-amber-300">성경·신학 질의응답 도우미</p>
                                     </div>
                                 </div>
                             </div>
@@ -655,7 +655,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                 ))}
                                 {isAiLoading && (
                                     <div className="p-2.5 bg-slate-900 rounded-2xl text-slate-400 text-xs flex items-center gap-2">
-                                        <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" /> 갈렙 AI가 묵상 중입니다...
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" /> 갈렙 AI가 답변을 작성 중입니다...
                                     </div>
                                 )}
                             </div>
@@ -719,20 +719,20 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                             </div>
 
                             <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">
-                                공인 사역자 자격증서 발급 완료
+                                과정 수료증 발급 완료
                             </h2>
                             <p className="text-xs md:text-sm text-slate-600 mb-6 leading-relaxed">
-                                {user?.name} 님께서 5대 핵심 강좌와 A4 실천 소감문을 성실히 완수하였으므로 산해원교회 산하 바라크아카데미 정규 사역자 자격증서가 정식 발급되었습니다.
+                                {user?.name} 님께서 핵심 강좌와 과목별 A4 소감문을 성실히 이수하였으므로 산해원교회 산하 바라크아카데미 과정 수료증이 발급되었습니다.
                             </p>
 
                             <div className="p-4 bg-slate-50 rounded-2xl mb-6 text-left text-xs space-y-1.5 border border-slate-200">
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500">공인 등록번호:</span>
+                                    <span className="text-slate-500">수료번호:</span>
                                     <span className="font-mono font-bold text-amber-600">{issuedCertKey}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-500">발급 주체:</span>
-                                    <span className="font-medium text-slate-800">바라크아카데미 (학장 이윤주 박사/목사)</span>
+                                    <span className="font-medium text-slate-800">산해원교회 바라크아카데미 학장 이윤주</span>
                                 </div>
                             </div>
 
@@ -741,7 +741,7 @@ function CourseContent({ params }: { params: Promise<{ id: string }> }) {
                                     href="/certificate"
                                     className="flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-md hover:scale-105 transition-all flex items-center justify-center gap-1.5"
                                 >
-                                    <Download className="w-4 h-4" /> 자격증서 고해상도 PDF 출력
+                                    <Download className="w-4 h-4" /> 수료증 고해상도 PDF 출력
                                 </Link>
                                 <button
                                     onClick={() => setShowGraduationModal(false)}

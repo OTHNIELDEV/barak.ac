@@ -179,7 +179,7 @@ export const certificateEngine = {
                 success: true,
                 isNewlyIssued: false,
                 certificate: found,
-                message: "이미 정식 발급된 공인 자격증서가 존재합니다.",
+                message: "이미 발급된 과정 수료증이 존재합니다.",
                 progressPercentage,
                 hasReflection,
             };
@@ -202,7 +202,7 @@ export const certificateEngine = {
             };
         }
 
-        // E. 고유 발급번호 및 자격증 자동 생성 (Serial Numbering)
+        // E. 고유 수료번호 및 수료증 자동 생성 (Serial Numbering)
         const rolePrefix = (roleTarget || (courseId === 1 ? "BARAK" : courseId === 2 ? "DEBORAH" : "JAEL")).toUpperCase();
         const year = new Date().getFullYear();
         const randomHash = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -245,13 +245,13 @@ export const certificateEngine = {
             success: true,
             isNewlyIssued: true,
             certificate: newCert,
-            message: "🎉 축하합니다! 전 과정 이수 및 소감문 요건이 확인되어 공식 자격증서가 자동 발급되었습니다.",
+            message: "🎉 축하합니다! 전 과정 이수 및 소감문 요건이 확인되어 과정 수료증이 자동 발급되었습니다.",
             progressPercentage: 100,
             hasReflection: true,
         };
     },
 
-    // 3. 자격증 고유 번호 진위 검증 (공식 조회 - Supabase 연동)
+    // 3. 수료증 수료번호 확인 (Supabase 연동)
     verifyLicense: async (licenseKey: string) => {
         const cleanedKey = licenseKey.trim().toUpperCase();
 
@@ -263,7 +263,7 @@ export const certificateEngine = {
                     isValid: true,
                     cert: matched,
                     issuer: "산해원교회 산하 • 바라크아카데미",
-                    president: "학장 이윤주 박사 (목사)",
+                    president: "학장 이윤주",
                     verifiedAt: new Date().toISOString()
                 };
             }
@@ -278,7 +278,7 @@ export const certificateEngine = {
                 isValid: true,
                 cert: localMatch,
                 issuer: "산해원교회 산하 • 바라크아카데미",
-                president: "학장 이윤주 박사 (목사)",
+                president: "학장 이윤주",
                 verifiedAt: new Date().toISOString()
             };
         }
@@ -292,20 +292,20 @@ export const certificateEngine = {
                     studentId: "user_verified",
                     studentName: "이믿음",
                     trackId: 1,
-                    trackTitle: "제1기 바라크아카데미 정규 신학과정 (120강)",
+                    trackTitle: "바락 부목사 과정 (2년 4학기 120강)",
                     issuedAt: "2026-03-01T00:00:00.000Z",
                     licenseKey: cleanedKey,
                     status: "active"
                 } as CertificateIssued,
                 issuer: "산해원교회 산하 • 바라크아카데미",
-                president: "학장 이윤주 박사 (목사)",
+                president: "학장 이윤주",
                 verifiedAt: new Date().toISOString()
             };
         }
 
         return {
             isValid: false,
-            message: "일치하는 공식 자격증서 발급 정보를 찾을 수 없습니다."
+            message: "일치하는 수료증 발급 정보를 찾을 수 없습니다."
         };
     }
 };

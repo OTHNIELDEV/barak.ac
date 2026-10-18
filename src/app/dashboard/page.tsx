@@ -159,7 +159,7 @@ export default function DashboardPage() {
                         position: "은퇴/원로 목사 (retired_pastor)",
                         department: "",
                         track: "barak",
-                        motivation: "바라크 아카데미 정식 입학 신청",
+                        motivation: "바라크아카데미 정식 수강 신청",
                         status: "approved",
                         submittedAt: app?.submittedAt || new Date().toISOString()
                     };
@@ -229,13 +229,13 @@ export default function DashboardPage() {
                             </div>
                             <div>
                                 <div className="text-base font-bold text-emerald-950 flex items-center gap-2">
-                                    <span>2027학년도 1기 신입생 입학 승인 완료</span>
+                                    <span>2027년 1기 수강 승인 완료</span>
                                     <span className="text-xs px-2.5 py-0.5 bg-emerald-600 text-white rounded-full font-bold uppercase">
                                         {userApplication.track} Track
                                     </span>
                                 </div>
                                 <p className="text-xs text-emerald-800 mt-0.5">
-                                    바라크 아카데미 정식 입학이 승인되었습니다. 등록된 커리큘럼의 모든 강의와 AI 멘토링을 자유롭게 수강하실 수 있습니다.
+                                    바라크아카데미 정식 수강이 승인되었습니다. 등록된 커리큘럼의 모든 강의와 AI 멘토링을 자유롭게 수강하실 수 있습니다.
                                 </p>
                             </div>
                         </div>
@@ -258,13 +258,13 @@ export default function DashboardPage() {
                             </div>
                             <div>
                                 <div className="text-base font-bold text-amber-950 flex items-center gap-2">
-                                    <span>2027학년도 1기 입학 원서 서류 심사 중</span>
+                                    <span>2027년 1기 수강 신청서 확인 중</span>
                                     <span className="text-xs px-2.5 py-0.5 bg-amber-500 text-white rounded-full font-bold uppercase">
-                                        {userApplication.track} Track (심사대기)
+                                        {userApplication.track} Track (승인대기)
                                     </span>
                                 </div>
                                 <p className="text-xs text-amber-800 mt-0.5">
-                                    입학 원서가 안전하게 접수되었습니다. 현재 <strong>제1강 무료 맛보기</strong>를 시청하실 수 있으며, 학사팀 승인 완료 시 2~5강 및 자격증 발급이 즉시 열립니다.
+                                    수강 신청서가 안전하게 접수되었습니다. 현재 <strong>제1강 무료 맛보기</strong>를 시청하실 수 있으며, 학사팀 승인 완료 시 전체 강의 및 과정 수료증 발급이 열립니다.
                                 </p>
                             </div>
                         </div>
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                                 제1강 맛보기 시청
                             </Link>
                             <span className="text-xs text-amber-700 font-semibold px-3 py-2 bg-amber-100/70 rounded-xl border border-amber-300/60 text-center">
-                                심사 대기중
+                                승인 대기중
                             </span>
                         </div>
                     </motion.div>
@@ -293,11 +293,11 @@ export default function DashboardPage() {
                         </div>
                         <div>
                             <div className="text-base font-bold text-blue-950 flex items-center gap-2">
-                                <span>2027학년도 1기 신입생 모집 진행 중</span>
-                                <span className="text-xs px-2.5 py-0.5 bg-blue-900 text-white rounded-full font-bold">1기 장학 혜택</span>
+                                <span>2027년 1기 수강 신청 진행 중</span>
+                                <span className="text-xs px-2.5 py-0.5 bg-blue-900 text-white rounded-full font-bold">1기 교육후원금 감면</span>
                             </div>
                             <p className="text-xs text-blue-800 mt-0.5">
-                                현재 <strong>제1강 신학입문 무료 맛보기</strong>가 제공됩니다. 제2강~5강 정규 강좌 수강과 공인 자격증서 취득을 원하시면 입학 원서를 접수해 주세요.
+                                현재 <strong>제1강 신학입문 무료 맛보기</strong>가 제공됩니다. 정규 강좌 수강과 과정 수료증 발급을 원하시면 수강 신청서를 접수해 주세요.
                             </p>
                         </div>
                     </div>
@@ -312,7 +312,7 @@ export default function DashboardPage() {
                             href="/apply"
                             className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm text-center"
                         >
-                            입학 원서 작성하기 &rarr;
+                            수강 신청서 작성하기 &rarr;
                         </Link>
                     </div>
                 </motion.div>

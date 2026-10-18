@@ -18,77 +18,77 @@ import { Progress } from "@/components/ui/progress";
 import { certificateEngine, ReflectionSubmission } from "@/lib/certificateEngine";
 import { motion, AnimatePresence } from "framer-motion";
 
-// 5대 핵심 실전 데모 강의 데이터 (실제 한국인 신학 교수 공식 YouTube 강의)
+// 바라크아카데미 1학기 핵심 강의 및 특강 데이터 (바라크아카데미 공식 영상)
 const DEMO_LECTURES = [
     {
         id: "demo-1",
         lectureNo: 1,
-        title: "제1강: 신학입문 - 신학이란 어떤 학문인가?",
-        instructor: "김진혁 교수 (연세대/횃불트리니티)",
-        instructorRole: "조직신학 교수 / 옥스퍼드대 Ph.D",
+        title: "제1강: 이갈렙 목사의 성경해석학 — 사사기 바락의 영성과 구속사",
+        instructor: "이윤주 학장 (산해원교회 담임목사)",
+        instructorRole: "바라크아카데미 학장 / 구약학 박사(Ph.D)",
         duration: "25:00",
-        youtubeId: "paVjQbkMg8I",
+        youtubeId: "T-kY9XBB8io",
         thumbnail: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=1000&auto=format&fit=crop",
-        category: "조직신학 & 신학서론",
-        bibleVerse: "딤후 3:16~17 / 롬 12:2",
-        summary: "신학의 정의와 본질, 신앙과 학문의 관계를 탐구하며 성경적 진리를 현대의 삶 속에서 바르게 이해하고 해석하는 신학의 기초를 정립합니다.",
-        handout: "신학이란_어떤_학문인가_강의안.pdf"
+        category: "성경해석학 & 구속사",
+        bibleVerse: "삿 4:6~14 / 히 11:32~35",
+        summary: "사사기 4~5장에 나타난 바락(Barak)의 히브리어 원어적 의미(무릎 꿇다·축복하다)와 구속사적 성경 해석의 핵심 원리를 배웁니다.",
+        handout: "제1강_이갈렙목사의_성경해석학_강의노트.pdf"
     },
     {
         id: "demo-2",
         lectureNo: 2,
-        title: "제2강: 구약학의 5가지 핵심 연구분야와 언약신학",
-        instructor: "하경택 교수 (장로회신학대학교)",
-        instructorRole: "장신대 구약학 교수 / 튀빙겐대 Dr.theol.",
-        duration: "18:00",
-        youtubeId: "JAUyMe63r28",
+        title: "제2강: 구약의 언약과 '바라크(ברך)' 영성의 실제",
+        instructor: "이윤주 학장 (산해원교회 담임목사)",
+        instructorRole: "바라크아카데미 학장 / 구약학 박사(Ph.D)",
+        duration: "22:00",
+        youtubeId: "bftZuUKSfM8",
         thumbnail: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
-        category: "구약 신학",
+        category: "구약 신학 & 언약",
         bibleVerse: "창 12:1~3 / 시 103:1~5",
-        summary: "오경, 역사서, 시가서, 예언서에 이르는 구약 성경의 광대한 흐름과 히브리어 '바라크(축복)'의 구속사적 언약 신학을 배웁니다.",
-        handout: "구약학의_5가지_연구분야_교안.pdf"
+        summary: "구약 성경 전체를 관통하는 하나님의 언약과 무릎 꿇는 예배자에게 임하는 성경적 복(Barak)의 의미를 심층 강해합니다.",
+        handout: "제2강_구약의_언약과_바라크_영성_강의노트.pdf"
     },
     {
         id: "demo-3",
         lectureNo: 3,
-        title: "제3강: 신약성서학이란 무엇인가? 원문과 해석학",
-        instructor: "김철홍 교수 (장로회신학대학교)",
-        instructorRole: "장신대 신약학 교수 / 풀러신학교 Ph.D",
-        duration: "20:00",
-        youtubeId: "GfXyT_L3m8Q",
+        title: "제3강: 복음서 강해와 예수 그리스도의 사역 원리",
+        instructor: "이갈렙 목사 (바라크아카데미 설립자)",
+        instructorRole: "산해원교회 설립목사 / 성경강해",
+        duration: "24:00",
+        youtubeId: "OP79-8l715c",
         thumbnail: "https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=1000&auto=format&fit=crop",
-        category: "신약 신학 & 성경해석학",
+        category: "신약 신학 & 복음서",
         bibleVerse: "요 5:39 / 롬 1:16~17",
-        summary: "복음서와 바울서신의 신약 텍스트 비평, 구속사적 성경 해석의 원리 및 초기 기독교 공동체의 복음 선포를 심층 강해합니다.",
-        handout: "신약성서학이란_무엇인가_교안.pdf"
+        summary: "복음서에 나타난 예수 그리스도의 말씀 사역과 십자가 복음의 능력을 목회 및 사역 현장에 적용하는 원리를 다룹니다.",
+        handout: "제3강_복음서_강해와_사역원리_강의노트.pdf"
     },
     {
         id: "demo-4",
         lectureNo: 4,
-        title: "제4강: 슬기로운 교회사와 역사신학 공부하기",
-        instructor: "이상조 교수 (장로회신학대학교)",
-        instructorRole: "장신대 역사신학/교회사 교수 / 캠브리지대 Ph.D",
-        duration: "16:00",
-        youtubeId: "twaX7pEQSCs",
+        title: "제4강: 영혼 돌봄과 성경적 목회상담의 실제",
+        instructor: "이윤주 학장 (산해원교회 담임목사)",
+        instructorRole: "바라크아카데미 학장 / 실천목회",
+        duration: "20:00",
+        youtubeId: "ZbAzIGAuywg",
         thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop",
-        category: "역사 신학 & 교회사",
-        bibleVerse: "히 12:1~2 / 딤후 4:7~8",
-        summary: "초대교회부터 종교개혁, 한국 교회사에 이르기까지 교회의 거룩한 전통과 신앙의 선진들이 남긴 사역적 영적 유산을 조명합니다.",
-        handout: "슬기로운_교회사_공부하기_교안.pdf"
+        category: "목회상담 & 영혼돌봄",
+        bibleVerse: "살전 5:14 / 갈 6:1~2",
+        summary: "교회 공동체와 가정 안에서 상처 입은 영혼을 말씀과 기도로 돌보며 회복시키는 성경적 상담 사역을 학습합니다.",
+        handout: "제4강_영혼돌봄과_목회상담_강의노트.pdf"
     },
     {
         id: "demo-5",
         lectureNo: 5,
-        title: "제5강: 실천신학과 기독교 영성신학 입문",
-        instructor: "오방식 교수 (장로회신학대학교)",
-        instructorRole: "장신대 실천/영성신학 교수 / 오순절 및 영성신학",
+        title: "제5강: 기도의 영성과 시대적 사역자의 길",
+        instructor: "이갈렙 목사 (바라크아카데미 설립자)",
+        instructorRole: "산해원교회 설립목사 / 영성신학",
         duration: "22:00",
-        youtubeId: "743UBBa6q0c",
+        youtubeId: "tvWiKoF_MI8",
         thumbnail: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=1000&auto=format&fit=crop",
-        category: "실천 신학 & 영성신학",
+        category: "실천 신학 & 영성",
         bibleVerse: "행 1:8 / 요 7:38~39 / 엡 6:18",
-        summary: "신학적 지식을 넘어 성령의 기름부으심, 기도의 영성, 목회 현장과 사역에서의 실천적 권능을 회복하는 영성 형성을 다룹니다.",
-        handout: "실천신학과_영성신학_입문_교안.pdf"
+        summary: "말씀과 기도의 자리에서 성령의 인도하심을 따라 교회와 다음 세대를 섬기는 사역자의 영적 자세를 정립합니다.",
+        handout: "제5강_기도의_영성과_사역자의_길_강의노트.pdf"
     }
 ];
 
@@ -125,13 +125,13 @@ export default function MyClassroomPage() {
     const isAllLecturesCompleted = completedCount === totalCount;
     const isCurrentLectureDone = completedLectures.includes(currentLecture.id);
 
-    // Option 1 Freemium Gate: Lecture 1 is free for everyone, 2~5 require approved admission
+    // Option 1 Freemium Gate: Lecture 1 is free for everyone, 2~5 require approved enrollment
     const isLectureLocked = (idx: number) => {
         if (idx === 0) return false; // 제1강: 누구나 무료 맛보기 개방!
         if (user?.role === "admin" || user?.role === "pastor") return false;
         if (user?.email?.trim().toLowerCase() === "axasoft@naver.com") return false;
         if (user?.level && user?.level.includes("정규")) return false;
-        return admissionStatus !== "approved"; // 제2강~: 정규 입학 승인자만 개방!
+        return admissionStatus !== "approved"; // 제2강~: 수강 승인자만 개방!
     };
     const isCurrentLectureLocked = isLectureLocked(activeLectureIndex);
 
@@ -245,7 +245,7 @@ export default function MyClassroomPage() {
             await autoIssueCertificate();
         } else if (activeLectureIndex < totalCount - 1) {
             // Next Lecture prompt
-            if (confirm("할렐루야! 이번 강의를 수료하셨습니다. 다음 강의로 이동하시겠습니까?")) {
+            if (confirm("할렐루야! 이번 강의를 수강 완료하셨습니다. 다음 강의로 이동하시겠습니까?")) {
                 setActiveLectureIndex(prev => prev + 1);
                 setIsVideoEnded(false);
             }
@@ -255,7 +255,7 @@ export default function MyClassroomPage() {
     // Fast Test Pass
     const handleFastPass = () => {
         if (isCurrentLectureLocked) {
-            alert("🔒 본 강좌는 정규 입학 승인자 전용 강좌입니다. 입학 원서를 먼저 작성해 주세요.");
+            alert("🔒 본 강좌는 수강 승인자 전용 강좌입니다. 수강 신청서를 먼저 작성해 주세요.");
             return;
         }
         setIsVideoEnded(true);
@@ -267,7 +267,7 @@ export default function MyClassroomPage() {
         if (!user || !reflectionContent.trim()) return;
 
         if (admissionStatus !== "approved") {
-            const goToApply = confirm("🔒 A4 과목 실천 소감문 제출 및 공인 자격증서 취득은 [정규 신입생 승인자] 전용 혜택입니다.\n\n정규 입학 원서 접수 페이지로 이동하시겠습니까?");
+            const goToApply = confirm("🔒 과목별 A4 소감문 제출 및 과정 수료증 발급은 [정규 수강 승인자] 전용 과정입니다.\n\n수강 신청 페이지로 이동하시겠습니까?");
             if (goToApply) {
                 router.push("/apply");
             }
@@ -276,7 +276,7 @@ export default function MyClassroomPage() {
 
         localStorage.setItem(`barak_demo_reflection_${user.id}`, reflectionContent);
         setHasSubmittedReflection(true);
-        alert("A4 과목 실천 소감문이 성공적으로 접수 및 승인되었습니다!");
+        alert("과목별 A4 소감문이 성공적으로 제출되었습니다!");
 
         if (completedLectures.length === totalCount) {
             await autoIssueCertificate();
@@ -299,7 +299,7 @@ export default function MyClassroomPage() {
             studentId: user.id,
             studentName: user.name,
             trackId: 1,
-            trackTitle: "제1기 바라크아카데미 정규 온라인 신학과정 (5대 핵심 강좌)",
+            trackTitle: "바락 부목사 과정 (2년 4학기 120강)",
             licenseKey
         });
 
@@ -308,7 +308,7 @@ export default function MyClassroomPage() {
                 studentId: user.id,
                 studentName: user.name,
                 trackId: 1,
-                trackTitle: "제1기 바라크아카데미 정규 온라인 신학과정 (5대 핵심 강좌)",
+                trackTitle: "바락 부목사 과정 (2년 4학기 120강)",
                 licenseKey
             });
         } catch (e) { }
@@ -332,7 +332,7 @@ export default function MyClassroomPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     messages: [
-                        { role: "system", content: `당신은 바라크아카데미 영적 튜터 '갈렙 AI'입니다. 현재 학생은 [${currentLecture.title} - 강사: ${currentLecture.instructor}]를 수강 중입니다. 성경적이며 은혜롭고 신학적으로 깊이 있게 3~4문장으로 답변해 주세요.` },
+                        { role: "system", content: `당신은 바라크아카데미 학습 보조 튜터 '갈렙 AI'입니다. 현재 수강생은 [${currentLecture.title} - 강사: ${currentLecture.instructor}]를 수강 중입니다. 성경적이며 은혜롭고 신학적으로 깊이 있게 3~4문장으로 답변해 주세요.` },
                         { role: "user", content: query }
                     ]
                 })
@@ -358,14 +358,14 @@ export default function MyClassroomPage() {
             <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 p-6 md:p-8 rounded-3xl text-white shadow-xl border border-amber-400/30">
                 <div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase mb-2 border border-amber-400/30">
-                        <Sparkles className="w-3.5 h-3.5" /> 2026 Barak Online Seminary • Live Demo
+                        <Sparkles className="w-3.5 h-3.5" /> 2026 Barak Academy • Online Classroom
                     </div>
                     <h1 className="text-2xl md:text-3xl font-black text-white flex items-center gap-3">
                         <BookOpen className="w-8 h-8 text-amber-400" />
                         바라크아카데미 온라인 강의실
                     </h1>
                     <p className="text-slate-300 mt-1 text-xs md:text-sm font-light">
-                        유튜브 실시간 강의를 시청하고, <strong>'아멘' 출석 인증</strong>과 <strong>A4 소감문</strong>을 제출하여 <strong>공인 사역자 자격증서</strong>를 취득하세요.
+                        온라인 강의를 시청하고, <strong>'아멘' 출석 체크</strong>와 <strong>과목별 A4 소감문</strong>을 제출하여 <strong>과정 수료증</strong>을 발급받으세요.
                     </p>
                 </div>
 
@@ -374,7 +374,7 @@ export default function MyClassroomPage() {
                         href="/certificate"
                         className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg hover:scale-105 transition-all"
                     >
-                        <Award className="w-4 h-4 text-slate-950" /> 공식 자격증서 발급센터
+                        <Award className="w-4 h-4 text-slate-950" /> 과정 수료증 발급센터
                     </Link>
                 </div>
             </div>
@@ -396,7 +396,7 @@ export default function MyClassroomPage() {
                                 </h3>
                             </div>
                             <p className="text-xs text-slate-300 mt-0.5">
-                                제2강~5강 정규 강좌 수강 및 공인 사역자 자격증서 취득을 원하시면 간편하게 <strong>입학 원서</strong>를 접수해 주세요.
+                                제2강~5강 본 과정 수강 및 과정 수료증 발급을 원하시면 간편하게 <strong>수강 신청서</strong>를 접수해 주세요.
                             </p>
                         </div>
                     </div>
@@ -404,7 +404,7 @@ export default function MyClassroomPage() {
                         href="/apply"
                         className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs hover:brightness-110 transition-all flex items-center justify-center gap-1.5 shadow-md flex-shrink-0"
                     >
-                        <GraduationCap className="w-4 h-4" /> 정규 입학 원서 접수하기
+                        <GraduationCap className="w-4 h-4" /> 수강 신청서 접수하기
                     </Link>
                 </div>
             )}
@@ -418,14 +418,14 @@ export default function MyClassroomPage() {
                         <div>
                             <div className="flex items-center gap-2">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/30 text-amber-200 border border-amber-400/40">
-                                    입학 심사 진행 중
+                                    수강 승인 확인 중
                                 </span>
                                 <h3 className="font-bold text-sm sm:text-base text-white">
-                                    제출하신 입학 신청서가 학사관리팀에서 심사 중입니다
+                                    제출하신 수강 신청서를 운영팀에서 확인 중입니다
                                 </h3>
                             </div>
                             <p className="text-xs text-slate-300 mt-0.5">
-                                심사 중에도 제1강은 자유롭게 수강하실 수 있으며, 관리자 승인 시 제2강~5강이 즉시 자동 개방됩니다.
+                                확인 중에도 제1강은 자유롭게 수강하실 수 있으며, 승인 완료 시 전체 강의가 즉시 자동 개방됩니다.
                             </p>
                         </div>
                     </div>
@@ -433,7 +433,7 @@ export default function MyClassroomPage() {
                         href="/dashboard"
                         className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md flex-shrink-0"
                     >
-                        심사 현황 확인하기 <ChevronRight className="w-3.5 h-3.5" />
+                        진행 현황 확인하기 <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
                 </div>
             )}
@@ -442,7 +442,7 @@ export default function MyClassroomPage() {
                 <div className="mb-6 p-3.5 sm:p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-2xl text-emerald-200 shadow-md flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
                     <div className="text-xs">
-                        <strong className="text-emerald-300">정규 신입생 승인 완료:</strong> 전체 5개 핵심 강좌 열람, 실천 소감문 제출 및 공인 사역자 자격증서 취득 권한이 정상 활성화되었습니다.
+                        <strong className="text-emerald-300">정규 수강생 승인 완료:</strong> 전체 핵심 강좌 열람, 과목별 소감문 제출 및 과정 수료증 발급 권한이 정상 활성화되었습니다.
                     </div>
                 </div>
             )}
@@ -456,10 +456,10 @@ export default function MyClassroomPage() {
                         </div>
                         <div>
                             <h3 className="font-extrabold text-base md:text-lg">
-                                🎉 {user?.name} 님의 공인 사역자 자격증서가 정식 발급되었습니다!
+                                🎉 {user?.name} 님의 바라크아카데미 과정 수료증이 발급되었습니다!
                             </h3>
                             <p className="text-xs font-semibold text-slate-900/80">
-                                발급등록번호 : <span className="font-mono underline font-bold">{issuedCert.licenseKey}</span> (산해원교회 산하 • 학장 이윤주 박사/목사)
+                                수료번호 : <span className="font-mono underline font-bold">{issuedCert.licenseKey}</span> (산해원교회 바라크아카데미 학장 이윤주)
                             </p>
                         </div>
                     </div>
@@ -467,7 +467,7 @@ export default function MyClassroomPage() {
                         href="/certificate"
                         className="px-5 py-2.5 bg-slate-950 text-amber-300 rounded-xl font-bold text-xs hover:bg-slate-900 transition-all flex items-center gap-1.5 shadow-md flex-shrink-0"
                     >
-                        <Download className="w-4 h-4" /> 자격증서 고해상도 PDF 출력
+                        <Download className="w-4 h-4" /> 수료증 고해상도 PDF 출력
                     </Link>
                 </div>
             )}
@@ -491,7 +491,7 @@ export default function MyClassroomPage() {
                             <div className="flex items-center gap-2">
                                 {isCurrentLectureLocked ? (
                                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                                        <Lock className="w-3 h-3" /> 정규 신입생 전용
+                                        <Lock className="w-3 h-3" /> 정규 수강생 전용
                                     </span>
                                 ) : activeLectureIndex === 0 ? (
                                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
@@ -523,7 +523,7 @@ export default function MyClassroomPage() {
                                     </div>
 
                                     <span className="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wider mb-2">
-                                        Regular Seminary Course Locked
+                                        Regular Academy Course Locked
                                     </span>
 
                                     <h3 className="text-lg sm:text-2xl font-black text-white max-w-lg mb-2">
@@ -533,15 +533,15 @@ export default function MyClassroomPage() {
                                     <p className="text-xs sm:text-sm text-slate-300 max-w-md mb-6 leading-relaxed">
                                         {admissionStatus === "pending" ? (
                                             <>
-                                                제출하신 입학 신청서가 <strong className="text-amber-300">현재 심사 중</strong>입니다.
+                                                제출하신 수강 신청서를 <strong className="text-amber-300">현재 확인 중</strong>입니다.
                                                 <br />
-                                                학사관리팀 승인 완료 시 본 강좌가 즉시 자동 잠금 해제됩니다.
+                                                운영팀 승인 완료 시 본 강좌가 즉시 자동 잠금 해제됩니다.
                                             </>
                                         ) : (
                                             <>
-                                                본 강좌는 <strong className="text-amber-300">바라크아카데미 정규 신입생</strong> 전용 과정입니다.
+                                                본 강좌는 <strong className="text-amber-300">바라크아카데미 정규 수강생</strong> 전용 과정입니다.
                                                 <br />
-                                                입학 원서를 접수하시면 5대 핵심 강좌 전체와 공인 사역자 자격증 취득 혜택이 주어집니다.
+                                                수강 신청서를 접수하시면 전체 강좌 수강 및 과정 수료증 발급이 가능합니다.
                                             </>
                                         )}
                                     </p>
@@ -552,14 +552,14 @@ export default function MyClassroomPage() {
                                                 onClick={() => router.push("/dashboard")}
                                                 className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xl transition-all flex items-center justify-center gap-1.5"
                                             >
-                                                심사 진행현황 확인하기 <ArrowRight className="w-3.5 h-3.5" />
+                                                승인 진행현황 확인하기 <ArrowRight className="w-3.5 h-3.5" />
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => router.push("/apply")}
                                                 className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-black text-xs shadow-xl transition-all flex items-center justify-center gap-1.5 animate-pulse"
                                             >
-                                                <GraduationCap className="w-4 h-4" /> 정규 입학 원서 접수하기 (무료/장학)
+                                                <GraduationCap className="w-4 h-4" /> 수강 신청서 접수하기 (1기 후원금 감면)
                                             </button>
                                         )}
 
@@ -607,7 +607,7 @@ export default function MyClassroomPage() {
                                 <h4 className="text-white font-bold text-sm sm:text-base flex items-center gap-2">
                                     {isCurrentLectureLocked ? (
                                         <span className="text-amber-400/80 flex items-center gap-1.5 text-xs sm:text-sm">
-                                            <Lock className="w-4 h-4" /> 정규 신입생 승인 후 본 강좌의 출석 및 진도 저장이 가능합니다.
+                                            <Lock className="w-4 h-4" /> 정규 수강 승인 후 본 강좌의 출석 및 진도 저장이 가능합니다.
                                         </span>
                                     ) : isCurrentLectureDone ? (
                                         <span className="text-emerald-400 flex items-center gap-1">
@@ -631,7 +631,7 @@ export default function MyClassroomPage() {
                                     className="w-full sm:w-auto px-6 py-3.5 rounded-2xl font-bold text-xs bg-slate-800 text-amber-400 border border-amber-500/30 hover:bg-slate-750 transition-all flex items-center justify-center gap-2 shadow-md"
                                 >
                                     <Lock className="w-4 h-4" />
-                                    <span>{admissionStatus === "pending" ? "입학 심사 대기 중" : "입학 원서 작성 필요"}</span>
+                                    <span>{admissionStatus === "pending" ? "수강 승인 대기 중" : "수강 신청서 작성 필요"}</span>
                                 </button>
                             ) : (
                                 <button
@@ -640,7 +640,7 @@ export default function MyClassroomPage() {
                                     className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-extrabold text-sm transition-all shadow-xl flex items-center justify-center gap-2 ${
                                         isCurrentLectureDone
                                             ? "bg-slate-800 text-slate-400 cursor-default border border-slate-700"
-                                            : isVideoEnded
+                                        : isVideoEnded
                                             ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 hover:scale-105 active:scale-95 animate-pulse"
                                             : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
                                     }`}
@@ -666,14 +666,14 @@ export default function MyClassroomPage() {
                                 onClick={() => setActiveTab("reflection")}
                                 className={`pb-2 transition-all flex items-center gap-1.5 ${activeTab === "reflection" ? "text-amber-600 border-b-2 border-amber-500 font-extrabold" : "text-slate-400 hover:text-slate-700"}`}
                             >
-                                <Award className="w-4 h-4" /> A4 과목 소감문 (자격증 필수)
+                                <Award className="w-4 h-4" /> A4 과목 소감문 (수료 필수)
                                 {hasSubmittedReflection && <Check className="w-3.5 h-3.5 text-emerald-600" />}
                             </button>
                             <button
                                 onClick={() => setActiveTab("handout")}
                                 className={`pb-2 transition-all flex items-center gap-1.5 ${activeTab === "handout" ? "text-blue-900 border-b-2 border-blue-900 font-extrabold" : "text-slate-400 hover:text-slate-700"}`}
                             >
-                                <FileText className="w-4 h-4" /> 강의 교안 다운로드
+                                <FileText className="w-4 h-4" /> 강의 요약 노트
                             </button>
                         </div>
 
@@ -714,10 +714,10 @@ export default function MyClassroomPage() {
                                         <Lock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                                         <div className="text-xs text-amber-950 space-y-1">
                                             <p className="font-bold text-amber-900 text-sm">
-                                                🔒 정규 신입생 승인자 전용 필수 과제입니다
+                                                🔒 정규 수강 승인자 전용 필수 과제입니다
                                             </p>
                                             <p className="text-amber-800 leading-relaxed">
-                                                A4 실천 소감문 제출 및 공인 사역자 자격증서 발급은 입학 심사를 통과한 정규 신입생에게만 제공됩니다. (제1강 무료 맛보기 청강생은 과제 제출 및 자격증 발급 대상에서 제외됩니다.)
+                                                A4 실천 소감문 제출 및 과정 수료증 발급은 수강 신청이 승인된 정규 수강생에게만 제공됩니다. (제1강 무료 맛보기 청강생은 과제 제출 및 수료증 발급 대상에서 제외됩니다.)
                                             </p>
                                             {admissionStatus === "unapplied" ? (
                                                 <button
@@ -725,18 +725,18 @@ export default function MyClassroomPage() {
                                                     onClick={() => router.push("/apply")}
                                                     className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 rounded-xl font-black text-xs shadow-md transition-all"
                                                 >
-                                                    <GraduationCap className="w-3.5 h-3.5" /> 정규 입학 원서 접수하러 가기
+                                                    <GraduationCap className="w-3.5 h-3.5" /> 수강 신청서 접수하러 가기
                                                 </button>
                                             ) : (
                                                 <p className="font-bold text-amber-700 mt-1 flex items-center gap-1">
-                                                    <Clock className="w-3.5 h-3.5 animate-spin" /> 현재 학사관리팀에서 입학 심사 진행 중입니다. 승인 완료 후 즉시 제출 가능합니다.
+                                                    <Clock className="w-3.5 h-3.5 animate-spin" /> 현재 운영팀에서 수강 신청을 확인 중입니다. 승인 완료 후 즉시 제출 가능합니다.
                                                 </p>
                                             )}
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-950 leading-relaxed">
-                                        <strong>📜 자격증 발급 필수 덕목:</strong> 본 아카데미는 시험 대신 배운 진리를 삶과 사역에 어떻게 적용할 것인지 작성하는 <strong>A4 1장 내외의 실천 소감문</strong>을 평가 기준으로 삼습니다.
+                                        <strong>📜 과정 수료 기준 안내:</strong> 본 아카데미는 필기시험 대신 배운 진리를 삶과 사역에 어떻게 적용할 것인지 작성하는 <strong>과목별 A4 1장 내외의 소감문 제출</strong>을 이수 요건으로 합니다.
                                     </div>
                                 )}
 
@@ -749,7 +749,7 @@ export default function MyClassroomPage() {
                                         placeholder={
                                             admissionStatus === "approved"
                                                 ? "본 강좌를 통해 깨달은 성경적 진리와 사역 현장(또는 가정과 삶)에서의 구체적 실천 다짐을 기록해 주세요..."
-                                                : "정규 신입생 승인 완료 후 실천 소감문을 작성 및 제출하실 수 있습니다."
+                                                : "정규 수강생 승인 완료 후 실천 소감문을 작성 및 제출하실 수 있습니다."
                                         }
                                         className={`w-full p-4 rounded-2xl border text-sm leading-relaxed ${
                                             admissionStatus === "approved"
@@ -759,7 +759,7 @@ export default function MyClassroomPage() {
                                     />
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs text-slate-400">
-                                            {hasSubmittedReflection ? "✓ 제출 및 승인 완료됨" : admissionStatus === "approved" ? "미제출 상태" : "승인 대기 상태"}
+                                            {hasSubmittedReflection ? "✓ 소감문 제출 완료됨" : admissionStatus === "approved" ? "미제출 상태" : "승인 대기 상태"}
                                         </span>
                                         <button
                                             type="submit"
@@ -770,7 +770,7 @@ export default function MyClassroomPage() {
                                                     : "bg-slate-200 text-slate-400 cursor-not-allowed"
                                             }`}
                                         >
-                                            <Send className="w-3.5 h-3.5" /> 소감문 제출 및 즉시 승인
+                                            <Send className="w-3.5 h-3.5" /> 소감문 제출하기
                                         </button>
                                     </div>
                                 </form>
@@ -786,14 +786,14 @@ export default function MyClassroomPage() {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-slate-900 text-sm">{currentLecture.handout}</h4>
-                                        <p className="text-xs text-slate-400">산해원교회 산하 바라크아카데미 정규 교재 • 2.4 MB</p>
+                                        <p className="text-xs text-slate-400">1학기 강의 요약 노트 및 소감문 작성 가이드</p>
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => alert("교안 다운로드가 시작되었습니다.")}
+                                    onClick={() => alert("강의 요약 노트 다운로드 안내가 준비되었습니다.")}
                                     className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-1.5"
                                 >
-                                    <Download className="w-3.5 h-3.5" /> 교안 받기
+                                    <Download className="w-3.5 h-3.5" /> 요약 노트 받기
                                 </button>
                             </div>
                         )}
@@ -822,15 +822,15 @@ export default function MyClassroomPage() {
 
                         <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs space-y-1 text-slate-600">
                             <div className="flex justify-between">
-                                <span>5대 강의 출석:</span>
+                                <span>핵심 강의 출석:</span>
                                 <strong className={isAllLecturesCompleted ? "text-emerald-600" : "text-slate-800"}>
                                     {isAllLecturesCompleted ? "✓ 전 강좌 수료" : `${completedCount}/5 강`}
                                 </strong>
                             </div>
                             <div className="flex justify-between">
-                                <span>A4 실천 소감문:</span>
+                                <span>과목별 A4 소감문:</span>
                                 <strong className={hasSubmittedReflection ? "text-emerald-600" : "text-amber-600"}>
-                                    {hasSubmittedReflection ? "✓ 승인 완료" : "작성 필요"}
+                                    {hasSubmittedReflection ? "✓ 제출 완료" : "작성 필요"}
                                 </strong>
                             </div>
                         </div>
@@ -839,7 +839,7 @@ export default function MyClassroomPage() {
                     {/* 3-4. Playlist: 5 Lectures List */}
                     <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
                         <h3 className="font-bold text-slate-900 text-base mb-4 flex items-center justify-between">
-                            <span>📚 5대 핵심 강좌 목록</span>
+                            <span>📚 바라크아카데미 핵심 강좌 목록</span>
                             <span className="text-xs text-slate-400 font-normal">선택 시 즉시 이동</span>
                         </h3>
 
@@ -898,7 +898,7 @@ export default function MyClassroomPage() {
                                                         </span>
                                                     ) : (
                                                         <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-100 text-blue-800">
-                                                            정규
+                                                            본 과정
                                                         </span>
                                                     )}
                                                 </div>
@@ -928,8 +928,8 @@ export default function MyClassroomPage() {
                                         AI
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-sm text-white">갈렙 AI 실시간 튜터</h4>
-                                        <p className="text-[10px] text-amber-300">24시간 신학 질의응답</p>
+                                        <h4 className="font-bold text-sm text-white">갈렙 AI 학습 보조 튜터</h4>
+                                        <p className="text-[10px] text-amber-300">성경·신학 질의응답 도우미</p>
                                     </div>
                                 </div>
                             </div>
@@ -950,7 +950,7 @@ export default function MyClassroomPage() {
                                 ))}
                                 {isAiLoading && (
                                     <div className="p-2.5 bg-white/10 rounded-2xl text-slate-400 text-xs flex items-center gap-2">
-                                        <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" /> 갈렙 AI가 묵상 중입니다...
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" /> 갈렙 AI가 답변을 작성 중입니다...
                                     </div>
                                 )}
                             </div>
@@ -1015,20 +1015,20 @@ export default function MyClassroomPage() {
                             </div>
 
                             <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">
-                                공인 사역자 자격증서 발급 완료
+                                과정 수료증 발급 완료
                             </h2>
                             <p className="text-xs md:text-sm text-slate-600 mb-6 leading-relaxed">
-                                {user?.name} 님께서 5대 핵심 강좌와 A4 실천 소감문을 성실히 완수하였으므로 산해원교회 산하 바라크아카데미 정규 사역자 자격증서가 정식 발급되었습니다.
+                                {user?.name} 님께서 핵심 강좌와 과목별 A4 소감문을 성실히 이수하였으므로 산해원교회 산하 바라크아카데미 과정 수료증이 발급되었습니다.
                             </p>
 
                             <div className="p-4 bg-slate-50 rounded-2xl mb-6 text-left text-xs space-y-1.5 border border-slate-200">
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500">공인 등록번호:</span>
+                                    <span className="text-slate-500">수료번호:</span>
                                     <span className="font-mono font-bold text-amber-600">{issuedCert?.licenseKey}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-500">발급 주체:</span>
-                                    <span className="font-medium text-slate-800">바라크아카데미 (학장 이윤주 박사/목사)</span>
+                                    <span className="font-medium text-slate-800">산해원교회 바라크아카데미 학장 이윤주</span>
                                 </div>
                             </div>
 
@@ -1037,7 +1037,7 @@ export default function MyClassroomPage() {
                                     href="/certificate"
                                     className="flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-md hover:scale-105 transition-all flex items-center justify-center gap-1.5"
                                 >
-                                    <Download className="w-4 h-4" /> 자격증서 고해상도 PDF 출력
+                                    <Download className="w-4 h-4" /> 수료증 고해상도 PDF 출력
                                 </Link>
                                 <button
                                     onClick={() => setShowCertModal(false)}

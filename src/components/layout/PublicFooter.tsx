@@ -26,7 +26,7 @@ export function PublicFooter() {
                             <Link href="/about" className="hover:text-amber-400 transition-colors">설립 취지 및 비전</Link>
                             <Link href="/faculty" className="hover:text-amber-400 transition-colors">교수진 소개</Link>
                             <Link href="/curriculum" className="hover:text-amber-400 transition-colors">4학기 교육과정</Link>
-                            <Link href="/apply" className="hover:text-amber-400 transition-colors font-bold text-amber-300">신입생 모집요강</Link>
+                            <Link href="/apply" className="hover:text-amber-400 transition-colors font-bold text-amber-300">수강 신청 안내</Link>
                         </div>
                     </div>
 
@@ -36,8 +36,8 @@ export function PublicFooter() {
                         <div className="flex flex-col space-y-4 text-sm font-medium md:text-center">
                             <Link href="/chapel" className="hover:text-amber-400 transition-colors">산해원 채플</Link>
                             <Link href="/ai-system" className="hover:text-amber-400 transition-colors">갈렙 AI 시스템</Link>
-                            <Link href="/dashboard/community" className="hover:text-amber-400 transition-colors">동문 커뮤니티</Link>
-                            <Link href="/login?mode=signup" className="hover:text-amber-400 transition-colors">온라인 등록</Link>
+                            <Link href="/certificate" className="hover:text-amber-400 transition-colors">과정 수료증 발급센터</Link>
+                            <Link href="/apply" className="hover:text-amber-400 transition-colors">온라인 수강 신청</Link>
                         </div>
                     </div>
 
@@ -49,19 +49,24 @@ export function PublicFooter() {
                             <li><strong className="text-slate-200">HP:</strong> 010-5205-6970</li>
                             <li><strong className="text-slate-200">Email:</strong> jhop3927@naver.com</li>
                             <li className="pt-2 text-xs text-slate-500 leading-relaxed">
-                                새 시대에 요구되는 성경 중심의 온라인 신학교<br />
+                                새 시대에 요구되는 성경 중심의 온라인 신학 아카데미<br />
                                 <strong>바라크아카데미 (BARAK ACADEMY)</strong>
                             </li>
                         </ul>
                     </div>
                 </div>
 
+                {/* Common Legal Disclaimer (R6) */}
+                <div className="mb-8 px-4 py-3.5 rounded-xl bg-slate-800/50 border border-slate-800 text-xs text-slate-400 leading-relaxed text-center">
+                    본 과정은 교육부 인가 학위·자격 과정이 아닌 산해원교회 산하 신학 아카데미의 교회 교육 과정입니다. 수료 시 과정별 수료증을 드리며, 이는 국가·민간 자격이나 학위가 아닙니다. 사역 배치와 임명은 각 교회·교단의 절차를 따릅니다.
+                </div>
+
                 {/* Bottom: Copyright */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
                     <span>&copy; {new Date().getFullYear()} Barak Academy. All rights reserved.</span>
                     <div className="flex gap-6">
-                        <Link href="#" className="hover:text-slate-400 transition-colors">이용약관</Link>
-                        <Link href="#" className="hover:text-slate-400 transition-colors">개인정보처리방침</Link>
+                        <Link href="/terms" className="hover:text-slate-300 transition-colors underline underline-offset-4">이용약관</Link>
+                        <Link href="/privacy" className="hover:text-slate-300 transition-colors font-semibold text-slate-400 underline underline-offset-4">개인정보처리방침</Link>
                     </div>
                 </div>
             </div>

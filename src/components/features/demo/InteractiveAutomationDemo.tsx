@@ -55,8 +55,8 @@ export function InteractiveAutomationDemo() {
     const handleSubmitReflection = () => {
         if (!reflectionText.trim()) return;
         setIsReflectionApproved(true);
-        addLog("db", `[Supabase INSERT reflections] user_id: 'user_demo', course_id: 1, status: 'approved'`);
-        addLog("ai", `[AI 학술위원회 실시간 심사] "사역적 결단과 성경적 고백이 충족되어 즉시 A4 소감문 이수가 승인되었습니다."`);
+        addLog("db", `[Supabase INSERT reflections] user_id: 'user_demo', course_id: 1, status: 'submitted'`);
+        addLog("ai", `[수료 요건 자동 확인] "과목별 A4 소감문 분량 및 제출 여부가 확인되어 이수 처리가 완료되었습니다."`);
         setCurrentStep(3);
 
         // Automatically trigger Step 3 Auto-Issuance
@@ -77,14 +77,14 @@ export function InteractiveAutomationDemo() {
             licenseKey,
             issuedAt,
             studentName,
-            trackTitle: selectedRole === 'barak' ? "바라크 트랙 (전문 부목사 과정 120강)" : selectedRole === 'deborah' ? "드보라 트랙 (여목 지도자 과정 120강)" : "야엘 트랙 (평신도 전도인 과정 120강)",
+            trackTitle: selectedRole === 'barak' ? "바락 부목사 과정 (120강)" : selectedRole === 'deborah' ? "드보라 담임목회 과정 (120강)" : "야엘 은사사역 과정 (120강)",
             status: "active"
         };
 
         setGeneratedCert(cert);
-        addLog("ai", `[certificateEngine] 수료 요건 검증: 진도율 100% (PASS), A4 소감문 (PASS), 성령세례 고백 (PASS)`);
+        addLog("ai", `[certificateEngine] 수료 요건 확인: 진도율 100% (충족), 과목별 A4 소감문 제출 (충족)`);
         addLog("db", `[Supabase INSERT certificates] license_key: '${licenseKey}', student: '${studentName}', status: 'active'`);
-        addLog("success", `🎉 [완전 자동 발급 완료] 공인 사역자 자격증서가 성공적으로 생성되었습니다!`);
+        addLog("success", `🎉 [자동 발급 완료] 과정 수료증이 성공적으로 생성되었습니다!`);
         setCurrentStep(4);
     };
 
@@ -107,13 +107,13 @@ export function InteractiveAutomationDemo() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-800">
                 <div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase mb-2 border border-amber-400/30">
-                        <Sparkles className="w-3.5 h-3.5" /> Full-Automated Certification Engine Simulator
+                        <Sparkles className="w-3.5 h-3.5" /> Automated Certificate Workflow Simulator
                     </div>
                     <h2 className="text-2xl sm:text-3xl font-black text-white">
-                        자격증 자동 발급 시스템 실시간 구동 목업
+                        수료증 자동 발급 흐름 체험
                     </h2>
                     <p className="text-slate-400 text-xs sm:text-sm mt-1">
-                        [강의 수강 ➔ A4 소감문 제출 ➔ Supabase DB 자동 검증 ➔ 고유 등록번호 발급 ➔ PDF 인쇄 & 진위 확인] 전 과정을 직접 실행해보세요.
+                        [강의 수강 ➔ 소감문 제출 ➔ 수료 요건 확인 ➔ 수료번호 발급 ➔ PDF 다운로드] 전 과정을 직접 실행해보세요.
                     </p>
                 </div>
 
@@ -131,9 +131,9 @@ export function InteractiveAutomationDemo() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
                 {[
                     { num: 1, title: "1. 온라인 강의 수강", sub: "진도율 100% & 아멘", done: currentStep > 1, active: currentStep === 1 },
-                    { num: 2, title: "2. A4 소감문 제출", sub: "AI 실시간 승인 총평", done: currentStep > 2, active: currentStep === 2 },
-                    { num: 3, title: "3. Supabase 자동 발급", sub: "시리얼 등록번호 채번", done: currentStep > 3, active: currentStep === 3 },
-                    { num: 4, title: "4. 자격증 렌더링 & 진위", sub: "PDF 다운로드 & 검증", done: currentStep === 4, active: currentStep === 4 },
+                    { num: 2, title: "2. 소감문 제출", sub: "수료 요건 자동 확인", done: currentStep > 2, active: currentStep === 2 },
+                    { num: 3, title: "3. 수료번호 발급", sub: "수료번호 자동 채번", done: currentStep > 3, active: currentStep === 3 },
+                    { num: 4, title: "4. 수료증 PDF 다운로드", sub: "PDF 인쇄 & 수료 확인", done: currentStep === 4, active: currentStep === 4 },
                 ].map((s) => (
                     <div
                         key={s.num}
@@ -209,7 +209,7 @@ export function InteractiveAutomationDemo() {
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
-                                    <FileText className="w-5 h-5" /> 2단계: A4 과목 소감문 작성 & 실시간 AI 승인
+                                    <FileText className="w-5 h-5" /> 2단계: 과목별 소감문 제출 & 수료 요건 자동 확인
                                 </div>
                                 <button
                                     onClick={handleLoadSampleReflection}
@@ -235,7 +235,7 @@ export function InteractiveAutomationDemo() {
                                 className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black rounded-2xl text-sm shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] disabled:opacity-50"
                             >
                                 <Send className="w-4 h-4 text-slate-950" />
-                                A4 소감문 제출 및 AI 자동 심사 실행 ➔
+                                소감문 제출 및 수료 요건 자동 확인 실행 ➔
                             </button>
                         </motion.div>
                     )}
@@ -244,30 +244,26 @@ export function InteractiveAutomationDemo() {
                     {currentStep === 3 && (
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
                             <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
-                                <Sparkles className="w-5 h-5 animate-spin" /> 3단계: Supabase 자동 발급 엔진 실행 중
+                                <Sparkles className="w-5 h-5 animate-spin" /> 3단계: 수료 요건 확인 및 수료번호 발급 중
                             </div>
 
                             <div className="p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-3 text-xs">
                                 <div className="flex items-center justify-between text-slate-300">
-                                    <span>① 120강 강의 진도율 검증:</span>
-                                    <span className="text-emerald-400 font-bold">✓ 100% 충족 (Pass)</span>
+                                    <span>① 120강 강의 수강 진도율 확인:</span>
+                                    <span className="text-emerald-400 font-bold">✓ 100% 충족</span>
                                 </div>
                                 <div className="flex items-center justify-between text-slate-300">
-                                    <span>② 과목별 A4 소감문 심사:</span>
-                                    <span className="text-emerald-400 font-bold">✓ AI 학술위원회 승인 (Pass)</span>
-                                </div>
-                                <div className="flex items-center justify-between text-slate-300">
-                                    <span>③ 성령과 불의 세례 고백:</span>
-                                    <span className="text-emerald-400 font-bold">✓ 체험 확인 (Pass)</span>
+                                    <span>② 과목별 소감문 분량·제출 확인:</span>
+                                    <span className="text-emerald-400 font-bold">✓ 제출 확인 완료</span>
                                 </div>
                                 <div className="flex items-center justify-between text-slate-300 pt-2 border-t border-slate-800">
-                                    <span>④ Supabase certificates INSERT:</span>
-                                    <span className="text-amber-400 font-mono font-bold">자동 트랜잭션 기록 중...</span>
+                                    <span>③ Supabase certificates INSERT:</span>
+                                    <span className="text-amber-400 font-mono font-bold">수료번호 자동 채번 및 기록 중...</span>
                                 </div>
                             </div>
 
                             <div className="text-center text-xs text-slate-400 animate-pulse">
-                                고유 발급번호 생성 및 공인 자격증서 실시간 렌더링 중...
+                                고유 수료번호 생성 및 과정 수료증 실시간 렌더링 중...
                             </div>
                         </motion.div>
                     )}
@@ -277,7 +273,7 @@ export function InteractiveAutomationDemo() {
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
-                                    <CheckCircle2 className="w-5 h-5 text-emerald-400" /> 4단계: 공식 자격증서 발급 완료 & 진위 확인 가능
+                                    <CheckCircle2 className="w-5 h-5 text-emerald-400" /> 4단계: 과정 수료증 PDF 인쇄 및 수료 확인
                                 </div>
                                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">
                                     LIVE IN SUPABASE
@@ -290,12 +286,16 @@ export function InteractiveAutomationDemo() {
                                     <span className="font-bold text-white">{generatedCert?.studentName}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-400">공인 등록번호:</span>
+                                    <span className="text-slate-400">수료번호:</span>
                                     <span className="font-mono font-bold text-amber-300">{generatedCert?.licenseKey}</span>
                                 </div>
                                 <div className="flex justify-between">
+                                    <span className="text-slate-400">수료 과정:</span>
+                                    <span className="text-amber-200 font-semibold">{generatedCert?.trackTitle}</span>
+                                </div>
+                                <div className="flex justify-between">
                                     <span className="text-slate-400">발급 주체:</span>
-                                    <span className="text-slate-300">산해원교회 산하 바라크아카데미 (학장 이윤주 박사/목사)</span>
+                                    <span className="text-slate-300">산해원교회 바라크아카데미 학장 이윤주</span>
                                 </div>
                             </div>
 
@@ -307,10 +307,10 @@ export function InteractiveAutomationDemo() {
                                     <Download className="w-4 h-4 text-slate-950" /> PDF 즉시 다운로드
                                 </a>
                                 <button
-                                    onClick={() => alert(`[실시간 진위 확인 성공]\n발급번호: ${generatedCert?.licenseKey}\n수료자: ${generatedCert?.studentName}\n상태: 정식 공인 자격증서 (Active)`)}
+                                    onClick={() => alert(`[실시간 수료 확인]\n수료번호: ${generatedCert?.licenseKey}\n수료자: ${generatedCert?.studentName}\n결과: 본 아카데미가 발급한 과정 수료증으로 확인됩니다.`)}
                                     className="py-3.5 bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 border border-slate-600 transition-all text-center"
                                 >
-                                    <Shield className="w-4 h-4 text-emerald-400" /> 1초 진위 검증 조회
+                                    <Shield className="w-4 h-4 text-emerald-400" /> 수료번호 조회 확인
                                 </button>
                             </div>
                         </motion.div>
@@ -319,7 +319,7 @@ export function InteractiveAutomationDemo() {
                     {/* Bottom Student Name & Role Customizer */}
                     <div className="mt-6 pt-4 border-t border-slate-700/60 flex flex-wrap items-center justify-between gap-3 text-xs">
                         <div className="flex items-center gap-2">
-                            <span className="text-slate-400">시뮬레이션 학생 성명:</span>
+                            <span className="text-slate-400">시뮬레이션 수강생 성명:</span>
                             <input
                                 type="text"
                                 value={studentName}
@@ -329,7 +329,7 @@ export function InteractiveAutomationDemo() {
                         </div>
 
                         <div className="flex items-center gap-1">
-                            <span className="text-slate-400 mr-1">직무 트랙:</span>
+                            <span className="text-slate-400 mr-1">과정 트랙:</span>
                             {(['barak', 'jael', 'deborah'] as const).map(role => (
                                 <button
                                     key={role}
@@ -338,7 +338,7 @@ export function InteractiveAutomationDemo() {
                                         selectedRole === role ? "bg-amber-400 text-slate-950" : "bg-slate-900 text-slate-400 hover:text-white"
                                     }`}
                                 >
-                                    {role === 'barak' ? '바락(부목)' : role === 'jael' ? '야엘(전도)' : '드보라(여목)'}
+                                    {role === 'barak' ? '바락 부목사 과정' : role === 'jael' ? '야엘 은사사역 과정' : '드보라 담임목회 과정'}
                                 </button>
                             ))}
                         </div>

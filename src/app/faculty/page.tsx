@@ -385,7 +385,7 @@ export default function FacultyPage() {
                             href="/apply"
                             className="px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-base hover:from-amber-400 hover:to-orange-400 transition-all shadow-xl flex items-center gap-2"
                         >
-                            2027학년도 1기 입학 지원 <ArrowRight className="w-5 h-5" />
+                            2027년 1기 수강 신청 <ArrowRight className="w-5 h-5" />
                         </Link>
                         <Link
                             href="/curriculum"
