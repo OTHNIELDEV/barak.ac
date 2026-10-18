@@ -1,12 +1,64 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Shield, Heart, Users, Sparkles, ArrowRight, ScrollText } from "lucide-react";
+import { Shield, Heart, Users, Sparkles, ArrowRight, ScrollText, Play, Clock, ExternalLink, X, Video } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface SermonVideo {
+    id: string;
+    partLabel: string;
+    title: string;
+    duration: string;
+    views: string;
+    youtubeId: string;
+    description: string;
+}
+
+const recommendationVideos: SermonVideo[] = [
+    {
+        id: "part-1",
+        partLabel: "제1편 (상)",
+        title: "바라크 부목사 아카데미 (상)",
+        duration: "66분",
+        views: "조회 199",
+        youtubeId: "zTEpicprGUQ",
+        description: "바라크 아카데미 설립 배경과 성경적 부목사·여종 사역의 본질 (전반부 설교)",
+    },
+    {
+        id: "part-2",
+        partLabel: "제2편 (하)",
+        title: "바라크 부목사 아카데미 (하)",
+        duration: "52분",
+        views: "조회 117",
+        youtubeId: "d37VEJ5AFig",
+        description: "드보라와 바락의 동역 모델을 통한 새 시대 전문 부목사 비전 (후반부 설교)",
+    },
+];
 
 export default function AboutPage() {
+    const [selectedVideo, setSelectedVideo] = useState<SermonVideo | null>(null);
+
+    useEffect(() => {
+        if (!selectedVideo) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setSelectedVideo(null);
+            }
+        };
+
+        document.body.style.overflow = "hidden";
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.body.style.overflow = "unset";
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [selectedVideo]);
+
     return (
         <div className="flex flex-col min-h-screen bg-slate-50 font-sans text-slate-900 pt-20">
             {/* 1. Hero Section */}
@@ -157,6 +209,103 @@ export default function AboutPage() {
                                     </p>
                                 </div>
                             </div>
+
+                            {/* 바라크아카데미 설명 영상 — 2편 */}
+                            <div className="pt-8 mt-8 border-t border-slate-700/80">
+                                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+                                    <div>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-wider uppercase mb-2.5">
+                                            <Video className="w-3.5 h-3.5 text-amber-400" />
+                                            바라크아카데미 설명 영상 — 2편
+                                        </div>
+                                        <h3 className="text-xl md:text-2xl font-extrabold text-white">
+                                            설립자 이갈렙 목사 특별 설명 설교 <span className="text-amber-400 font-bold">(상·하)</span>
+                                        </h3>
+                                    </div>
+                                    <p className="text-xs md:text-sm text-slate-400 flex items-center gap-1.5">
+                                        <Play className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                                        영상을 클릭하면 화면 중앙 팝업에서 바로 시청하실 수 있습니다
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {recommendationVideos.map((video) => (
+                                        <button
+                                            key={video.id}
+                                            type="button"
+                                            onClick={() => setSelectedVideo(video)}
+                                            className="group relative text-left rounded-2xl overflow-hidden bg-slate-900/90 border border-slate-700/80 hover:border-amber-400/70 transition-all duration-300 shadow-lg hover:shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_25px_rgba(245,158,11,0.2)] hover:-translate-y-1 flex flex-col focus:outline-none focus:ring-2 focus:ring-amber-400/60"
+                                        >
+                                            {/* 썸네일 영역 */}
+                                            <div className="relative aspect-video w-full overflow-hidden bg-slate-950">
+                                                <Image
+                                                    src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+                                                    alt={video.title}
+                                                    fill
+                                                    className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-[0.82] group-hover:brightness-95"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-black/20" />
+
+                                                {/* 상단 파트 배지 */}
+                                                <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                                                    <span className="px-3 py-1 rounded-full bg-slate-950/85 border border-amber-400/40 backdrop-blur-md text-amber-300 text-xs font-bold tracking-wide shadow">
+                                                        {video.partLabel}
+                                                    </span>
+                                                </div>
+
+                                                {/* 우측 상단 재생시간 배지 */}
+                                                <div className="absolute top-3.5 right-3.5">
+                                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-slate-200 text-xs font-semibold border border-white/10">
+                                                        <Clock className="w-3 h-3 text-amber-400" />
+                                                        {video.duration}
+                                                    </span>
+                                                </div>
+
+                                                {/* 중앙 플레이 버튼 */}
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <div className="relative flex items-center justify-center">
+                                                        <div className="absolute -inset-3 rounded-full bg-amber-500/20 group-hover:bg-amber-500/35 animate-ping duration-1000" />
+                                                        <div className="absolute -inset-1.5 rounded-full bg-amber-400/30 blur-md group-hover:bg-amber-400/50 transition-all" />
+                                                        <div className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-300 text-slate-950 flex items-center justify-center shadow-[0_0_25px_rgba(245,158,11,0.5)] group-hover:scale-110 transition-transform duration-300">
+                                                            <Play className="w-6 h-6 fill-slate-950 text-slate-950 ml-0.5" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* 하단 설명 영역 */}
+                                            <div className="p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-900/95 to-slate-950">
+                                                <div>
+                                                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                                                        <span className="text-xs font-semibold text-amber-400/90">
+                                                            설립자 이갈렙 목사 설교
+                                                        </span>
+                                                        <span className="text-xs text-slate-400">
+                                                            {video.duration} &bull; {video.views}
+                                                        </span>
+                                                    </div>
+                                                    <h4 className="text-lg md:text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+                                                        {video.title}
+                                                    </h4>
+                                                    <p className="text-xs md:text-sm text-slate-300/90 leading-relaxed line-clamp-2">
+                                                        {video.description}
+                                                    </p>
+                                                </div>
+
+                                                <div className="mt-4 pt-3.5 border-t border-slate-800/90 flex items-center justify-between text-xs font-bold">
+                                                    <span className="text-amber-300 group-hover:text-amber-200 flex items-center gap-1.5">
+                                                        <Play className="w-3.5 h-3.5 fill-current" />
+                                                        팝업으로 설교 영상 시청하기
+                                                    </span>
+                                                    <span className="px-2.5 py-1 rounded-md bg-white/5 group-hover:bg-amber-500/20 text-slate-300 group-hover:text-amber-300 transition-colors">
+                                                        바로 재생 &rarr;
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,6 +370,140 @@ export default function AboutPage() {
                     </div>
                 </div>
             </section>
+
+            {/* Sermon Video Centered Modal Popup */}
+            <AnimatePresence>
+                {selectedVideo && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8">
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            onClick={() => setSelectedVideo(null)}
+                            className="fixed inset-0 bg-black/85 backdrop-blur-md cursor-pointer"
+                            aria-hidden="true"
+                        />
+
+                        {/* Modal Dialog */}
+                        <motion.div
+                            role="dialog"
+                            aria-modal="true"
+                            aria-label={selectedVideo.title}
+                            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.92, y: 20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative w-full max-w-4xl bg-gradient-to-b from-slate-900 via-slate-950 to-black border border-amber-500/30 rounded-2xl md:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] overflow-hidden z-10 flex flex-col"
+                        >
+                            {/* Modal Header */}
+                            <div className="flex items-center justify-between px-5 py-3.5 md:px-6 md:py-4 border-b border-slate-800/80 bg-slate-950/80 gap-4">
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold flex-shrink-0">
+                                        <Sparkles className="w-3 h-3 text-amber-400" />
+                                        {selectedVideo.partLabel}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <h3 className="text-white font-bold text-sm md:text-lg tracking-tight truncate">
+                                            {selectedVideo.title}
+                                        </h3>
+                                        <p className="text-[11px] md:text-xs text-slate-400 truncate">
+                                            설립자 이갈렙 목사 &bull; {selectedVideo.duration} &bull; {selectedVideo.views}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                    {/* 상/하 편 빠른 전환 탭 */}
+                                    <div className="hidden sm:flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1">
+                                        {recommendationVideos.map((v) => (
+                                            <button
+                                                key={v.id}
+                                                type="button"
+                                                onClick={() => setSelectedVideo(v)}
+                                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                                    selectedVideo.id === v.id
+                                                        ? "bg-amber-500 text-slate-950 shadow"
+                                                        : "text-slate-400 hover:text-white"
+                                                }`}
+                                            >
+                                                {v.partLabel}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <a
+                                        href={`https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium transition-colors border border-slate-700"
+                                    >
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                        YouTube
+                                    </a>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setSelectedVideo(null)}
+                                        aria-label="영상 팝업 닫기"
+                                        className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:rotate-90 group focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                                    >
+                                        <X className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* YouTube Embed Player (16:9) */}
+                            <div className="relative w-full aspect-video bg-black overflow-hidden shadow-inner">
+                                <iframe
+                                    key={selectedVideo.youtubeId}
+                                    src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                                    title={selectedVideo.title}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                    className="absolute inset-0 w-full h-full border-0"
+                                />
+                            </div>
+
+                            {/* Modal Footer */}
+                            <div className="px-5 py-3.5 md:px-6 md:py-4 bg-slate-950/90 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs md:text-sm">
+                                <p className="text-slate-300 font-light text-center sm:text-left">
+                                    {selectedVideo.description}
+                                </p>
+
+                                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                                    {/* 모바일용 상/하 전환 버튼 */}
+                                    <div className="flex sm:hidden items-center bg-slate-900 border border-slate-800 rounded-xl p-1">
+                                        {recommendationVideos.map((v) => (
+                                            <button
+                                                key={v.id}
+                                                type="button"
+                                                onClick={() => setSelectedVideo(v)}
+                                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                                    selectedVideo.id === v.id
+                                                        ? "bg-amber-500 text-slate-950"
+                                                        : "text-slate-400"
+                                                }`}
+                                            >
+                                                {v.partLabel}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setSelectedVideo(null)}
+                                        className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors"
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             <PublicFooter />
         </div>
