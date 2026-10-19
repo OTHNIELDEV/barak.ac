@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Header } from "@/components/layout/Header";
+import { SITE_URL, ROUTE_SEO, createPageMetadata } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +15,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const homeMetadata = createPageMetadata(ROUTE_SEO.home);
+
 export const metadata: Metadata = {
-  title: "바라크아카데미 | 성경 중심의 온라인 신학 아카데미 (Barak Academy)",
-  description: "사사기 바락의 겸손(ברך)과 드보라의 비전, 야엘의 결행. 산해원교회 산하 신학 아카데미의 2년 4학기 교회 교육 과정.",
+  metadataBase: new URL(SITE_URL),
+  ...homeMetadata,
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
