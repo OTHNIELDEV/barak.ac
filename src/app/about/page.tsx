@@ -24,8 +24,8 @@ const recommendationVideos: SermonVideo[] = [
         title: "바라크 부목사 아카데미 (상)",
         duration: "66분",
         views: "조회 199",
-        youtubeId: "zTEpicprGUQ",
-        description: "바라크 아카데미 설립 배경과 성경적 부목사·여종 사역의 본질 (전반부 설교)",
+        youtubeId: "bkDyECVeCIc",
+        description: "드보라와 바락, 담임과 부목의 모델 — 사사기 4~5장 · 히브리서 11:32 | 바라크 부목사 아카데미 1부",
     },
     {
         id: "part-2",
@@ -33,8 +33,8 @@ const recommendationVideos: SermonVideo[] = [
         title: "바라크 부목사 아카데미 (하)",
         duration: "52분",
         views: "조회 117",
-        youtubeId: "d37VEJ5AFig",
-        description: "드보라와 바락의 동역 모델을 통한 새 시대 전문 부목사 비전 (후반부 설교)",
+        youtubeId: "R4jTPLqnchI",
+        description: "마지막 때, 여성 사역자를 세우라 — 남종과 여종 (요엘 2:28, 행 2:17) | 바라크 부목사 아카데미 2부",
     },
 ];
 
