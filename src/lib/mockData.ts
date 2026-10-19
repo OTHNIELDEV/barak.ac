@@ -109,7 +109,7 @@ export const mockCourses: Course[] = [
                 id: "b-4",
                 title: "제4강: 다음 세대 교육과 디지털 목회 활용",
                 duration: "20:00",
-                videoUrl: "https://www.youtube.com/watch?v=91D2odqEcRo",
+                videoUrl: "https://www.youtube.com/watch?v=0erRTAn0HJQ",
                 description: "기독교 교육과 현대 디지털 도구를 활용해 교회 사역을 효과적으로 지원하는 방법을 익힙니다."
             }
         ]
