@@ -15,7 +15,7 @@ interface PromoVideoModalProps {
 export function PromoVideoModal({
   isOpen,
   onClose,
-  videoId = "0erRTAn0HJQ",
+  videoId = "bJ2w3F3YscM",
   title = "바라크아카데미 공식 홍보영상",
 }: PromoVideoModalProps) {
   // ESC 키로 닫기 지원 & 스크롤 방지

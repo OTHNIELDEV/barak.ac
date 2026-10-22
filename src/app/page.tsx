@@ -684,7 +684,7 @@ export default function LandingPage() {
       <PromoVideoModal
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
-        videoId="0erRTAn0HJQ"
+        videoId="bJ2w3F3YscM"
         title="바라크아카데미 공식 홍보영상"
       />
 
