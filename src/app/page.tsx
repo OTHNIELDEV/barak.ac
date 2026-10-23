@@ -83,7 +83,7 @@ export default function LandingPage() {
     { name: "김영희 교수", field: "신약학", image: "/images/faculty/kim-younghee.jpg" },
     { name: "전예령 교수", field: "기독교교육학", image: "/images/faculty/jeon-yeryeong.jpg" },
     { name: "박은정 교수", field: "목회상담학", image: "/images/faculty/park-eunjung.jpg" },
-    { name: "김종우 교수", field: "인공지능 시대의 기독교 신학", image: "/images/faculty/kim-jongwoo.jpg" },
+    { name: "김종우 교수", field: "인공지능 시대의\n기독교 신학", image: "/images/faculty/kim-jongwoo.jpg" },
   ];
 
   if (!mounted) return null;
@@ -131,8 +131,8 @@ export default function LandingPage() {
 
             {/* Sub Paragraph */}
             <p className="text-base sm:text-xl text-slate-200 leading-relaxed mb-8 max-w-3xl mx-auto font-light drop-shadow-lg">
-              하나님 앞에 겸손히 무릎 꿇는 영성(<span className="text-amber-300 font-semibold">ברך</span>)과 최첨단 AI 기술을 융합하여,
-              마지막 때 <span className="text-white font-bold">부목사, 선교사, 전도사, 특히 여성 사역자</span>를 온누리의 영적 리더로 세웁니다.
+              하나님 앞에 겸손히 무릎 꿇는 영성(<span className="text-amber-300 font-semibold">ברך</span>)과 최첨단 AI 기술을 융합하여, 마지막 때<br />
+              <span className="text-white font-bold">부목사, 선교사, 전도사, 특히 여성 사역자</span>를 온누리의 영적 리더로 세웁니다.
             </p>
 
             {/* Sponsorship & Course Badges in Hero */}
@@ -274,7 +274,7 @@ export default function LandingPage() {
                   드보라 선지자가 가나안 군대와 싸우러 나가라 했을 때, 바락은 자신의 영광이나 명예보다 <strong>드보라와 함께 가기</strong>를 구했습니다(삿 4:8).
                 </p>
                 <div className="bg-slate-50 p-4 rounded-xl text-xs md:text-sm text-slate-700 border border-slate-100">
-                  성경은 바락을 주저한 자가 아닌, 당당한 <strong>“믿음의 사람”</strong>으로 증언합니다 (히 11:32-33).
+                  성경은 바락을 주저한 자가 아닌 더 좋은 부활을 얻은 <strong>“믿음의 사람”</strong>으로 증언합니다. (히 11:32-33)
                 </div>
               </div>
             </div>
@@ -292,7 +292,7 @@ export default function LandingPage() {
                   바라크(ברך): “하나님 앞에 무릎을 꿇는 삶”
                 </h3>
                 <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-4">
-                  ‘바라크(Barak)’는 히브리어로 <strong>“축복하다”</strong>이며, 어원적으로는 <strong>‘무릎을 꿇다’</strong>입니다. 축복하는 행위보다 하나님 앞에 복을 받는 사람의 겸손한 자세를 기준합니다.
+                  ‘바라크(Barak)’는 히브리어로 <strong>“축복하다”</strong>는 뜻이며, 어원적으로는 <strong>‘무릎을 꿇다’</strong>입니다. 축복하는 행위보다 하나님 앞에 복을 받는 사람의 겸손한 자세를 기준합니다.
                 </p>
                 <div className="bg-slate-50 p-4 rounded-xl text-xs md:text-sm text-slate-700 border border-slate-100">
                   겸손히 하나님 앞에 엎드리는 영적 태도 자체가 바로 <strong>복을 받는 참된 모습</strong>입니다.
@@ -451,8 +451,8 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-amber-400 font-bold text-xs md:text-sm tracking-widest uppercase">2027 Course Guide & Sponsorship</span>
-            <h2 className="text-3xl md:text-5xl font-black text-white mt-2">
-              수강 대상 · 과정 안내 · 교육후원금 감면
+            <h2 className="text-3xl md:text-5xl font-black text-white mt-2 whitespace-nowrap">
+              수강 대상 · 교육후원금 감면
             </h2>
             <p className="text-slate-300 mt-4 text-base md:text-lg font-light">
               말씀과 사역을 사모하는 분이라면 누구나 수강 신청이 가능하며, 전 과정 이수 시 과정별 수료증을 드립니다.
@@ -539,7 +539,7 @@ export default function LandingPage() {
               {/* Sponsorship Notice Box (R5) */}
               <div className="p-5 rounded-2xl bg-white/5 border border-white/15 text-xs text-slate-300 leading-relaxed">
                 <strong className="text-amber-300 font-bold block mb-1">💡 교육후원금 운영 안내</strong>
-                바라크아카데미는 산해원교회의 교육 사역으로 운영되며, 수강생의 교육후원금으로 강의 제작과 운영비를 충당합니다. 권장 후원금은 2년 과정 100만원이며, 2027년 1기 수강생은 30%, 목사 사모는 50%를 감면합니다. 형편이 어려운 분은 운영팀과 상의할 수 있습니다. (<Link href="/terms" className="underline text-amber-200 hover:text-white">환불·중단 기준은 이용약관 제8조 참조</Link>)
+                바라크아카데미는 산해원교회의 교육 사역으로 운영되며, 수강생의 교육후원금으로 강의 제작과 운영비를 충당합니다. 권장 후원금은 2년 과정 100만원이며, 2027년 1기 수강생은 30%, 목사 사모는 50%를 감면합니다. 후원금 납부가 어려운 분은 분할 납부도 가능하며 운영팀과 상의할 수 있습니다. (<Link href="/terms" className="underline text-amber-200 hover:text-white">환불·중단 기준은 이용약관 제8조 참조</Link>)
               </div>
             </div>
           </div>
@@ -571,7 +571,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <h4 className="font-bold text-slate-900 text-sm mb-0.5">{faculty.name}</h4>
-                <p className="text-amber-600 font-semibold text-xs">{faculty.field}</p>
+                <p className="text-amber-600 font-semibold text-xs whitespace-pre-line">{faculty.field}</p>
               </div>
             ))}
           </div>

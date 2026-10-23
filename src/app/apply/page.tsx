@@ -440,7 +440,7 @@ function AdmissionApplyForm() {
 
                 {/* 2-3. 교육후원금 안내문 (R5) */}
                 <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm text-xs md:text-sm text-slate-600 leading-relaxed">
-                    <strong className="text-slate-900 font-bold">💡 교육후원금 안내:</strong> 바라크아카데미는 산해원교회의 교육 사역으로 운영되며, 수강생의 교육후원금으로 강의 제작과 운영비를 충당합니다. 권장 후원금은 2년 과정 100만원이며, 2027년 1기 수강생은 30%, 목사 사모는 50%를 감면합니다. 형편이 어려운 분은 운영팀과 상의할 수 있습니다. (<Link href="/terms" className="text-blue-900 font-semibold underline underline-offset-2">환불·중단 기준은 이용약관 제8조 참조</Link>)
+                    <strong className="text-slate-900 font-bold">💡 교육후원금 안내:</strong> 바라크아카데미는 산해원교회의 교육 사역으로 운영되며, 수강생의 교육후원금으로 강의 제작과 운영비를 충당합니다. 권장 후원금은 2년 과정 100만원이며, 2027년 1기 수강생은 30%, 목사 사모는 50%를 감면합니다. 후원금 납부가 어려운 분은 분할 납부도 가능하며 운영팀과 상의할 수 있습니다. (<Link href="/terms" className="text-blue-900 font-semibold underline underline-offset-2">환불·중단 기준은 이용약관 제8조 참조</Link>)
                 </div>
             </section>
 

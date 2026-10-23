@@ -11,9 +11,9 @@ export default function FacultyPage() {
         {
             id: 1,
             name: "이윤주 학장",
-            title: "바라크아카데미 학장 / 산해원교회 담임목사",
+            title: "학장 / 산해원교회 담임목사",
             subject: "이갈렙 목사의 성경해석학",
-            category: "성경해석학 & 실천신학",
+            category: "성경해석학 / 설교방법론",
             badge: "학장 / 산해원교회 담임목사",
             accentColor: "from-amber-500 to-orange-600",
             borderColor: "border-amber-400",
@@ -31,7 +31,7 @@ export default function FacultyPage() {
             ],
             booksLabel: "대표 연구",
             books: [
-                "창조와 구원의 관점에서 샬롬과 샤바트 연구"
+                "창조와 구원의 관점에서 샬롬(שָׁלוֹם)과 샤바트(שׁבת) 관계성 연구"
             ],
             courses: [
                 "이갈렙 목사의 성경해석학 (15강)",
@@ -48,7 +48,7 @@ export default function FacultyPage() {
             badge: "더바이블 무브먼트 대표",
             accentColor: "from-blue-600 to-indigo-700",
             borderColor: "border-blue-400",
-            bio: "서울대 독문과 및 시카고대 고대근동학, 맥코믹신학교 구약학을 전공하였으며, '바라크(ברך)'의 히브리어 어원적 영성을 제시한 세계적 성서언어·구약 신학자입니다.",
+            bio: "서울대 독문과 및 시카고대 고대근동학, 맥코믹 신학교 구약학을 전공하였으며 원어로 성경의 의미를 해석하는데 탁월한 세계적 성서언어·구약 신학자입니다.",
             image: "/images/faculty/song-minwon.jpg",
             academics: [
                 "서울대학교 독일문학 전공",
@@ -66,7 +66,7 @@ export default function FacultyPage() {
                 "태초에 질문이 있었다",
                 "더바이블 욥기: 정답이 무너진 자리에서",
                 "더바이블 전도서: 성숙한 신앙을 위한 지혜",
-                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀 외 다수",
+                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀",
                 "더바이블 룻기: 헤세드의 사람들"
             ],
             courses: [
@@ -79,7 +79,7 @@ export default function FacultyPage() {
             id: 3,
             name: "김영희 교수",
             title: "신약학 교수",
-            subject: "신약학 (New Testament)",
+            subject: "요한복음 강해",
             category: "신약 신학 & 복음서",
             badge: "신약학 전문가",
             accentColor: "from-emerald-600 to-teal-700",
@@ -87,7 +87,8 @@ export default function FacultyPage() {
             bio: "복음서의 예수 그리스도 중심 구속사와 바울 신학을 현대 목회 현장의 실천적 제자도와 연결하는 명쾌한 강의를 펼칩니다.",
             image: "/images/faculty/kim-younghee.jpg",
             academics: [
-                "순복음 신학교 졸업"
+                "순복음 신학교(현, 한세대학교)",
+                "California Theological Seminary"
             ],
             careers: [
                 "전) 러시아 성바울 신학교 교수",
@@ -180,13 +181,19 @@ export default function FacultyPage() {
             bio: "생성형 AI와 최첨단 IT 기술을 복음 전파와 목회 사역에 거룩하게 전용하여, 시대를 앞서가는 스마트 사역자를 양성합니다.",
             image: "/images/faculty/kim-jongwoo.jpg",
             academics: [
-                "컴퓨터공학 및 기독교문화융합 전공",
-                "생성형 AI 목회 콘텐츠 연구개발"
+                "연세대학교 신학박사 (종교철학)",
+                "단국대학교 공학박사 (인공지능융합)",
+                "연세대학교 신학석사 (조직신학)",
+                "계명대학교 의학석사 (생리학)",
+                "고려대학교 이학사 (생명과학)"
             ],
             careers: [
-                "바라크아카데미 AI와 기독교 교수",
-                "스마트목회지원 연구소장",
-                "한국교회 AI 선교포럼 전문위원"
+                "강남대학교 기독교커뮤니케이션학과 강사",
+                "단국대학교 음악예술대학 강사",
+                "연세대학교 산학협력단 연구원",
+                "전) 연세대학교 연합신학대학원 강사",
+                "전) 명지대학교 방목기초교육대학 객원교수",
+                "전) 계명대학교 의과대학 외래조교수"
             ],
             books: [
                 "AI 시대의 목회와 복음 콘텐츠",
@@ -374,11 +381,12 @@ export default function FacultyPage() {
             <section className="py-20 bg-white border-t border-slate-200">
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <span className="text-blue-900 font-bold text-xs md:text-sm tracking-widest uppercase">Enrollment Open</span>
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2 mb-4">
-                        6인의 교수진과 함께 새 시대의 사역자로 거듭나십시오
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2 mb-4 leading-tight">
+                        6인의 교수진과 함께<br />
+                        새 시대의 사역자로 거듭나십시오
                     </h2>
-                    <p className="text-slate-600 text-base md:text-lg mb-8 max-w-2xl mx-auto font-light">
-                        100% 온라인 녹화 영상 강의와 자율 수강, 시험 없는 소감문 중심의 실전 교육이 기다립니다.
+                    <p className="text-slate-600 text-base md:text-lg mb-8 max-w-4xl mx-auto font-light md:whitespace-nowrap">
+                        100% 온라인 녹화 영상 강의와 자율수강, 시험 없는 소감문 중심의 실전 교육이 기다립니다.
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link
