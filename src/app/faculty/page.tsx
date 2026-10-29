@@ -42,23 +42,22 @@ export default function FacultyPage() {
         {
             id: 2,
             name: "송민원 교수",
-            title: "더바이블 무브먼트 대표 / 구약학 교수",
+            title: "더바이블 무브먼트 대표 / Israel Institute of Biblical Studies 성서언어 분과 교수",
             subject: "구약학 (Old Testament)",
             category: "구약 신학 & 성서언어",
             badge: "더바이블 무브먼트 대표",
             accentColor: "from-blue-600 to-indigo-700",
             borderColor: "border-blue-400",
-            bio: "서울대 독문과 및 시카고대 고대근동학, 맥코믹 신학교 구약학을 전공하였으며 원어로 성경의 의미를 해석하는데 탁월한 세계적 성서언어·구약 신학자입니다.",
+            bio: "서울대 독문과 및 맥코믹신학교 구약학, 시카고대 고대근동학을 전공하였으며 원어로 성경의 의미를 해석하는데 탁월한 세계적 성서언어·구약 신학자입니다.",
             image: "/images/faculty/song-minwon.jpg",
             academics: [
                 "서울대학교 독일문학 전공",
                 "맥코믹신학교(McCormick Theological Seminary) 구약 전공",
-                "시카고대학교(University of Chicago) 고대근동학 전공"
+                "시카고대학(University of Chicago) 고대근동학 전공"
             ],
             careers: [
                 "더바이블 무브먼트 대표",
-                "Israel Institute of Biblical Studies 성서언어 분과 교수",
-                "바라크아카데미 구약학 전임교수"
+                "Israel Institute of Biblical Studies 성서언어 분과 교수"
             ],
             books: [
                 "지혜란 무엇인가: 잠언-욥기-전도서의 상호작용",
@@ -66,8 +65,7 @@ export default function FacultyPage() {
                 "태초에 질문이 있었다",
                 "더바이블 욥기: 정답이 무너진 자리에서",
                 "더바이블 전도서: 성숙한 신앙을 위한 지혜",
-                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀",
-                "더바이블 룻기: 헤세드의 사람들"
+                "Jesus for You: 당신에게 들려주고 싶은 예수님의 말씀 외 다수"
             ],
             courses: [
                 "구약 파노라마와 구속사 (15강)",
