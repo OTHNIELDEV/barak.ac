@@ -104,26 +104,26 @@ export default function FacultyPage() {
             id: 4,
             name: "전예령 교수",
             title: "기독교교육학 교수 / 교육철학 박사",
-            subject: "기독교교육학 (Christian Education)",
+            subject: "기독교 교육의 이론과 실제",
             category: "교육철학 & 세대 연합",
             badge: "토론토대 교육철학 Ph.D",
             accentColor: "from-purple-600 to-pink-600",
             borderColor: "border-purple-400",
-            bio: "연세대 및 McMaster대 종교교육, 토론토대 교육철학 박사로서, 청장년 회복과 2세를 위한 교육 프락시스(Praxis)를 개발하고 사모 및 여성 지도자의 교육 리더십을 세웁니다.",
+            bio: "서울신학대학교 교양학부 교수 활동 외에도 청장년(30-40세)들의 회복과 만남을 통한 신앙의 공동체 형성과 2세들을 위한 교육 프락시스를 개발하여 시행하는 일에 열심을 내고 있습니다.",
             image: "/images/faculty/jeon-yeryeong.jpg",
             academics: [
                 "연세대학교 종교교육 (M.A.)",
-                "McMaster University 종교교육 (M.A.)",
+                "Mcmaster University 종교교육 (M.A)",
                 "University of Toronto 교육철학 (Ph.D)"
             ],
             careers: [
                 "서울신학대학교 교양학부 교수 활동",
-                "청장년(30-40세) 회복 신앙공동체 형성 및 2세 교육 프락시스 사역",
-                "바라크아카데미 기독교교육학 전임교수"
+                "청장년(30-40세)들의 회복과 만남을 통한 신앙의 공동체 형성",
+                "2세들을 위한 교육 프락시스 개발 및 시행"
             ],
             books: [
-                "Caring- Application for Christian Ethics and Faith Education (신앙과지성사)",
-                "성찰의 힘으로서 대화: 사람들을 변화시키는 힘 (신앙과지성사, Joyce Bellous)",
+                "Caring- Application for Christian Ethics and Faith Education, (신앙과 지성사)",
+                "성찰의 힘으로서 대화: 사람들을 변화시키는 힘. (신앙과 지성사) \"Conversations that change us\", Joyce Bellous.(2007)",
                 "부모교육 교재 집필 (2017)"
             ],
             courses: [
