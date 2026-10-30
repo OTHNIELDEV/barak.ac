@@ -77,7 +77,7 @@ export default function FacultyPage() {
             id: 3,
             name: "김영희 교수",
             title: "신약학 교수",
-            subject: "요한복음 강해",
+            subject: "요한복음 연구",
             category: "신약 신학 & 복음서",
             badge: "신약학 전문가",
             accentColor: "from-emerald-600 to-teal-700",
