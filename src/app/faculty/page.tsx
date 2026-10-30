@@ -135,7 +135,7 @@ export default function FacultyPage() {
         {
             id: 5,
             name: "박은정 교수",
-            title: "웨스트민스터신학대학원 일반학부장 / 목회상담학 교수",
+            title: "웨스트민스터신학대학원 일반학부장 · 상담심리·놀이치료학과장",
             subject: "목회상담학 (Pastoral Counseling)",
             category: "치유 상담 & 영혼 돌봄",
             badge: "웨스트민스터신학대학원 학부장",
@@ -143,24 +143,21 @@ export default function FacultyPage() {
             borderColor: "border-rose-400",
             bio: "웨스트민스터신학대학원 일반학부장이자 상담심리·놀이치료학과장으로서, 사역 현장의 상처 입은 영혼과 목회자 가정을 돌보며 성경적 상담 및 정서적 치유 실무를 강의합니다.",
             image: "/images/faculty/park-eunjung.jpg",
+            academicsLabel: "주요 직책 및 학회 활동",
             academics: [
                 "웨스트민스터신학대학원 일반학부장 · 상담심리·놀이치료학과장",
-                "한국복음주의상담학회 부회장 및 감독상담사",
+                "현) 한국복음주의상담학회 부회장 및 감독상담사",
                 "한국정신분석심리상담학회 놀이치료 부분과장",
                 "한국대학평생교육원 협의회 놀이심리상담사 자격증 출제위원"
             ],
             careers: [
                 "제30대 한국실천신학회장",
                 "보건복지부 아동권리보장원 아동·청소년·가족상담사례 수퍼바이저",
-                "한국입양홍보회 부모교육 강사",
-                "(전) 서빙고 온누리교회 로뎀상담실 팀장",
-                "(전) 두란노서원 빛과소금 상담전문기자",
-                "바라크아카데미 목회상담학 교수"
+                "한국입양홍보회 부모교육",
+                "(전) 서빙고온누리교회 로뎀상담실 팀장",
+                "(전) 두란노서원 빛과소금 상담전문기자"
             ],
-            books: [
-                "성경적 목회상담과 가정 회복",
-                "사역자의 자기돌봄과 영적 건강"
-            ],
+            books: [],
             courses: [
                 "성경적 목회상담과 가족치유 (15강)",
                 "위기상담과 여성사역자의 자기돌봄 (15강)",
@@ -308,7 +305,7 @@ export default function FacultyPage() {
                                     <div className="space-y-2">
                                         <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
                                             <GraduationCap className="w-4 h-4 text-blue-900" />
-                                            주요 학력 (Academics)
+                                            {prof.academicsLabel || "주요 학력 (Academics)"}
                                         </h4>
                                         <ul className="space-y-1 text-slate-600">
                                             {prof.academics.map((ac, idx) => (
