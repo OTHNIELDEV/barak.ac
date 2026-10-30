@@ -85,12 +85,12 @@ export default function FacultyPage() {
             bio: "복음서의 예수 그리스도 중심 구속사와 바울 신학을 현대 목회 현장의 실천적 제자도와 연결하는 명쾌한 강의를 펼칩니다.",
             image: "/images/faculty/kim-younghee.jpg",
             academics: [
-                "순복음 신학교(현, 한세대학교)",
-                "California Theological Seminary"
+                "순복음신학교(현, 한세대학교) 졸업",
+                "California Theological Seminary 졸업"
             ],
             careers: [
-                "전) 러시아 성바울 신학교 교수",
-                "전) 강석교회 담임목사",
+                "전) 러시아 성바울신학교 교수",
+                "전) 강석교회 담임",
                 "전) 선교제일교회 교육목사"
             ],
             books: [],
