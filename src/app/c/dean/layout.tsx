@@ -28,7 +28,7 @@ export const viewport: Viewport = {
     viewportFit: "cover",
 };
 
-const OG_IMAGE_URL = `${SITE_URL}/og/og-dean-card.png`;
+const OG_IMAGE_URL = `${SITE_URL}/og/og-dean-card.png?v=2`;
 
 export const metadata: Metadata = {
     title: "이윤주 학장 · 바라크아카데미 (Barak Academy)",

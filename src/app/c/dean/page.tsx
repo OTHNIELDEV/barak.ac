@@ -204,7 +204,7 @@ export default function DeanBusinessCardPage() {
                             <p className="bc-eyebrow">DEAN &amp; SENIOR PASTOR · PH.D.</p>
                             <h1 className="bc-name">이윤주</h1>
                             <p className="bc-name-en">
-                                <span className="bc-name-latin">Rev. Dr. Lee Yoonju</span> · 학장 / 담임목사
+                                <span className="bc-name-latin">Rev. Dr. Lee YoonJoo</span> · 학장 / 담임목사
                             </p>
                         </div>
 
@@ -521,11 +521,11 @@ export default function DeanBusinessCardPage() {
                     <div className="bc-office">
                         <div className="bc-office-text">
                             <p className="bc-office-label">바라크아카데미 · 산해원 채플</p>
-                            <p className="bc-office-addr">경기도 광주시 초월읍 경충대로 1337-46</p>
+                            <p className="bc-office-addr">경기도 성남시 분당구 수내로 54, 2707호(수내동,삼성보보스쉐르빌)</p>
                         </div>
                         <a
                             className="bc-round"
-                            href="https://map.kakao.com/?q=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B4%91%EC%A3%BC%EC%8B%9C%20%EC%B4%88%EC%9B%94%EC%9D%8D%20%EA%B2%BD%EC%B6%A9%EB%8C%80%EB%A1%9C%201337-46"
+                            href="https://map.kakao.com/?q=%EA%B2%BD%EA%B8%B0%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%EC%88%98%EB%82%B4%EB%A1%9C%2054"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="바라크아카데미 지도 보기"
