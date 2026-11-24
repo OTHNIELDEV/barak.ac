@@ -23,8 +23,8 @@ export function Header() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Hide Public Header on Dashboard routes, Login page, and Course Player
-    if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/course") || pathname?.startsWith("/my-classroom") || pathname === "/login") return null;
+    // Hide Public Header on Dashboard routes, Login page, Course Player, and Digital Business Card
+    if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/course") || pathname?.startsWith("/my-classroom") || pathname?.startsWith("/c/") || pathname === "/c" || pathname === "/login") return null;
 
     const routes = [
         { name: "아카데미소개", href: "/about" },
